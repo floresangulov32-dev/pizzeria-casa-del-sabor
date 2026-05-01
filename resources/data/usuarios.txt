@@ -1,0 +1,8 @@
+# Sistema Pizzeria - Archivo de usuarios
+# Formato: id, nombre, usuario, contraseña, ROL
+1,Administrador,admin,admin123,GERENTE
+2,Jose,jos,123,CAJERO
+3,Victor,vhic,123,GERENTE
+4,Pepe,pep,123,COCINA
+5,Cliente,cliente,cliente123,CLIENTE
+6,Pedro,Ped,123,CLIENTE
