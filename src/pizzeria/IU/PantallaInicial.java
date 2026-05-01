@@ -4,7 +4,6 @@
  */
 package pizzeria.IU;
 
-// Imports de Java AWT (para gráficos)
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -65,8 +64,7 @@ public class PantallaInicial extends javax.swing.JFrame {
     }
     
     private void cargarImagenes() {
-        try {
-            // Método alternativo usando File
+        try {            
             String rutaLogo = "resources/imagenes/LogoPizzeria.jpg";
             File archivoLogo = new File(rutaLogo);
 
@@ -81,8 +79,7 @@ public class PantallaInicial extends javax.swing.JFrame {
             System.out.println("Error cargando logo: " + e.getMessage());
         }
     }    
-    private void configurarApariencia() {
-        // Panel principal con fondo negro/rojo
+    private void configurarApariencia() {        
         JPanel panelFondo = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -106,14 +103,11 @@ public class PantallaInicial extends javax.swing.JFrame {
         
         panelFondo.setLayout(new BorderLayout());
         
-        // Configurar paneles existentes
         jPanel1.setOpaque(false);
         jPanel2.setOpaque(false);
-        
-        // MEJORAR jPanel1 (Cabecera) - Agregar logo y título
+                
         configurarCabecera();
-        
-        // MEJORAR jPanel2 (Botones) - Estilo moderno
+                
         configurarBotones();
         
         panelFondo.add(jPanel1, BorderLayout.NORTH);
@@ -247,8 +241,7 @@ public class PantallaInicial extends javax.swing.JFrame {
         JDialog dialogMenu = new JDialog(this, "Menú - La Casa del Sabor", true);
         dialogMenu.setSize(550, 450);
         dialogMenu.setLocationRelativeTo(this);
-        
-        // Fondo del diálogo
+                
         JPanel panelFondoDialogo = new JPanel(new BorderLayout());
         panelFondoDialogo.setBackground(new Color(30, 30, 30));
         
