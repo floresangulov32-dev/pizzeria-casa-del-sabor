@@ -79,7 +79,7 @@ public class PantallaInicial extends javax.swing.JFrame {
             System.out.println("Error cargando logo: " + e.getMessage());
         }
     }    
-    private void configurarApariencia() {        
+    private void configurarApariencia() {
         JPanel panelFondo = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -379,10 +379,9 @@ public class PantallaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JOptionPane.showMessageDialog(this, 
-            "Ventana de Login - Próximamente", 
-            "Iniciar Sesión", 
-            JOptionPane.INFORMATION_MESSAGE);
+        LoginGUI login = new LoginGUI();
+        login.setVisible(true);
+        this.dispose();        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
