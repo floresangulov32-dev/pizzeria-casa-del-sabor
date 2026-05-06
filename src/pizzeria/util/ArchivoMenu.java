@@ -2,6 +2,7 @@ package pizzeria.util;
 
 import pizzeria.model.Producto;
 import pizzeria.model.Combo;
+import pizzeria.model.TipoProducto;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 import java.io.File;
 
 public class ArchivoMenu{
-    private final String archivoProductos = "resources/data/productos.txt";
-    private final String archivoCombos = "resources/data/combos.txt";
+    private final String archivoProductos = "productos.txt";
+    private final String archivoCombos = "combos.txt";
     public ArrayList<Producto> cargarProductos(String archivo){
         ArrayList<Producto> productos = new ArrayList<>();
 
@@ -33,19 +34,20 @@ public class ArchivoMenu{
 
                 String[] datos = linea.split(",");
 
-                if(datos.length < 4){
+                if(datos.length < 5){
                     continue;
                 }
 
                 int id = Integer.parseInt(datos[0]);
-                String nombre = datos[1];
-                String descripcion = datos[2];
-                double precio = Double.parseDouble(datos[3]);
-
-                Producto p = new Producto(id, nombre, descripcion, precio);
-            
-                if(datos.length >= 5 && !datos[4].isEmpty()){
-                    String[] ids = datos[4].split(";");
+                TipoProducto tipo = TipoProducto.fromString(datos[1]);
+                String nombre = datos[2];
+                String descripcion = datos[3];
+                double precio = Double.parseDouble(datos[4]);
+                
+                Producto p = new Producto(id, tipo, nombre, descripcion, precio);
+                
+                if(datos.length >= 6 && !datos[4].isEmpty()){
+                    String[] ids = datos[5].split(";");
 
                     for(String idTxt : ids){
                         int idIng = Integer.parseInt(idTxt);
@@ -143,7 +145,11 @@ public class ArchivoMenu{
             sc.newLine();
             for(Producto p : productos){
             
-                String res = p.getID()+","+p.getNombre()+","+p.getDescripcion()+","+p.getPrecio()+",";
+                String res = p.getID() + ","
+                           + p.getTipo().name().toLowerCase() + ","
+                           + p.getNombre() + ","
+                           + p.getDescripcion() + ","
+                           + p.getPrecio() + ",";
                 ArrayList<Integer> ingredientes = p.getIngredientes();
             
                 for(int i = 0; i < ingredientes.size(); i++){

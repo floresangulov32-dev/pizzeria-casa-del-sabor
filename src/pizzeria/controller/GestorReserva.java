@@ -3,6 +3,7 @@ package pizzeria.controller;
 import pizzeria.model.EstadoReserva;
 import pizzeria.model.MovimientoCaja;
 import pizzeria.model.DetalleVenta;
+import pizzeria.model.TipoProducto;
 
 //import pizzeria.controller.GestorCocina;
 //import pizzeria.controller.GestorFinanzas;
@@ -30,11 +31,13 @@ public class GestorReserva{
     public void setListaReservas(List<Reserva> listaReservas) {
         this.listaReservas = listaReservas;
     }
-  
+
+    // Genera un ID automático para cada nueva reserva
     public int generarId() {
         return siguienteId++;
     }
 
+    // Crea una nueva reserva, la agrega a la lista y la devuelve
     public Reserva nuevaReserva(String nombreCliente, String telefono, LocalDateTime fechaReserva, List<DetalleVenta> pedido) {
         Reserva reserva = new Reserva(generarId(), nombreCliente, telefono, fechaReserva);
         reserva.setPedido(pedido);
@@ -42,6 +45,7 @@ public class GestorReserva{
         return reserva;
     }
 
+    // Busca una reserva por su ID
     public Reserva buscarPorId(int id) {
         for (Reserva reserva : listaReservas) {
             if (reserva.getId() == id) {
@@ -51,6 +55,7 @@ public class GestorReserva{
         return null;
     }
 
+    // Cancela una reserva pagada y registra el reembolso si todavía no fue preparada ni entregada
     public boolean cancelarReserva(int id, GestorFinanzas gestorFinanzas, GestorCocina gestorCocina) {
         Reserva reserva = buscarPorId(id);
 
@@ -88,10 +93,12 @@ public class GestorReserva{
         return true;
     }
 
+    // Versión simple sin finanzas ni cocina, por compatibilidad
     public boolean cancelarReserva(int id) {
         return cancelarReserva(id, null, null);
     }
 
+    // Envía una reserva a cocina si está pendiente
     public boolean enviarACocina(int idReserva, GestorCocina gestorCocina) {
         Reserva reserva = buscarPorId(idReserva);
 
@@ -113,10 +120,12 @@ public class GestorReserva{
         return false;
     }
 
+    // Devuelve la lista completa de reservas
     public List<Reserva> verReservas() {
         return listaReservas;
     }
 
+    // Devuelve únicamente las reservas del día actual
     public List<Reserva> verDelDia() {
         List<Reserva> reservasDelDia = new ArrayList<>();
         LocalDate hoy = LocalDate.now();
@@ -130,6 +139,7 @@ public class GestorReserva{
         return reservasDelDia;
     }
 
+    // Guarda las reservas en archivo, incluyendo el detalle del pedido
     public void guardarArchivo(String nombreArchivo) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo));
@@ -152,7 +162,8 @@ public class GestorReserva{
             System.out.println(" Error al guardar el archivo de reservas.");
         }
     }
-   
+
+    // Carga las reservas desde archivo y reconstruye también el pedido
     public void cargarArchivo(String nombreArchivo) {
         File archivo = new File(nombreArchivo);
 
@@ -221,7 +232,8 @@ public class GestorReserva{
 
         return sb.toString();
     }
-    
+
+    // Reconstruye el pedido desde el texto guardado en el archivo
     private List<DetalleVenta> deserializarPedido(String textoPedido) {
         List<DetalleVenta> pedido = new ArrayList<>();
 
@@ -236,7 +248,7 @@ public class GestorReserva{
             double precio = Double.parseDouble(campos[3]);
             int cantidad = Integer.parseInt(campos[4]);
 
-            Producto producto = new Producto(idProducto, nombre, descripcion, precio);
+            Producto producto = new Producto(idProducto, TipoProducto.PRODUCTO, nombre, descripcion, precio);
             DetalleVenta detalle = new DetalleVenta(producto, cantidad);
             pedido.add(detalle);
         }
