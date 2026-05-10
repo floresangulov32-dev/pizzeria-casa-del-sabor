@@ -6,6 +6,7 @@ import pizzeria.model.Producto;
 import java.util.ArrayList;
 import pizzeria.model.Combo;
 import pizzeria.model.Producto;
+import pizzeria.model.TipoProducto;
 
 public class Menu{
     private ArrayList <Producto> productos;
@@ -24,14 +25,13 @@ public class Menu{
         combos = new ArrayList<>();
     }
     
-    public void agregarProducto(String nombre, String descripcion, double precio) {
+    public void agregarProducto(String nombre, String descripcion, double precio, TipoProducto tipo){
         int maxId = 0;
         for(Producto p : productos){
-            if(p.getID() > maxId){
-                maxId = p.getID();
-            }
+            if(p.getID() > maxId) maxId = p.getID();
         }
-        Producto p = new Producto(maxId + 1, nombre, descripcion, precio);
+        
+        Producto p = new Producto(maxId + 1, tipo, nombre, descripcion, precio);
         productos.add(p);
     }
     
@@ -57,6 +57,16 @@ public class Menu{
             }
         }
         return null;
+    }
+    
+     public ArrayList<Producto> getProductosPorTipo(TipoProducto tipo){
+        ArrayList<Producto> filtrados = new ArrayList<>();
+        for(Producto p : productos){
+            if(p.getTipo() == tipo){
+                filtrados.add(p);
+            }
+        }
+        return filtrados;
     }
     
      public ArrayList<Producto> getProductos(){
@@ -103,15 +113,45 @@ public class Menu{
     }
     
     public String mostrarMenu(){
-        String res = "===============PRODUCTOS===============" + "\n";
-        for(Producto p : productos){
-            res+= p.verProducto()+"\n";
+        StringBuilder res = new StringBuilder();
+
+         ArrayList<Producto> soloProductos = getProductosPorTipo(TipoProducto.PRODUCTO);
+        res.append("PRODUCTOS\n");
+        res.append("----------------------------------------\n");
+        if(soloProductos.isEmpty()){
+            res.append("No hay productos disponibles\n");
+        } else {
+            for(Producto p : soloProductos){
+                res.append(p.verProducto()).append("\n");
+            }
         }
-        res+=  "=================COMBOS=================: \n";
-        for(Combo c : combos){
-            res+= c.verCombo()+"\n";
+        res.append("\n");
+ 
+        ArrayList<Producto> refrescos = getProductosPorTipo(TipoProducto.REFRESCO);
+        res.append("REFRESCOS\n");
+        res.append("----------------------------------------\n");
+        if(refrescos.isEmpty()){
+            res.append("No hay refrescos disponibles\n");
+        } else {
+            for(Producto p : refrescos){
+                res.append(p.verProducto()).append("\n");
+            }
         }
-        return res;
+        res.append("\n");
+
+        res.append("COMBOS\n");
+        res.append("----------------------------------------\n");
+        if (combos.isEmpty()) {
+        res.append("No hay combos disponibles\n");
+        } else {
+            for (Combo c : combos) {
+                res.append(c.verCombo()).append("\n");
+            }
+        }
+
+        res.append("========================================");
+
+        return res.toString();
     }
     
     public String mostrarProductos(){

@@ -3,6 +3,7 @@ package pizzeria.view;
 import pizzeria.model.Menu;
 import pizzeria.model.Combo;
 import pizzeria.util.ArchivoMenu;
+import pizzeria.model.TipoProducto;
 
 import pizzeria.model.Producto;
 import java.util.ArrayList;
@@ -73,11 +74,19 @@ public class SuperMenu{
         String nombre      = Consola.leerTexto("Nombre del producto: ");
         String descripcion = Consola.leerTexto("Descripción del producto: ");
         double precio      = leerPrecio("Precio del producto (Bs.): ");
+        
+        System.out.println(" Tipo de producto:");
+        System.out.println(" 1. " + TipoProducto.PRODUCTO.getNombre());
+        System.out.println(" 2. " + TipoProducto.REFRESCO.getNombre());
+        int opTipo = Consola.leerEnteroRango("Seleccione el tipo: ", 1, 2);
+        TipoProducto tipo = (opTipo == 2) ? TipoProducto.REFRESCO : TipoProducto.PRODUCTO;
 
-        menu.agregarProducto(nombre, descripcion, precio);
+        menu.agregarProducto(nombre, descripcion, precio, tipo);
         System.out.println(" Producto agregado correctamente.");
         archivoMenu.guardarProductos(menu.getProductos());
         Consola.pausar();
+        
+        
     }
 
     private void agregarIngrediente(){
