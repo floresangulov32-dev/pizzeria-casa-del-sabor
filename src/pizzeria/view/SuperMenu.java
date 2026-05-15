@@ -4,18 +4,22 @@ import pizzeria.model.Menu;
 import pizzeria.model.Combo;
 import pizzeria.util.ArchivoMenu;
 import pizzeria.model.TipoProducto;
+import pizzeria.model.Inventario;
+import pizzeria.model.Insumo;
 
 import pizzeria.model.Producto;
 import java.util.ArrayList;
 
 public class SuperMenu{
 
-    private final Menu       menu;
+    private final Menu        menu;
     private final ArchivoMenu archivoMenu;
-
-    public SuperMenu(Menu menu, ArchivoMenu archivoMenu){
+    private final Inventario        inventario;
+    
+    public SuperMenu(Menu menu, ArchivoMenu archivoMenu, Inventario inventario){
         this.menu        = menu;
         this.archivoMenu = archivoMenu;
+        this.inventario  = inventario;  
     }
 
 
@@ -58,7 +62,39 @@ public class SuperMenu{
     
     private void verProductos(){
         Consola.titulo("PRODUCTOS REGISTRADOS");
-        System.out.println(menu.mostrarProductos());
+
+        ArrayList<Producto> productos = menu.getProductos();
+        if(productos.isEmpty()){
+            System.out.println(" No hay productos registrados.");
+            Consola.pausar();
+            return;
+        }
+
+        for(Producto p : productos){
+            System.out.println();
+            System.out.printf("  [%02d] %s  —  Bs. %.2f%n", p.getID(), p.getNombre(), p.getPrecio());
+            System.out.printf("       Descripción: %s%n",
+                p.getDescripcion().isEmpty() ? "(sin descripción)" : p.getDescripcion());
+
+            ArrayList<Integer> ids = p.getIngredientes();
+            if(ids.isEmpty()){
+                System.out.println("       Ingredientes: (ninguno registrado)");
+            } else {
+                System.out.print("       Ingredientes: ");
+                StringBuilder sb = new StringBuilder();
+                for(int idIng : ids){
+                    String nombre = "(ID " + idIng + ")";
+                    if(inventario != null){
+                        Insumo ins = inventario.buscarId(idIng);
+                        if(ins != null) nombre = ins.getNombre();
+                    }
+                    if(sb.length() > 0) sb.append(", ");
+                    sb.append(nombre);
+                }
+                System.out.println(sb);
+            }
+            Consola.separador();
+        }
         Consola.pausar();
     }
 
@@ -74,7 +110,7 @@ public class SuperMenu{
         String nombre      = Consola.leerTexto("Nombre del producto: ");
         String descripcion = Consola.leerTexto("Descripción del producto: ");
         double precio      = leerPrecio("Precio del producto (Bs.): ");
-        
+
         System.out.println(" Tipo de producto:");
         System.out.println(" 1. " + TipoProducto.PRODUCTO.getNombre());
         System.out.println(" 2. " + TipoProducto.REFRESCO.getNombre());
@@ -82,8 +118,59 @@ public class SuperMenu{
         TipoProducto tipo = (opTipo == 2) ? TipoProducto.REFRESCO : TipoProducto.PRODUCTO;
 
         menu.agregarProducto(nombre, descripcion, precio, tipo);
-        System.out.println(" Producto agregado correctamente.");
+        Producto nuevo = menu.getProductos().get(menu.getProductos().size() - 1);
+        System.out.printf(" Producto '%s' agregado con ID [%02d].%n", nuevo.getNombre(), nuevo.getID());
+
+        // Paso 2: agregar ingredientes (insumos) al producto recién creado
+        if(inventario != null && !inventario.getInsumos().isEmpty()){
+            if(Consola.confirmar("¿Desea agregar ingredientes (insumos) a este producto?")){
+                boolean agregando = true;
+                while(agregando){
+                    System.out.println();
+                    System.out.println(" Insumos disponibles:");
+                    System.out.println(" " + "-".repeat(68));
+                    for(Insumo ins : inventario.getInsumos()){
+                        System.out.printf("  [%02d] %-20s  (%s)%n",
+                            ins.getId(), ins.getNombre(), ins.getUnidad());
+                    }
+                    System.out.println(" " + "-".repeat(68));
+
+                    // Mostrar ingredientes ya agregados
+                    if(!nuevo.getIngredientes().isEmpty()){
+                        System.out.print(" Ya agregados: ");
+                        StringBuilder sb = new StringBuilder();
+                        for(int idIng : nuevo.getIngredientes()){
+                            Insumo ins = inventario.buscarId(idIng);
+                            if(sb.length() > 0) sb.append(", ");
+                            sb.append(ins != null ? ins.getNombre() : "(ID " + idIng + ")");
+                        }
+                        System.out.println(sb);
+                    }
+
+                    System.out.println(" (0 para terminar)");
+                    int idIng = Consola.leerEntero("ID del insumo a agregar: ");
+
+                    if(idIng == 0){
+                        agregando = false;
+                    } else {
+                        Insumo ins = inventario.buscarId(idIng);
+                        if(ins == null){
+                            System.out.printf(" No existe un insumo con ID %d.%n", idIng);
+                        } else if(nuevo.getIngredientes().contains(idIng)){
+                            System.out.printf(" '%s' ya está agregado.%n", ins.getNombre());
+                        } else {
+                            nuevo.agregarIngrediente(idIng);
+                            System.out.printf(" Ingrediente '%s' agregado.%n", ins.getNombre());
+                        }
+                    }
+                }
+            }
+        } else {
+            System.out.println(" (No hay insumos en el inventario para asignar como ingredientes)");
+        }
+
         archivoMenu.guardarProductos(menu.getProductos());
+        System.out.println(" Producto guardado correctamente.");
         Consola.pausar();
         
         
@@ -98,7 +185,9 @@ public class SuperMenu{
             return;
         }
 
-        System.out.println(menu.mostrarMenu());
+        // Mostrar lista de productos
+        System.out.println(" Productos disponibles:");
+        System.out.println(menu.mostrarProductos());
         int idProducto = Consola.leerEntero("ID del producto: ");
 
         Producto prod = menu.buscarProducto(idProducto);
@@ -108,16 +197,46 @@ public class SuperMenu{
             return;
         }
 
-        int idIngrediente = Consola.leerEntero("ID del ingrediente (insumo): ");
+        // Mostrar lista de insumos disponibles
+        if(inventario != null && !inventario.getInsumos().isEmpty()){
+            System.out.println();
+            System.out.println(" Insumos disponibles:");
+            System.out.println(" " + "-".repeat(68));
+            for(Insumo ins : inventario.getInsumos()){
+                System.out.printf("  [%02d] %-20s  (%s)%n",
+                    ins.getId(), ins.getNombre(), ins.getUnidad());
+            }
+            System.out.println(" " + "-".repeat(68));
+        } else {
+            System.out.println(" (No hay insumos cargados en el inventario)");
+        }
+
+        int idIngrediente = Consola.leerEntero("ID del insumo a agregar como ingrediente: ");
         if(idIngrediente <= 0){
             System.out.println(" ID de ingrediente inválido.");
             Consola.pausar();
             return;
         }
 
+        // Verificar que el insumo exista si hay inventario
+        if(inventario != null){
+            Insumo ins = inventario.buscarId(idIngrediente);
+            if(ins == null){
+                System.out.printf(" No existe un insumo con ID %d en el inventario.%n", idIngrediente);
+                Consola.pausar();
+                return;
+            }
+        }
+
         prod.agregarIngrediente(idIngrediente);
-        System.out.printf(" Ingrediente %d agregado al producto '%s'.%n",
-                idIngrediente, prod.getNombre());
+        String nombreIns = "(ID " + idIngrediente + ")";
+        if(inventario != null){
+            Insumo ins = inventario.buscarId(idIngrediente);
+            if(ins != null) nombreIns = ins.getNombre();
+        }
+        System.out.printf(" Ingrediente '%s' agregado al producto '%s'.%n",
+                nombreIns, prod.getNombre());
+        archivoMenu.guardarProductos(menu.getProductos());
         Consola.pausar();
     }
 
