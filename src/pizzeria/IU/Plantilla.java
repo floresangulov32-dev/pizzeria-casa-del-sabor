@@ -7,6 +7,9 @@ package pizzeria.IU;
 public class Plantilla extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Plantilla.class.getName());
+    private String nombreUsuario;
+    private String rolUsuario;
+    
 
     /**
      * Creates new form MenuGerente
@@ -16,6 +19,21 @@ public class Plantilla extends javax.swing.JFrame {
         setSize(1280, 720);
         setLocationRelativeTo(null);
     }
+    
+    public Plantilla(String rol, String nombre) {
+    initComponents();
+    setSize(1280, 720);
+    setLocationRelativeTo(null);
+    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+    this.rolUsuario = rol;
+    this.nombreUsuario = nombre;
+    mostrarUsuario();
+    
+    
+    
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,6 +62,7 @@ public class Plantilla extends javax.swing.JFrame {
         PiePag = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        Interfaz = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -62,7 +81,6 @@ public class Plantilla extends javax.swing.JFrame {
 
         Encabezado.setBackground(new java.awt.Color(255, 255, 255));
         Encabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
-        Encabezado.setPreferredSize(new java.awt.Dimension(1208, 100));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(168, 27, 29));
@@ -74,6 +92,7 @@ public class Plantilla extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(74, 74, 74));
         jLabel4.setText("PIZZERIA");
 
+        Rol.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         Rol.setText("Rol: Usuario");
 
         javax.swing.GroupLayout EncabezadoLayout = new javax.swing.GroupLayout(Encabezado);
@@ -84,32 +103,26 @@ public class Plantilla extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
-            .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(EncabezadoLayout.createSequentialGroup()
-                    .addGap(122, 122, 122)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(1052, Short.MAX_VALUE)))
+                .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 630, Short.MAX_VALUE)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         EncabezadoLayout.setVerticalGroup(
             EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EncabezadoLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
                     .addGroup(EncabezadoLayout.createSequentialGroup()
                         .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(33, Short.MAX_VALUE))))
-            .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EncabezadoLayout.createSequentialGroup()
-                    .addContainerGap(51, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(16, 16, 16)))
+                            .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         BarraNav.setBackground(new java.awt.Color(255, 255, 255));
@@ -215,14 +228,29 @@ public class Plantilla extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        Interfaz.setBackground(new java.awt.Color(255, 255, 255));
+        Interfaz.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+
+        javax.swing.GroupLayout InterfazLayout = new javax.swing.GroupLayout(Interfaz);
+        Interfaz.setLayout(InterfazLayout);
+        InterfazLayout.setHorizontalGroup(
+            InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        InterfazLayout.setVerticalGroup(
+            InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
         Fondo.setLayout(FondoLayout);
         FondoLayout.setHorizontalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE)
+            .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(FondoLayout.createSequentialGroup()
                 .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1000, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         FondoLayout.setVerticalGroup(
@@ -230,7 +258,9 @@ public class Plantilla extends javax.swing.JFrame {
             .addGroup(FondoLayout.createSequentialGroup()
                 .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -274,9 +304,21 @@ public class Plantilla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        // TODO add your handling code here:
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+        this, "¿Desea cerrar sesión?", "Cerrar Sesión",
+        javax.swing.JOptionPane.YES_NO_OPTION
+    );
+    if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+        this.dispose();
+        new LoginGUI().setVisible(true);
+    }
     }//GEN-LAST:event_btnCerrarActionPerformed
-
+    
+    private void mostrarUsuario() {
+    
+        Rol.setText(rolUsuario + ": " + nombreUsuario);
+    }
+    
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -304,6 +346,7 @@ public class Plantilla extends javax.swing.JFrame {
     private javax.swing.JPanel BarraNav;
     private javax.swing.JPanel Encabezado;
     private javax.swing.JPanel Fondo;
+    private javax.swing.JPanel Interfaz;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
     private javax.swing.JButton btnCerrar;
