@@ -4,23 +4,29 @@
  */
 package pizzeria.IU;
 
-public class Plantilla extends javax.swing.JFrame {
+public class PlantillaGerente extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Plantilla.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PlantillaGerente.class.getName());
     private String nombreUsuario;
     private String rolUsuario;
-    
+    private javax.swing.JButton btnActivo = null;
 
     /**
      * Creates new form MenuGerente
      */
-    public Plantilla() {
+    public PlantillaGerente() {
         initComponents();
         setSize(1280, 720);
         setLocationRelativeTo(null);
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+        
+        configurarHover();        
+        activarBoton(btnInicio);
     }
     
-    public Plantilla(String rol, String nombre) {
+    public PlantillaGerente(String rol, String nombre) {
     initComponents();
     setSize(1280, 720);
     setLocationRelativeTo(null);
@@ -30,6 +36,8 @@ public class Plantilla extends javax.swing.JFrame {
     this.rolUsuario = rol;
     this.nombreUsuario = nombre;
     mostrarUsuario();
+    configurarHover();        
+    activarBoton(btnInicio);
     
     
     
@@ -292,7 +300,8 @@ public class Plantilla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFinanzasActionPerformed
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
-        // TODO add your handling code here:
+        activarBoton(btnMenu);
+        cargarPanel(new Menu());
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
@@ -319,7 +328,53 @@ public class Plantilla extends javax.swing.JFrame {
         Rol.setText(rolUsuario + ": " + nombreUsuario);
     }
     
+    private void cargarPanel(javax.swing.JPanel panel) {
+        Interfaz.removeAll();                    // limpia el contenido anterior
+        Interfaz.setLayout(new java.awt.BorderLayout());
+        Interfaz.add(panel, java.awt.BorderLayout.CENTER);
+        Interfaz.revalidate();                   // refresca el layout
+        Interfaz.repaint();                      // redibuja
+    }
+    private void configurarHover() {
+        javax.swing.JButton[] botones = {btnInicio, btnUsuarios, btnFinanzas,
+                                      btnMenu, btnInvetario, btnReportes, btnCerrar};
     
+        for (javax.swing.JButton b : botones) {
+            b.setContentAreaFilled(true);
+            b.setOpaque(true);
+            b.setBorderPainted(false);
+            b.setBackground(java.awt.Color.WHITE);
+            b.setForeground(new java.awt.Color(60, 60, 60));
+        
+            b.addMouseListener(new java.awt.event.MouseAdapter() {
+    @Override
+    public void mouseEntered(java.awt.event.MouseEvent e) {
+        if (b != btnActivo) {
+            b.setBackground(new java.awt.Color(230, 230, 230));
+            b.setForeground(new java.awt.Color(168, 27, 29)); // #A81B1D
+        }
+    }
+    @Override
+    public void mouseExited(java.awt.event.MouseEvent e) {
+        if (b != btnActivo) {
+            b.setBackground(new java.awt.Color(255, 255, 255)); // #FFFFFF
+            b.setForeground(new java.awt.Color(60, 60, 60));
+        }
+    }
+});
+        }
+    }
+    
+    private void activarBoton(javax.swing.JButton boton) {
+    // Resetea el anterior
+        if (btnActivo != null) {
+            btnActivo.setBackground(new java.awt.Color(255, 255, 255)); // #FFFFFF
+            btnActivo.setForeground(new java.awt.Color(60, 60, 60));
+        }
+        boton.setBackground(new java.awt.Color(168, 27, 29)); // #A81B1D
+        boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
+        btnActivo = boton;
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -339,7 +394,7 @@ public class Plantilla extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Plantilla().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new PlantillaGerente().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
