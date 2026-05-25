@@ -17,8 +17,9 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
      */
     public InventarioPantallaInicial() {
         initComponents();
+        configurarTabla();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,10 +39,12 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         btnMenu = new javax.swing.JButton();
         btnInvetario = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
+        btnInvetario1 = new javax.swing.JButton();
         PiePag = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        Interfaz = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(214, 69, 69));
@@ -98,46 +101,61 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         btnFinanzas.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnFinanzas.setText("Buscar Insumo");
         btnFinanzas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnFinanzas.addActionListener(this::btnFinanzasActionPerformed);
+        btnFinanzas.addActionListener(this::btnBuscarInsumoActionPerformed);
 
         btnMenu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnMenu.setText("Agregar Insumo");
         btnMenu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnMenu.addActionListener(this::btnMenuActionPerformed);
+        btnMenu.addActionListener(this::btnAgregarInsumoActionPerformed);
 
         btnInvetario.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnInvetario.setText("Guardar Cambios");
         btnInvetario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnInvetario.addActionListener(this::btnInvetarioActionPerformed);
+        btnInvetario.addActionListener(this::btnGuardarCambiosPerformed);
 
         btnCerrar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnCerrar.setText("Volver");
         btnCerrar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnCerrar.addActionListener(this::btnCerrarActionPerformed);
+        btnCerrar.addActionListener(this::btnVolverPerformed);
+
+        btnInvetario1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnInvetario1.setText("Insumos con Bajo Stock");
+        btnInvetario1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnInvetario1.addActionListener(this::btnInvetario1btnGuardarCambiosPerformed);
 
         javax.swing.GroupLayout BarraNavLayout = new javax.swing.GroupLayout(BarraNav);
         BarraNav.setLayout(BarraNavLayout);
         BarraNavLayout.setHorizontalGroup(
             BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BarraNavLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFinanzas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnInvetario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCerrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(BarraNavLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(262, 262, 262))
+                    .addGroup(BarraNavLayout.createSequentialGroup()
+                        .addGroup(BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFinanzas, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnInvetario1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(BarraNavLayout.createSequentialGroup()
+                        .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         BarraNavLayout.setVerticalGroup(
             BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BarraNavLayout.createSequentialGroup()
-                .addGap(138, 138, 138)
+                .addGap(93, 93, 93)
                 .addComponent(btnFinanzas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnInvetario1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72)
+                .addGap(51, 51, 51)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(94, Short.MAX_VALUE))
         );
@@ -171,19 +189,18 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        Interfaz.setBackground(new java.awt.Color(255, 255, 255));
-        Interfaz.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
-
-        javax.swing.GroupLayout InterfazLayout = new javax.swing.GroupLayout(Interfaz);
-        Interfaz.setLayout(InterfazLayout);
-        InterfazLayout.setHorizontalGroup(
-            InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        InterfazLayout.setVerticalGroup(
-            InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -191,9 +208,9 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1))
             .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -203,37 +220,51 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnFinanzasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinanzasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinanzasActionPerformed
-
-    private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
-        activarBoton(btnMenu);
-        cargarPanel(new Menu());
-    }//GEN-LAST:event_btnMenuActionPerformed
-
-    private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInvetarioActionPerformed
-
-    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
-            this, "¿Desea cerrar sesión?", "Cerrar Sesión",
-            javax.swing.JOptionPane.YES_NO_OPTION
-        );
-        if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-            this.dispose();
-            new LoginGUI().setVisible(true);
+    private void configurarTabla(){
+    javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Nombre", "Unidad", "Stock","Stock Minimo", "Precio de Compra", "Cantidad por Piza"},0)
+    {
+        @Override
+        public boolean isCellEditable(int row, int column){
+        return column !=0;
         }
-    }//GEN-LAST:event_btnCerrarActionPerformed
+    };
+    jTable1.setModel(modelo);
+    jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);  // ID
+    jTable1.getColumnModel().getColumn(1).setPreferredWidth(150); // Nombre
+    jTable1.getColumnModel().getColumn(2).setPreferredWidth(70);  // Unidad
+    jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Stock
+    jTable1.getColumnModel().getColumn(4).setPreferredWidth(90);  // Stock Mínimo
+    jTable1.getColumnModel().getColumn(5).setPreferredWidth(120); // Precio
+    jTable1.getColumnModel().getColumn(6).setPreferredWidth(120); //Cantidad por Pizza
+    }
+    private void btnBuscarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarInsumoActionPerformed
+        new BuscarInsumos().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBuscarInsumoActionPerformed
+
+    private void btnGuardarCambiosPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuardarCambiosPerformed
+
+    private void btnVolverPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverPerformed
+        new PlantillaGerente().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverPerformed
+
+    private void btnAgregarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarInsumoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarInsumoActionPerformed
+
+    private void btnInvetario1btnGuardarCambiosPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetario1btnGuardarCambiosPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInvetario1btnGuardarCambiosPerformed
 
     /**
      * @param args the command line arguments
@@ -263,17 +294,19 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BarraNav;
     private javax.swing.JPanel Encabezado;
-    private javax.swing.JPanel Interfaz;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnFinanzas;
     private javax.swing.JButton btnInvetario;
+    private javax.swing.JButton btnInvetario1;
     private javax.swing.JButton btnMenu;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
