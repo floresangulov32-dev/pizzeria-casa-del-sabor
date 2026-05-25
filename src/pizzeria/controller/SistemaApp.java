@@ -61,11 +61,11 @@ public class SistemaApp{
 
         ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
         menu = new Menu(productos, archivoMenu.cargarCombos("resources/data/combos.txt", productos));
-
-        superMenu = new SuperMenu(menu, archivoMenu);
-
-        consolaInventario = new ConsolaInventario();
-
+        
+        consolaInventario = new ConsolaInventario();  
+        
+        superMenu = new SuperMenu(menu, archivoMenu, consolaInventario.getInventario());
+        
         gestorReserva = new GestorReserva();
         gestorCocina = new GestorCocina(consolaInventario.getInventario(), menu);
         gestorVenta = new GestorVenta(menu, consolaInventario.getInventario(), gestorFinanzas, gestorReserva, gestorCocina);
