@@ -9,8 +9,10 @@ import pizzeria.model.Reserva;
 import pizzeria.model.Venta;
 import pizzeria.model.Producto;
 import pizzeria.model.Combo;
+import pizzeria.model.TipoProducto;
 import pizzeria.model.MetodoPago;
 import pizzeria.model.DetalleVenta;
+import pizzeria.model.DetalleCombo;
 import pizzeria.view.Consola;
 
 
@@ -26,7 +28,7 @@ import java.util.List;
 
 public class GestorVenta {
 
-    private static final String ARCHIVO_VENTAS = "resources/data/ventas.txt";
+    private static final String ARCHIVO_VENTAS = "ventas.txt";
 
     private ArrayList<Venta> listaVenta;
     private Menu menu;
@@ -54,6 +56,7 @@ public class GestorVenta {
         return ventaActual;
     }
 
+    // Muestra el menú principal del módulo de ventas
     public void menuVentas(int idCajero) {
         int opcion;
         ArrayList<Producto> productos = menu.getProductos();
@@ -79,6 +82,7 @@ public class GestorVenta {
         } while (opcion != 0);
     }
 
+    // Inicia el armado de un pedido nuevo
     private void menuNuevoPedido(int idCajero, ArrayList<Producto> productos) {
         crearVenta(idCajero);
         Consola.titulo("NUEVO PEDIDO #" + ventaActual.getId());
@@ -105,7 +109,7 @@ public class GestorVenta {
                 case 3 -> menuQuitarItem();
                 case 4 -> verItemsActuales();
                 case 5 -> {
-                    if (ventaActual.getItems().isEmpty()) {
+                    if (ventaActual.estaVacio()) {
                         System.out.println(" No hay productos en el pedido.");
                     } else {
                         boolean finalizado = menuCobrarYDefinirDestino();
@@ -123,6 +127,7 @@ public class GestorVenta {
         } while (opcion != 0);
     }
 
+    // Permite agregar un producto individual al pedido actual
     private void menuAgregarItem(ArrayList<Producto> productos) {
         Consola.titulo("AGREGAR PRODUCTO");
 
@@ -163,13 +168,37 @@ public class GestorVenta {
             Consola.pausar();
             return;
         }
+        
+        // Verificar stock antes de agregar
+        boolean stockInsuficiente = false;
+        for (int idInsumo : prod.getIngredientes()) {
+            Insumo insumo = inventario.buscarId(idInsumo);
+            if (insumo == null) continue;
+            double requerido = insumo.getCantidadPorPizza() * cant;
+            if (requerido > insumo.getStockActual()) {
+                if (!stockInsuficiente) {
+                    Consola.separador();
+                    System.out.println(" ⚠ PEDIDO BLOQUEADO - Stock insuficiente:");
+                    stockInsuficiente = true;
+                }
+                System.out.printf("   [!] '%s': necesita %.3f, disponible %.3f%n",
+                    insumo.getNombre(), requerido, insumo.getStockActual());
+            }
+        }
 
+        if (stockInsuficiente) {
+            System.out.println(" El producto no pudo ser agregado.");
+            Consola.separador();
+            Consola.pausar();
+            return;
+        }
         agregarItem(prod, cant);
 
         System.out.printf(" Agregado: %dx %s%n", cant, prod.getNombre());
         Consola.pausar();
     }
 
+    // Permite agregar un combo al pedido actual como un elemento único con su precio total
     private void menuAgregarCombo() {
         ArrayList<Combo> combos = menu.getCombos();
 
@@ -222,61 +251,83 @@ public class GestorVenta {
             return;
         }
 
-        ArrayList<Producto> prods = combo.getCombo();
-        double precioTotal = 0;
-
-        for (Producto p : prods) {
-            precioTotal += p.getPrecio();
-        }
-
-        for (Producto p : prods) {
-            double proporcion;
-            if (precioTotal > 0) {
-                proporcion = p.getPrecio() / precioTotal;
-            } else {
-                proporcion = 1.0 / prods.size();
+        // Verificar stock de los productos del combo antes de agregar
+        boolean stockInsuficiente = false;
+        for (Producto p : combo.getCombo()) {
+            for (int idInsumo : p.getIngredientes()) {
+                Insumo insumo = inventario.buscarId(idInsumo);
+                if (insumo == null) continue;
+                double requerido = insumo.getCantidadPorPizza() * cant;
+                if (requerido > insumo.getStockActual()) {
+                    if (!stockInsuficiente) {
+                        Consola.separador();
+                        System.out.println(" ⚠ PEDIDO BLOQUEADO - Stock insuficiente:");
+                        stockInsuficiente = true;
+                    }
+                    System.out.printf("   [!] '%s' para '%s': necesita %.3f, disponible %.3f%n",
+                        insumo.getNombre(), p.getNombre(), requerido, insumo.getStockActual());
+                }
             }
-
-            double precioAjustado = combo.getPrecio() * proporcion;
-
-            Producto pAjustado = new Producto(p.getID(), p.getNombre(), p.getDescripcion(), precioAjustado);
-            pAjustado.getIngredientes().addAll(p.getIngredientes());
-
-            agregarItem(pAjustado, cant);
         }
+
+        if (stockInsuficiente) {
+            System.out.println(" El combo no pudo ser agregado.");
+            Consola.separador();
+            Consola.pausar();
+            return;
+        }
+
+        // Agregar el combo como un elemento único — sin modificar precios de productos
+        agregarCombo(combo, cant);
 
         System.out.printf(" Combo #%d agregado x%d — Bs.%.2f c/u%n", nro, cant, combo.getPrecio());
         Consola.pausar();
     }
 
-
+    // Permite quitar un item o combo del pedido actual
     private void menuQuitarItem() {
-        if (ventaActual.getItems().isEmpty()) {
+        if (ventaActual.estaVacio()) {
             System.out.println(" No hay productos en el pedido.");
             return;
         }
 
-        Consola.titulo("QUITAR PRODUCTO");
+        Consola.titulo("QUITAR PRODUCTO / COMBO");
         mostrarItemsSinPausa();
 
+        ArrayList<DetalleVenta> items = ventaActual.getItems();
+        ArrayList<DetalleCombo> combos = ventaActual.getCombos();
+        int totalItems = items.size() + combos.size();
+
         Integer index = Consola.leerEnteroCancelable(
-                "Índice del producto a quitar (1 - " + ventaActual.getItems().size() + ")");
+                "Índice del producto/combo a quitar (1 - " + totalItems + ")");
 
         if (index == null) {
             System.out.println(" Acción cancelada.");
             return;
         }
 
-        if (index < 1 || index > ventaActual.getItems().size()) {
+        if (index < 1 || index > totalItems) {
             System.out.println(" Índice inválido.");
             Consola.pausar();
             return;
         }
 
-        String nombre = ventaActual.getItems().get(index - 1).getProducto().getNombre();
+        String nombre;
+        if (index <= items.size()) {
+            nombre = items.get(index - 1).getProducto().getNombre();
+        } else {
+            int comboIdx = index - items.size() - 1;
+            nombre = "COMBO #" + combos.get(comboIdx).getNroCombo();
+        }
 
-        if (Consola.confirmar("¿Está seguro de quitar este producto?")) {
-            quitarItem(index - 1);
+        if (Consola.confirmar("¿Está seguro de quitar este elemento?")) {
+            if (index <= items.size()) {
+                quitarItem(index - 1);
+            } else {
+                int comboIdx = index - items.size() - 1;
+                combos.remove(comboIdx);
+                ventaActual.calcularTotal();
+            }
             System.out.println(" Eliminado: " + nombre);
         } else {
             System.out.println(" No se eliminó ningún producto.");
@@ -285,13 +336,18 @@ public class GestorVenta {
         Consola.pausar();
     }
 
+    // Muestra los items del pedido actual
     private void verItemsActuales() {
         Consola.titulo("ITEMS DEL PEDIDO ACTUAL");
-        if (ventaActual.getItems().isEmpty()) {
+        if (ventaActual.estaVacio()) {
             System.out.println(" (sin productos)");
         } else {
-            for (int i = 0; i < ventaActual.getItems().size(); i++) {
-                System.out.printf(" [%d] %s%n", i + 1, ventaActual.getItems().get(i));
+            int idx = 1;
+            for (DetalleVenta d : ventaActual.getItems()) {
+                System.out.printf(" [%d] %s%n", idx++, d);
+            }
+            for (DetalleCombo c : ventaActual.getCombos()) {
+                System.out.printf(" [%d] %s%n", idx++, c.toStringDetallado());
             }
 
             Consola.separador();
@@ -300,20 +356,26 @@ public class GestorVenta {
         Consola.pausar();
     }
 
+    // Muestra los items actuales sin pausar
     private void mostrarItemsSinPausa() {
-        if (ventaActual.getItems().isEmpty()) {
+        if (ventaActual.estaVacio()) {
             System.out.println(" (sin productos)");
             return;
         }
 
-        for (int i = 0; i < ventaActual.getItems().size(); i++) {
-            System.out.printf(" [%d] %s%n", i + 1, ventaActual.getItems().get(i));
+        int idx = 1;
+        for (DetalleVenta d : ventaActual.getItems()) {
+            System.out.printf(" [%d] %s%n", idx++, d);
+        }
+        for (DetalleCombo c : ventaActual.getCombos()) {
+            System.out.printf(" [%d] %s%n", idx++, c.toStringDetallado());
         }
 
         Consola.separador();
         System.out.printf(" Total: Bs.%.2f%n", ventaActual.getTotal());
     }
-  
+
+    // Cobra el pedido actual y permite elegir si será venta inmediata o reserva
     private boolean menuCobrarYDefinirDestino() {
         Consola.titulo("COBRO DEL PEDIDO");
 
@@ -397,6 +459,7 @@ public class GestorVenta {
         return true;
     }
 
+    // Convierte el pedido actual en una venta inmediata pagada y la envía a cocina
     private void finalizarVentaInmediata(MetodoPago metodo, double montoPagado) {
         if (ventaActual == null) {
             return;
@@ -409,17 +472,21 @@ public class GestorVenta {
 
         Venta ventaFinalizada = ventaActual;
         listaVenta.add(ventaFinalizada);
-
+        
+        //descuenta el stock al confirmar la venta
+        ventaFinalizada.descontarInsumos(inventario, menu);
+        
         registrarCobro(ventaFinalizada.getTotal(), metodo, ventaFinalizada.getCambio(),
                 "Venta inmediata #" + ventaFinalizada.getId());
 
         gestorCocina.agregarVentaACocina(ventaFinalizada);
 
         guardarArchivo();
-        generarFactura(ventaFinalizada);
+        preguntarYGenerarFactura(ventaFinalizada);
         ventaActual = null;
     }
-   
+
+    // Convierte el pedido actual en una reserva pagada
     private void registrarReservaPagada(MetodoPago metodo, double montoPagado) {
         if (ventaActual == null) {
             return;
@@ -448,17 +515,19 @@ public class GestorVenta {
         ventaActual.calcularCambio(montoPagado);
 
         List<DetalleVenta> copiaPedido = copiarItems(ventaActual.getItems());
+        ArrayList<DetalleCombo> copiaCombos = copiarCombos(ventaActual.getCombos());
         Reserva reserva = gestorReserva.nuevaReserva(nombreReserva, telefono, fechaReserva, copiaPedido);
 
         registrarCobro(reserva.calcularTotal(), metodo, ventaActual.getCambio(),
                 "Reserva #" + reserva.getId());
 
-        gestorReserva.guardarArchivo("resources/data/reservas.txt");
+        gestorReserva.guardarArchivo("reservas.txt");
         generarConfirmacionReserva(reserva);
 
         ventaActual = null;
     }
 
+    // Registra en caja el ingreso y, si corresponde, el egreso por cambio
     private void registrarCobro(double total, MetodoPago metodo, double cambio, String descripcion) {
         if (gestorFinanzas != null) {
             gestorFinanzas.registrarIngreso(
@@ -477,6 +546,7 @@ public class GestorVenta {
         }
     }
 
+    // Muestra el historial de ventas registradas
     private void verHistorial() {
         Consola.titulo("HISTORIAL DE VENTAS");
         if (listaVenta.isEmpty()) {
@@ -499,6 +569,7 @@ public class GestorVenta {
         Consola.pausar();
     }
 
+    // Busca una venta por ID y la muestra completa
     private void buscarVentaMenu() {
         Consola.titulo("BUSCAR VENTA");
 
@@ -555,6 +626,7 @@ public class GestorVenta {
         Consola.pausar();
     }
 
+    // Crea una nueva venta temporal para comenzar a armar un pedido
     public void crearVenta(int idCajero) {
         int nuevoId;
         if (listaVenta.isEmpty()) {
@@ -566,6 +638,23 @@ public class GestorVenta {
         ventaActual = new Venta(nuevoId, idCajero);
     }
 
+    // Agrega un combo al pedido actual, o aumenta su cantidad si ya estaba
+    public void agregarCombo(Combo combo, int cantidad) {
+        if (ventaActual == null) return;
+
+        for (DetalleCombo dc : ventaActual.getCombos()) {
+            if (dc.getNroCombo() == combo.getNroCombo()) {
+                dc.setCantidad(dc.getCantidad() + cantidad);
+                ventaActual.calcularTotal();
+                return;
+            }
+        }
+
+        ventaActual.getCombos().add(new DetalleCombo(combo, cantidad));
+        ventaActual.calcularTotal();
+    }
+
+    // Agrega un item al pedido actual o aumenta cantidad si ya existía
     public void agregarItem(Producto p, int cantidad) {
         if (ventaActual == null) {
             return;
@@ -583,6 +672,7 @@ public class GestorVenta {
         ventaActual.calcularTotal();
     }
 
+    // Quita un item del pedido actual según su índice
     public void quitarItem(int index) {
         if (ventaActual == null) {
             return;
@@ -596,6 +686,7 @@ public class GestorVenta {
         }
     }
 
+    // Cancela el armado del pedido actual antes de cobrarlo
     public void cancelarArmadoPedido() {
         if (ventaActual != null) {
             System.out.println(" Pedido en armado cancelado.");
@@ -603,6 +694,7 @@ public class GestorVenta {
         }
     }
 
+    // Cancela una venta ya pagada si todavía no fue entregada y registra su reembolso
     public boolean cancelarVentaPagada(int idVenta) {
         Venta venta = buscarVentaPorId(idVenta);
 
@@ -630,11 +722,91 @@ public class GestorVenta {
         return true;
     }
 
-    // Genera la factura de una venta inmediata
-    public void generarFactura(Venta v) {
-        Consola.titulo("FACTURA");
+    // Pregunta al cajero si el cliente desea factura y actúa en consecuencia
+    private void preguntarYGenerarFactura(Venta v) {
+        Consola.titulo("COMPROBANTE DE VENTA");
         System.out.println(v);
-        System.out.println(" Gracias por su preferencia — Pizzería");
+        System.out.println(" Gracias por su preferencia — La casa del Sabor");
+        Consola.separador();
+
+        if (!Consola.confirmar("¿El cliente desea factura?")) {
+            return;
+        }
+
+        // Pedir datos de facturación
+        String nit = Consola.leerTexto("NIT del cliente: ");
+        String razonSocial = Consola.leerTexto("Nombre / Razón Social: ");
+
+        generarFacturaOficial(v, nit, razonSocial);
+    }
+
+    // Genera e imprime la factura oficial con los datos de la pizzería y del cliente
+    public void generarFacturaOficial(Venta v, String nit, String razonSocial) {
+        String linea  = " " + "=".repeat(58);
+        String lineaD = " " + "-".repeat(58);
+
+        System.out.println();
+        System.out.println(linea);
+        System.out.println(centrar("LA CASA DEL SABOR", 60));
+        System.out.println(centrar("Pje. Suiza 1645, Cochabamba", 60));
+        System.out.println(centrar("Tel. 62620262  —  Cochabamba-Bolivia", 60));
+        System.out.println(linea);
+        System.out.println(centrar("F A C T U R A", 60));
+        System.out.println(linea);
+        System.out.printf(" NIT:          %s%n", nit);
+        System.out.printf(" Razón Social: %s%n", razonSocial);
+        System.out.printf(" Fecha:        %s%n", v.getFecha().format(Venta.FORMATO_FECHA));
+        System.out.printf(" N° Venta:     %d%n", v.getId());
+        System.out.println(lineaD);
+        System.out.printf(" %-22s  %4s  %10s  %10s%n",
+                "Descripción", "Cant", "P.Unit (Bs)", "Total (Bs)");
+        System.out.println(lineaD);
+
+        // Productos individuales
+        for (DetalleVenta d : v.getItems()) {
+            System.out.printf(" %-22s  %4d  %10.2f  %10.2f%n",
+                    d.getProducto().getNombre(),
+                    d.getCantidad(),
+                    d.getProducto().getPrecio(),
+                    d.getSubTotal());
+        }
+
+        // Combos como elemento único con su precio total sin distribuir
+        for (DetalleCombo c : v.getCombos()) {
+            System.out.printf(" %-22s  %4d  %10.2f  %10.2f%n",
+                    "COMBO #" + c.getNroCombo(),
+                    c.getCantidad(),
+                    c.getPrecioUnitario(),
+                    c.getSubTotal());
+            System.out.printf("   ( %s )%n", c.getDescripcion());
+        }
+
+        System.out.println(lineaD);
+        System.out.printf(" %-39s %10.2f Bs.%n", "TOTAL:", v.getTotal());
+
+        if (v.getCambio() > 0) {
+            System.out.printf(" %-39s %10.2f Bs.%n", "CAMBIO:", v.getCambio());
+        }
+
+        System.out.printf(" Método de pago: %s%n", v.getMetodoPago().getNombre());
+        System.out.println(linea);
+        System.out.println(centrar("¡Gracias por su preferencia!", 60));
+        System.out.println(linea);
+        System.out.println();
+    }
+
+    // Centra un texto en un ancho dado con espacios
+    private String centrar(String texto, int ancho) {
+        if (texto.length() >= ancho) return texto;
+        int espacios = (ancho - texto.length()) / 2;
+        return " ".repeat(espacios) + texto;
+    }
+
+    // Genera la factura de una venta inmediata (comprobante simple sin datos de facturación)
+    public void generarFactura(Venta v) {
+        Consola.titulo("COMPROBANTE DE VENTA");
+        System.out.println(v);
+        System.out.println(" Gracias por su preferencia — La casa del Sabor");
         Consola.separador();
     }
 
@@ -660,6 +832,7 @@ public class GestorVenta {
     private boolean hayStockSuficienteParaPedido(List<DetalleVenta> items) {
         HashMap<Integer, Double> requeridoPorInsumo = new HashMap<>();
 
+        // Verificar insumos de productos individuales
         for (DetalleVenta detalle : items) {
             Producto productoCompleto = menu.buscarProducto(detalle.getProducto().getID());
 
@@ -685,6 +858,30 @@ public class GestorVenta {
             }
         }
 
+        // Verificar insumos de los combos
+        for (DetalleCombo dc : ventaActual.getCombos()) {
+            Combo combo = menu.buscarCombo(dc.getNroCombo());
+            if (combo == null) continue;
+
+            for (Producto p : combo.getCombo()) {
+                Producto productoCompleto = menu.buscarProducto(p.getID());
+                if (productoCompleto == null) productoCompleto = p;
+
+                for (int idInsumo : productoCompleto.getIngredientes()) {
+                    Insumo insumo = inventario.buscarId(idInsumo);
+                    if (insumo == null) continue;
+
+                    double requerido = insumo.getCantidadPorPizza() * dc.getCantidad();
+
+                    if (requeridoPorInsumo.containsKey(idInsumo)) {
+                        requerido += requeridoPorInsumo.get(idInsumo);
+                    }
+
+                    requeridoPorInsumo.put(idInsumo, requerido);
+                }
+            }
+        }
+
         boolean suficiente = true;
 
         for (Integer idInsumo : requeridoPorInsumo.keySet()) {
@@ -701,6 +898,7 @@ public class GestorVenta {
         return suficiente;
     }
 
+    // Guarda las ventas en archivo
     public void guardarArchivo() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO_VENTAS))) {
             bw.write("# Sistema Pizzería — Ventas");
@@ -717,6 +915,7 @@ public class GestorVenta {
         }
     }
 
+    // Carga las ventas desde archivo y reconstruye los productos usando el menú real cuando es posible
     public void cargarArchivo() {
         listaVenta = new ArrayList<>();
 
@@ -767,10 +966,12 @@ public class GestorVenta {
 
             String itemsRaw = "";
 
-            if (partes.length == 8) {            
+            if (partes.length == 8) {
+                // Formato antiguo sin nombre de cliente
                 itemsRaw = partes[7].trim();
                 v.setNombreCliente("");
             } else {
+                // Formato nuevo con nombre de cliente
                 v.setNombreCliente(partes[7].trim());
                 itemsRaw = partes[8].trim();
             }
@@ -784,21 +985,33 @@ public class GestorVenta {
                         continue;
                     }
 
-                    int idProd = Integer.parseInt(d[0].trim());
-                    String nombre = d[1].trim();
-                    double precio = Double.parseDouble(d[2].trim().replace(",", "."));
-                    int cant = Integer.parseInt(d[3].trim());
-
-                    Producto prodMenu = menu.buscarProducto(idProd);
-                    Producto prod;
-
-                    if (prodMenu != null) {
-                        prod = prodMenu;
+                    // Detectar si es un combo serializado (empieza con "COMBO")
+                    if ("COMBO".equals(d[0].trim())) {
+                        // Formato: COMBO~nroCombo~descripcion~precioUnitario~cantidad
+                        if (d.length < 5) continue;
+                        int nroCombo = Integer.parseInt(d[1].trim());
+                        String descripcion = d[2].trim();
+                        double precioUnit = Double.parseDouble(d[3].trim().replace(",", "."));
+                        int cant = Integer.parseInt(d[4].trim());
+                        v.getCombos().add(new DetalleCombo(nroCombo, descripcion, precioUnit, cant));
                     } else {
-                        prod = new Producto(idProd, nombre, "", precio);
-                    }
+                        // Producto individual
+                        int idProd = Integer.parseInt(d[0].trim());
+                        String nombre = d[1].trim();
+                        double precio = Double.parseDouble(d[2].trim().replace(",", "."));
+                        int cant = Integer.parseInt(d[3].trim());
 
-                    v.getItems().add(new DetalleVenta(prod, cant));
+                        Producto prodMenu = menu.buscarProducto(idProd);
+                        Producto prod;
+
+                        if (prodMenu != null) {
+                            prod = prodMenu;
+                        } else {
+                            prod = new Producto(idProd, TipoProducto.PRODUCTO, nombre, "", precio);
+                        }
+
+                        v.getItems().add(new DetalleVenta(prod, cant));
+                    }
                 }
             }
 
@@ -809,17 +1022,28 @@ public class GestorVenta {
         }
     }
 
+    // Crea una copia de los items y combos para reutilizarlos al generar una reserva
     private List<DetalleVenta> copiarItems(ArrayList<DetalleVenta> origen) {
         List<DetalleVenta> copia = new ArrayList<>();
 
         for (DetalleVenta d : origen) {
             Producto p = d.getProducto();
-            Producto copiaProducto = new Producto(p.getID(), p.getNombre(), p.getDescripcion(), p.getPrecio());
+            Producto copiaProducto = new Producto(p.getID(), p.getTipo(), p.getNombre(), p.getDescripcion(), p.getPrecio());
             copiaProducto.getIngredientes().addAll(p.getIngredientes());
 
             copia.add(new DetalleVenta(copiaProducto, d.getCantidad()));
         }
 
+        return copia;
+    }
+
+    // Crea una copia de los combos para reutilizarlos al generar una reserva
+    private ArrayList<DetalleCombo> copiarCombos(ArrayList<DetalleCombo> origen) {
+        ArrayList<DetalleCombo> copia = new ArrayList<>();
+        for (DetalleCombo dc : origen) {
+            copia.add(new DetalleCombo(dc.getNroCombo(), dc.getDescripcion(),
+                                       dc.getPrecioUnitario(), dc.getCantidad()));
+        }
         return copia;
     }
 }

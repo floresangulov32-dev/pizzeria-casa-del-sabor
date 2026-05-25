@@ -61,3 +61,5 @@
 59|INGRESO|120,00|2026-04-12 21:09|Venta|Reserva #6
 60|EGRESO|30,00|2026-04-12 21:09|Otro|Cambio entregado de Reserva #6
 61|INGRESO|120,00|2026-04-12 21:19|Venta|Reserva #7
+62|INGRESO|240,00|2026-05-07 21:43|Venta|Venta inmediata #1
+63|EGRESO|60,00|2026-05-07 21:43|Otro|Cambio entregado de Venta inmediata #1

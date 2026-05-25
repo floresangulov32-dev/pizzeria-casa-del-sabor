@@ -10,17 +10,20 @@ public class Producto{
     private String descripcion;
     private double precio;
     private ArrayList <Integer> ingredientes;
+    private TipoProducto tipo;
     
-    public Producto(String nombre, String descripcion, double precio){
+    public Producto(String nombre, String descripcion, double precio, TipoProducto tipo){
         this.ID = contadorId++;
+        this.tipo = tipo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.ingredientes = new ArrayList<>();
     }
     
-    public Producto(int ID, String nombre, String descripcion, double precio){
+    public Producto(int ID, TipoProducto tipo, String nombre, String descripcion, double precio){
         this.ID = ID;
+        this.tipo = tipo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
@@ -30,6 +33,7 @@ public class Producto{
             contadorId = ID + 1;
         }
     }
+    
     
     public static void ajustarContador(int maxIdCargado){
         if(maxIdCargado >= contadorId){
@@ -81,6 +85,14 @@ public class Producto{
         this.precio = precio;
     }
     
+    public TipoProducto getTipo(){
+        return tipo;
+    }
+    
+    public void setTipo(TipoProducto tipo){
+        this.tipo = tipo;
+    }
+    
     public void agregarIngrediente(int i){
         ingredientes.add(i); 
     }
@@ -95,7 +107,7 @@ public class Producto{
     }
     
     public String verProducto(){
-        String res = "ID: "+ ID + " -- " + nombre + "\n" + descripcion + "\n" + precio + " Bs.\n";        
-        return res;
+        return String.format("[%02d] %-20s ....... %6.2f Bs", ID, nombre, precio);
     }
 }
+

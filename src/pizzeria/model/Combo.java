@@ -64,7 +64,7 @@ public class Combo{
             sb.append("  (sin productos)\n");
         }else{
             for(Producto p : combo){
-                sb.append("  ").append(p.verProducto()).append("\n");
+                sb.append(String.format("   - %-20s\n", p.getNombre()));
             }
         }
         sb.append(String.format("Precio total: %.2f Bs.%n", precio));

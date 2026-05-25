@@ -4,12 +4,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+
 public class Venta {
     public static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private int id;
     private LocalDateTime fecha;
     private ArrayList<DetalleVenta> items;
+    private ArrayList<DetalleCombo> combos;   // combos como elementos aparte
     private double total;
     private int idCajero;
     private MetodoPago metodoPago;
@@ -23,11 +25,20 @@ public class Venta {
         this.idCajero = idCajero;
         this.fecha = LocalDateTime.now();
         this.items = new ArrayList<>();
+        this.combos = new ArrayList<>();
         this.total = 0.0;
         this.cambio = 0.0;
         this.estado = EstadoPedido.PENDIENTE;
         this.metodoPago = MetodoPago.EFECTIVO;
         this.nombreCliente = "";
+    }
+
+    public ArrayList<DetalleCombo> getCombos() {
+        return combos;
+    }
+
+    public void setCombos(ArrayList<DetalleCombo> combos) {
+        this.combos = combos;
     }
 
     public int getId() {
@@ -123,12 +134,20 @@ public class Venta {
         }
     }
 
-    // Recalcula el total de la venta sumando los subtotales de todos los items
+    // Recalcula el total de la venta sumando subtotales de productos individuales y combos
     public void calcularTotal() {
         total = 0.0;
         for (DetalleVenta d : items) {
             total += d.getSubTotal();
         }
+        for (DetalleCombo c : combos) {
+            total += c.getSubTotal();
+        }
+    }
+
+    /** Indica si el pedido no tiene ni productos ni combos. */
+    public boolean estaVacio() {
+        return items.isEmpty() && combos.isEmpty();
     }
 
     // Calcula el cambio del cliente en caso de pago en efectivo
@@ -143,23 +162,31 @@ public class Venta {
 
     // Convierte la venta a texto para guardarla en archivo
     public String escribirTexto() {
-        String texto = id + "|"
-                + fecha.format(FORMATO_FECHA) + "|"
-                + idCajero + "|"
-                + metodoPago.name() + "|"
-                + String.format("%.2f", total).replace(",", ".") + "|"
-                + String.format("%.2f", cambio).replace(",", ".") + "|"
-                + estado.name() + "|"
-                + nombreCliente.replace("|", "/") + "|";
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append("|")
+          .append(fecha.format(FORMATO_FECHA)).append("|")
+          .append(idCajero).append("|")
+          .append(metodoPago.name()).append("|")
+          .append(String.format("%.2f", total).replace(",", ".")).append("|")
+          .append(String.format("%.2f", cambio).replace(",", ".")).append("|")
+          .append(estado.name()).append("|")
+          .append(nombreCliente.replace("|", "/")).append("|");
 
-        for (int i = 0; i < items.size(); i++) {
-            texto += items.get(i).escribirTexto();
-            if (i < items.size() - 1) {
-                texto += ";";
-            }
+        boolean primero = true;
+
+        for (DetalleVenta d : items) {
+            if (!primero) sb.append(";");
+            sb.append(d.escribirTexto());
+            primero = false;
         }
 
-        return texto;
+        for (DetalleCombo c : combos) {
+            if (!primero) sb.append(";");
+            sb.append(c.escribirTexto());
+            primero = false;
+        }
+
+        return sb.toString();
     }
 
     // Devuelve una representación visual completa de la venta
@@ -175,14 +202,50 @@ public class Venta {
 
         sb.append(String.format(" Estado: %-20s%n", estado));
         sb.append(" " + "-".repeat(58) + "\n");
+
         for (DetalleVenta d : items) {
             sb.append(d.toString()).append("\n");
         }
+
+        for (DetalleCombo c : combos) {
+            sb.append(c.toStringDetallado()).append("\n");
+        }
+
         sb.append(" " + "-".repeat(58) + "\n");
         sb.append(String.format(" %-38s TOTAL: Bs.%7.2f%n", "", total));
         if (cambio > 0) {
             sb.append(String.format(" %-38s CAMBIO: Bs.%6.2f%n", "", cambio));
         }
         return sb.toString();
+    }
+    
+    public void descontarInsumos(Inventario inventario, Menu menu){
+        // Descontar insumos de productos individuales
+        for(DetalleVenta detalle : items){
+            Producto productoCompleto = menu.buscarProducto(detalle.getProducto().getID());
+            if(productoCompleto == null) continue;
+            for(int idInsumo : productoCompleto.getIngredientes()){
+                Insumo insumo = inventario.buscarId(idInsumo);
+                if(insumo == null) continue;
+                double aDescontar = insumo.getCantidadPorPizza() * detalle.getCantidad();
+                inventario.descontarStock(idInsumo, aDescontar);
+            }
+        }
+
+        // Descontar insumos de los productos dentro de cada combo
+        for(DetalleCombo dc : combos){
+            Combo combo = menu.buscarCombo(dc.getNroCombo());
+            if(combo == null) continue;
+            for(Producto p : combo.getCombo()){
+                Producto productoCompleto = menu.buscarProducto(p.getID());
+                if(productoCompleto == null) productoCompleto = p;
+                for(int idInsumo : productoCompleto.getIngredientes()){
+                    Insumo insumo = inventario.buscarId(idInsumo);
+                    if(insumo == null) continue;
+                    double aDescontar = insumo.getCantidadPorPizza() * dc.getCantidad();
+                    inventario.descontarStock(idInsumo, aDescontar);
+                }
+            }
+        }
     }
 }
