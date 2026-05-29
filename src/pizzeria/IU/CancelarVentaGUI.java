@@ -146,7 +146,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                     .addGroup(EncabezadoLayout.createSequentialGroup()
                         .addGap(209, 209, 209)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1132, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1149, Short.MAX_VALUE)
                 .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -265,11 +265,13 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton3.setText("VOLVER A CONSULTAS");
         jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton4.setBackground(new java.awt.Color(168, 27, 29));
         jButton4.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("CONFIRMAR CANCELACION");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
@@ -371,7 +373,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jLabel12))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
@@ -394,10 +396,8 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         jLabel25.setForeground(new java.awt.Color(4, 74, 74));
         jLabel25.setText("que ya fue registrada y pagada.");
 
-        jLabel26.setForeground(new java.awt.Color(4, 74, 74));
         jLabel26.setText("Se registrará el reembolso correspondiente");
 
-        jLabel27.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         jLabel27.setText("¿Desea continuar?  ");
 
         jLabel28.setFont(new java.awt.Font("Liberation Sans", 1, 17)); // NOI18N
@@ -421,9 +421,9 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel28)
-                .addGap(18, 18, 18)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel24)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel25)
@@ -451,7 +451,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(53, 53, 53)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(608, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         InterfazLayout.setVerticalGroup(
             InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -468,7 +468,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(620, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
@@ -513,6 +513,8 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
+        new VentasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
@@ -533,6 +535,18 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         new LoginGUI().setVisible(true);
     }
     }//GEN-LAST:event_btnCerrarActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        new ConsultarVentasGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        new ConsultarVentasGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
     
     private void mostrarUsuario() {
     

@@ -265,6 +265,7 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         jButton2.setAlignmentX(345.0F);
         jButton2.setAlignmentY(145.0F);
         jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         jLabel9.setText("Venta N.º 001");
@@ -412,6 +413,8 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
+        new VentasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
@@ -435,7 +438,15 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        new NuevoPedidoGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        new ConsultarVentasGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     private void mostrarUsuario() {
     

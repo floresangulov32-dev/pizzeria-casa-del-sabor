@@ -259,11 +259,13 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton3.setText("VOLVER A VENTAS");
         jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton4.setBackground(new java.awt.Color(168, 27, 29));
         jButton4.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("CANCELAR VENTA PAGADA");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jLabel14.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel14.setText("Buscar por ID:");
@@ -476,6 +478,8 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
+        new VentasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
@@ -496,6 +500,18 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         new LoginGUI().setVisible(true);
     }
     }//GEN-LAST:event_btnCerrarActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        new VentasGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        new CancelarVentaGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
     
     private void mostrarUsuario() {
     
