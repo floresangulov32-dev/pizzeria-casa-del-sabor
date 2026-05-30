@@ -764,7 +764,9 @@ public class GestorVenta {
             return false;
         }
 
-        gestorCocina.cancelarPedidoPorVenta(idVenta);
+        if (gestorCocina != null) {
+            gestorCocina.cancelarPedidoPorVenta(idVenta);
+        }
         venta.setEstado(EstadoPedido.CANCELADO);
 
         if (gestorFinanzas != null) {

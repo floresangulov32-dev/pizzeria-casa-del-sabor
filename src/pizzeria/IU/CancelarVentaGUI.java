@@ -500,14 +500,59 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        javax.swing.JOptionPane.showMessageDialog(
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getVentaSeleccionadaConsulta();
+
+        if (venta == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No hay una venta seleccionada para cancelar.",
+                    "Venta no seleccionada",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
                 this,
-                "La cancelación real se conectará después de validar caja, estado y archivo de ventas.",
-                "Cancelación pendiente",
-                javax.swing.JOptionPane.INFORMATION_MESSAGE
+                "¿Está seguro de cancelar la venta N.º " + venta.getId()
+                        + "?\nSe registrará un reembolso de Bs. "
+                        + String.format("%.2f", venta.getTotal()) + ".",
+                "Confirmar cancelación",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
         );
-        new ConsultarVentasGUI().setVisible(true);
-        this.dispose();
+
+        if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean cancelada = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .cancelarVentaPagada(venta.getId());
+
+        if (cancelada) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Venta cancelada correctamente.\nReembolso registrado: Bs. "
+                            + String.format("%.2f", venta.getTotal()),
+                    "Cancelación exitosa",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(null);
+
+            new ConsultarVentasGUI().setVisible(true);
+            this.dispose();
+
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo cancelar la venta.\nPuede que ya esté entregada, cancelada o no exista.",
+                    "No se pudo cancelar",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
     
     private void mostrarUsuario() {

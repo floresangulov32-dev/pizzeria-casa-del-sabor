@@ -73,3 +73,4 @@
 71|EGRESO|180.00|2026-05-30 16:19|Otro|Cambio entregado de Venta inmediata #34
 72|INGRESO|80.00|2026-05-30 16:38|Venta|Venta inmediata #35
 73|EGRESO|220.00|2026-05-30 16:38|Otro|Cambio entregado de Venta inmediata #35
+74|EGRESO|80.00|2026-05-30 17:36|Otro|Reembolso venta #35
