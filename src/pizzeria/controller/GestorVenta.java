@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GestorVenta {
 
-    private static final String ARCHIVO_VENTAS = "ventas.txt";
+    private static final String ARCHIVO_VENTAS = "resources/data/ventas.txt";;
 
     private ArrayList<Venta> listaVenta;
     private Menu menu;
@@ -485,6 +485,46 @@ public class GestorVenta {
         preguntarYGenerarFactura(ventaFinalizada);
         ventaActual = null;
     }
+    
+    
+    public Venta finalizarVentaInmediataGUI(MetodoPago metodo, double montoPagado, String nombreCliente) {
+        if (ventaActual == null || ventaActual.estaVacio()) {
+            return null;
+        }
+
+        ventaActual.setNombreCliente(nombreCliente);
+        ventaActual.setMetodoPago(metodo);
+        ventaActual.calcularTotal();
+        ventaActual.calcularCambio(montoPagado);
+        ventaActual.setEstado(EstadoPedido.PENDIENTE);
+
+        if (ventaActual.getCambio() < 0) {
+            return null;
+        }
+
+        Venta ventaFinalizada = ventaActual;
+
+        listaVenta.add(ventaFinalizada);
+
+        ventaFinalizada.descontarInsumos(inventario, menu);
+
+        registrarCobro(
+                ventaFinalizada.getTotal(),
+                metodo,
+                ventaFinalizada.getCambio(),
+                "Venta inmediata #" + ventaFinalizada.getId()
+        );
+
+        if (gestorCocina != null) {
+            gestorCocina.agregarVentaACocina(ventaFinalizada);
+        }
+
+        guardarArchivo();
+
+        ventaActual = null;
+
+        return ventaFinalizada;
+    }
 
     // Convierte el pedido actual en una reserva pagada
     private void registrarReservaPagada(MetodoPago metodo, double montoPagado) {
@@ -685,6 +725,23 @@ public class GestorVenta {
             ventaActual.calcularTotal();
         }
     }
+    
+    //NUEVO METODO QUE QUITA COMBOS, SI YA SE TENIA IMPLEMENTADO SE PUEDE BORRAR
+    //////////////////////////////////////////////////////////////////////////
+    public void quitarCombo(int index) {
+        if (ventaActual == null) {
+            return;
+        }
+
+        java.util.ArrayList<pizzeria.model.DetalleCombo> combos = ventaActual.getCombos();
+
+        if (index >= 0 && index < combos.size()) {
+            combos.remove(index);
+            ventaActual.calcularTotal();
+        }
+    }
+    
+    ///////////////////////////////////////////////////////////////////////
 
     // Cancela el armado del pedido actual antes de cobrarlo
     public void cancelarArmadoPedido() {
@@ -707,7 +764,9 @@ public class GestorVenta {
             return false;
         }
 
-        gestorCocina.cancelarPedidoPorVenta(idVenta);
+        if (gestorCocina != null) {
+            gestorCocina.cancelarPedidoPorVenta(idVenta);
+        }
         venta.setEstado(EstadoPedido.CANCELADO);
 
         if (gestorFinanzas != null) {

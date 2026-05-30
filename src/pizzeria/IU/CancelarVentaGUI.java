@@ -24,6 +24,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        cargarVentaSeleccionada();
     }
     
    
@@ -41,7 +42,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     
-    
+    cargarVentaSeleccionada();
     
 }
 
@@ -79,19 +80,13 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
+        lblClienteCancelar = new javax.swing.JLabel();
+        lblEstadoCancelar = new javax.swing.JLabel();
+        lblVentaCancelar = new javax.swing.JLabel();
+        lblMetodoCancelar = new javax.swing.JLabel();
+        lblReembolsoCancelar = new javax.swing.JLabel();
+        lblTotalCancelar = new javax.swing.JLabel();
+        lblDetalleCancelar = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
@@ -282,36 +277,22 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
 
-        jLabel7.setText("Cliente:");
+        lblClienteCancelar.setText("Cliente:");
 
-        jLabel9.setText("Juan Pérez");
+        lblEstadoCancelar.setText("Metodo de pago:");
 
-        jLabel10.setText("Metodo de pago:");
+        lblVentaCancelar.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        lblVentaCancelar.setText("Venta N.º 001");
 
-        jLabel11.setText("Estado actual:");
+        lblMetodoCancelar.setText("Fecha:");
 
-        jLabel12.setText("Efectivo");
+        lblReembolsoCancelar.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
+        lblReembolsoCancelar.setText("Reembolso:");
 
-        jLabel13.setText("Pendiente");
+        lblTotalCancelar.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        lblTotalCancelar.setText("Total pagado:");
 
-        jLabel16.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        jLabel16.setText("Venta N.º 001");
-
-        jLabel17.setText("Fecha:");
-
-        jLabel18.setText("25/05/2026");
-
-        jLabel20.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        jLabel20.setText("Reembolso:");
-
-        jLabel21.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel21.setText("Total pagado:");
-
-        jLabel22.setFont(new java.awt.Font("Liberation Sans", 1, 17)); // NOI18N
-        jLabel22.setText("Bs. 45");
-
-        jLabel23.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
-        jLabel23.setText("Bs. 45");
+        lblDetalleCancelar.setText("Detalle: ");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -321,35 +302,22 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel16)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel17)
-                                    .addGap(102, 102, 102)
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel18))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jLabel20)
-                                        .addComponent(jLabel21))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel23, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(25, 25, 25))))
+                            .addComponent(lblClienteCancelar)
+                            .addComponent(jLabel3)
+                            .addComponent(lblVentaCancelar)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(147, 147, 147)
+                                .addComponent(jLabel6))
+                            .addComponent(lblMetodoCancelar))
+                        .addContainerGap(196, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDetalleCancelar)
+                            .addComponent(lblReembolsoCancelar)
+                            .addComponent(lblTotalCancelar)
+                            .addComponent(lblEstadoCancelar))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,34 +325,22 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel3)
                 .addGap(39, 39, 39)
-                .addComponent(jLabel16)
+                .addComponent(lblVentaCancelar)
+                .addGap(29, 29, 29)
+                .addComponent(lblClienteCancelar)
                 .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel17)
-                        .addComponent(jLabel18)))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel12))
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMetodoCancelar)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel13))
+                .addComponent(lblEstadoCancelar)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel22))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel23))
-                .addGap(8, 8, 8))
+                .addComponent(lblDetalleCancelar)
+                .addGap(29, 29, 29)
+                .addComponent(lblTotalCancelar)
+                .addGap(18, 18, 18)
+                .addComponent(lblReembolsoCancelar)
+                .addGap(26, 26, 26))
         );
 
         jPanel4.setBackground(new java.awt.Color(252, 235, 235));
@@ -466,8 +422,8 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addGap(30, 30, 30)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -544,8 +500,59 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        new ConsultarVentasGUI().setVisible(true);
-        this.dispose();
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getVentaSeleccionadaConsulta();
+
+        if (venta == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No hay una venta seleccionada para cancelar.",
+                    "Venta no seleccionada",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de cancelar la venta N.º " + venta.getId()
+                        + "?\nSe registrará un reembolso de Bs. "
+                        + String.format("%.2f", venta.getTotal()) + ".",
+                "Confirmar cancelación",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean cancelada = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .cancelarVentaPagada(venta.getId());
+
+        if (cancelada) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Venta cancelada correctamente.\nReembolso registrado: Bs. "
+                            + String.format("%.2f", venta.getTotal()),
+                    "Cancelación exitosa",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(null);
+
+            new ConsultarVentasGUI().setVisible(true);
+            this.dispose();
+
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo cancelar la venta.\nPuede que ya esté entregada, cancelada o no exista.",
+                    "No se pudo cancelar",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
     
     private void mostrarUsuario() {
@@ -604,6 +611,80 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    private void cargarVentaSeleccionada() {
+            pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                    .getVentaSeleccionadaConsulta();
+
+            if (venta == null) {
+                lblVentaCancelar.setText("Venta N.º -");
+                lblClienteCancelar.setText("Cliente: -");
+                lblMetodoCancelar.setText("Método de pago: -");
+                lblEstadoCancelar.setText("Estado actual: -");
+                lblTotalCancelar.setText("Total pagado: Bs. 0.00");
+                lblReembolsoCancelar.setText("Reembolso: Bs. 0.00");
+                lblDetalleCancelar.setText("Detalle: no se seleccionó ninguna venta");
+                return;
+            }
+
+            venta.calcularTotal();
+
+            lblVentaCancelar.setText("Venta N.º " + String.format("%03d", venta.getId()));
+            lblClienteCancelar.setText("Cliente: " + obtenerClienteVisual(venta));
+            lblMetodoCancelar.setText("Método de pago: " + venta.getMetodoPago());
+            lblEstadoCancelar.setText("Estado actual: " + venta.getEstado());
+            lblTotalCancelar.setText("Total pagado: Bs. " + String.format("%.2f", venta.getTotal()));
+            lblReembolsoCancelar.setText("Reembolso: Bs. " + String.format("%.2f", venta.getTotal()));
+            lblDetalleCancelar.setText("Detalle: " + obtenerDetalleVisual(venta));
+        }
+    
+    private String obtenerClienteVisual(pizzeria.model.Venta venta) {
+        String cliente = venta.getNombreCliente();
+
+        if (cliente == null || cliente.trim().isEmpty()) {
+            return "Sin nombre";
+        }
+
+        cliente = cliente.trim();
+
+        try {
+            Double.parseDouble(cliente);
+            return "Sin nombre";
+        } catch (NumberFormatException e) {
+            return cliente;
+        }
+    }
+    
+    private String obtenerDetalleVisual(pizzeria.model.Venta venta) {
+        StringBuilder detalle = new StringBuilder();
+
+        for (pizzeria.model.DetalleVenta item : venta.getItems()) {
+            if (detalle.length() > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(item.getCantidad())
+                    .append("x ")
+                    .append(item.getProducto().getNombre());
+        }
+
+        for (pizzeria.model.DetalleCombo combo : venta.getCombos()) {
+            if (detalle.length() > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(combo.getCantidad())
+                    .append("x Combo #")
+                    .append(combo.getNroCombo());
+        }
+
+        if (detalle.length() == 0) {
+            return "Sin detalle";
+        }
+
+        return detalle.toString();
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -642,19 +723,8 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
@@ -664,12 +734,17 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel lblClienteCancelar;
+    private javax.swing.JLabel lblDetalleCancelar;
+    private javax.swing.JLabel lblEstadoCancelar;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblMetodoCancelar;
+    private javax.swing.JLabel lblReembolsoCancelar;
+    private javax.swing.JLabel lblTotalCancelar;
+    private javax.swing.JLabel lblVentaCancelar;
     // End of variables declaration//GEN-END:variables
 }
