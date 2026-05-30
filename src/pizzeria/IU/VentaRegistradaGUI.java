@@ -517,31 +517,30 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
     }
     
     private void cargarDatosVentaRegistrada() {
-    pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
-            .getGestorVenta()
-            .getVentaActual();
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getUltimaVentaRegistrada();
 
-    ContextoVentasGUI contexto = ContextoVentasGUI.getInstancia();
+        ContextoVentasGUI contexto = ContextoVentasGUI.getInstancia();
 
-    if (venta == null) {
-        lblNumeroVentaRegistrada.setText("Venta N.º -");
+        if (venta == null) {
+            lblNumeroVentaRegistrada.setText("Venta N.º -");
+            lblClienteRegistrado.setText("Cliente: " + contexto.getClienteCobro());
+            lblMetodoPagoRegistrado.setText("Método de pago: " + contexto.getMetodoPagoCobro());
+            lblEstadoRegistrado.setText("Estado: Registrado");
+            lblTotalRegistrado.setText("Bs. 0.00");
+            lblCambioRegistrado.setText("Cambio: Bs. " + String.format("%.2f", contexto.getCambioCobro()));
+            return;
+        }
+
+        venta.calcularTotal();
+
+        lblNumeroVentaRegistrada.setText("Venta N.º " + String.format("%03d", venta.getId()));
         lblClienteRegistrado.setText("Cliente: " + contexto.getClienteCobro());
         lblMetodoPagoRegistrado.setText("Método de pago: " + contexto.getMetodoPagoCobro());
-        lblEstadoRegistrado.setText("Estado: Registrado");
-        lblTotalRegistrado.setText("Bs. 0.00");
+        lblEstadoRegistrado.setText("Estado: " + contexto.getTipoPedidoCobro() + " registrada");
+        lblTotalRegistrado.setText("Bs. " + String.format("%.2f", venta.getTotal()));
         lblCambioRegistrado.setText("Cambio: Bs. " + String.format("%.2f", contexto.getCambioCobro()));
-        return;
     }
-
-    venta.calcularTotal();
-
-    lblNumeroVentaRegistrada.setText("Venta N.º " + String.format("%03d", venta.getId()));
-    lblClienteRegistrado.setText("Cliente: " + contexto.getClienteCobro());
-    lblMetodoPagoRegistrado.setText("Método de pago: " + contexto.getMetodoPagoCobro());
-    lblEstadoRegistrado.setText("Estado: " + contexto.getTipoPedidoCobro() + " registrada");
-    lblTotalRegistrado.setText("Bs. " + String.format("%.2f", venta.getTotal()));
-    lblCambioRegistrado.setText("Cambio: Bs. " + String.format("%.2f", contexto.getCambioCobro()));
-}
     
     
     

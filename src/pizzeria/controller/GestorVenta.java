@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GestorVenta {
 
-    private static final String ARCHIVO_VENTAS = "ventas.txt";
+    private static final String ARCHIVO_VENTAS = "resources/data/ventas.txt";;
 
     private ArrayList<Venta> listaVenta;
     private Menu menu;
@@ -484,6 +484,46 @@ public class GestorVenta {
         guardarArchivo();
         preguntarYGenerarFactura(ventaFinalizada);
         ventaActual = null;
+    }
+    
+    
+    public Venta finalizarVentaInmediataGUI(MetodoPago metodo, double montoPagado, String nombreCliente) {
+        if (ventaActual == null || ventaActual.estaVacio()) {
+            return null;
+        }
+
+        ventaActual.setNombreCliente(nombreCliente);
+        ventaActual.setMetodoPago(metodo);
+        ventaActual.calcularTotal();
+        ventaActual.calcularCambio(montoPagado);
+        ventaActual.setEstado(EstadoPedido.PENDIENTE);
+
+        if (ventaActual.getCambio() < 0) {
+            return null;
+        }
+
+        Venta ventaFinalizada = ventaActual;
+
+        listaVenta.add(ventaFinalizada);
+
+        ventaFinalizada.descontarInsumos(inventario, menu);
+
+        registrarCobro(
+                ventaFinalizada.getTotal(),
+                metodo,
+                ventaFinalizada.getCambio(),
+                "Venta inmediata #" + ventaFinalizada.getId()
+        );
+
+        if (gestorCocina != null) {
+            gestorCocina.agregarVentaACocina(ventaFinalizada);
+        }
+
+        guardarArchivo();
+
+        ventaActual = null;
+
+        return ventaFinalizada;
     }
 
     // Convierte el pedido actual en una reserva pagada

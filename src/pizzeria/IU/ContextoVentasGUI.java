@@ -22,6 +22,7 @@ public class ContextoVentasGUI {
     private String tipoPedidoCobro = "Venta inmediata";
     private double montoRecibidoCobro = 0.0;
     private double cambioCobro = 0.0;
+    private pizzeria.model.Venta ultimaVentaRegistrada;
 
     private ContextoVentasGUI() {
         ArchivoMenu archivoMenu = new ArchivoMenu();
@@ -33,6 +34,8 @@ public class ContextoVentasGUI {
                 productos,
                 archivoMenu.cargarCombos("resources/data/combos.txt", productos)
         );
+        
+        
 
         Inventario inventario = new Inventario();
         inventario.cargarArchivo("resources/data/Insumos.txt");
@@ -53,6 +56,7 @@ public class ContextoVentasGUI {
         );
 
         gestorVenta.cargarArchivo();
+     
     }
 
     public static ContextoVentasGUI getInstancia() {
@@ -102,6 +106,15 @@ public class ContextoVentasGUI {
 
     public double getCambioCobro() {
         return cambioCobro;
+    }
+    
+    
+    public void setUltimaVentaRegistrada(pizzeria.model.Venta venta) {
+    this.ultimaVentaRegistrada = venta;
+    }
+
+    public pizzeria.model.Venta getUltimaVentaRegistrada() {
+        return ultimaVentaRegistrada;
     }
     
 }

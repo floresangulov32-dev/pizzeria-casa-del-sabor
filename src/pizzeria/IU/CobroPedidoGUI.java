@@ -576,6 +576,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
         pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
             .getGestorVenta()
             .getVentaActual();
@@ -596,15 +597,8 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         cliente = "Sin nombre";
     }
 
-    String metodoPago;
-
-    if (rbEfectivo.isSelected()) {
-        metodoPago = "Efectivo";
-    } else if (rbQR.isSelected()) {
-        metodoPago = "QR / Transferencia";
-    } else {
-        metodoPago = "Tarjeta";
-    }
+    pizzeria.model.MetodoPago metodoEnum = obtenerMetodoPagoSeleccionado();
+    String metodoPago = metodoEnum.getNombre();
 
     String tipoPedido;
 
@@ -659,10 +653,35 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
             cambio
     );
 
-    venta.setNombreCliente(cliente);
+    if (rbReserva.isSelected()) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "El registro de reservas desde la interfaz se conectará después. Por ahora use Venta inmediata.",
+                "Reserva pendiente",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+        return;
+    }
+
+    pizzeria.model.Venta ventaFinalizada = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .finalizarVentaInmediataGUI(metodoEnum, montoRecibido, cliente);
+
+    if (ventaFinalizada == null) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "No se pudo registrar la venta. Revise el pedido o el monto recibido.",
+                "Error al registrar venta",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+    ContextoVentasGUI.getInstancia().setUltimaVentaRegistrada(ventaFinalizada);
 
     new VentaRegistradaGUI().setVisible(true);
     this.dispose();
+      
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -820,6 +839,17 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         rbTarjeta.addActionListener(e -> calcularCambio());
     }
     
+    private pizzeria.model.MetodoPago obtenerMetodoPagoSeleccionado() {
+        if (rbQR.isSelected()) {
+            return pizzeria.model.MetodoPago.QR;
+        }
+
+        if (rbTarjeta.isSelected()) {
+            return pizzeria.model.MetodoPago.TARJETA;
+        }
+
+        return pizzeria.model.MetodoPago.EFECTIVO;
+    }
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
