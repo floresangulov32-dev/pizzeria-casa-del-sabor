@@ -23,6 +23,7 @@ public class ContextoVentasGUI {
     private double montoRecibidoCobro = 0.0;
     private double cambioCobro = 0.0;
     private pizzeria.model.Venta ultimaVentaRegistrada;
+    private pizzeria.model.Venta ventaSeleccionadaConsulta;
 
     private ContextoVentasGUI() {
         ArchivoMenu archivoMenu = new ArchivoMenu();
@@ -115,6 +116,14 @@ public class ContextoVentasGUI {
 
     public pizzeria.model.Venta getUltimaVentaRegistrada() {
         return ultimaVentaRegistrada;
+    }
+    
+    public void setVentaSeleccionadaConsulta(pizzeria.model.Venta venta) {
+        this.ventaSeleccionadaConsulta = venta;
+    }
+
+    public pizzeria.model.Venta getVentaSeleccionadaConsulta() {
+        return ventaSeleccionadaConsulta;
     }
     
 }

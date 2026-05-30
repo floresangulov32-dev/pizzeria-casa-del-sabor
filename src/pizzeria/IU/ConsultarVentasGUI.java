@@ -505,6 +505,19 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        pizzeria.model.Venta ventaSeleccionada = ContextoVentasGUI.getInstancia()
+            .getVentaSeleccionadaConsulta();
+
+        if (ventaSeleccionada == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione una venta de la tabla antes de continuar.",
+                    "Venta no seleccionada",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         new CancelarVentaGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -623,6 +636,8 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
             lblTotalSeleccionado.setText("Total: -");
             lblEstadoSeleccionado.setText("Estado: -");
             lblDetalleSeleccionado.setText("Detalle: seleccione una venta de la tabla");
+            
+            ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(null);
         }
 
         private void mostrarVentaSeleccionada() {
@@ -641,6 +656,8 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         }
 
         pizzeria.model.Venta venta = ventasMostradas.get(filaModelo);
+        
+        ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(venta);
 
         lblVentaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
         lblClienteSeleccionado.setText("Cliente: " + obtenerClienteVisual(venta));
