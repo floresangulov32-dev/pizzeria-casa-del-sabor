@@ -24,6 +24,8 @@ public class AgregarComboGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarCombos();
     }
     
    
@@ -40,7 +42,7 @@ public class AgregarComboGUI extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     activarBoton(btnInicio);
-    
+    cargarCombos();
     
     
 }
@@ -435,6 +437,29 @@ public class AgregarComboGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un combo de la tabla.",
+                    "Combo no seleccionado",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int cantidad = (int) jSpinner1.getValue();
+
+        java.util.ArrayList<pizzeria.model.Combo> combos =
+                ContextoVentasGUI.getInstancia().getMenu().getCombos();
+
+        pizzeria.model.Combo comboSeleccionado = combos.get(fila);
+
+        ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .agregarCombo(comboSeleccionado, cantidad);
+
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -501,6 +526,47 @@ public class AgregarComboGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    //////////////////////NUEVO METODO DE CARGAR COMBOS
+    private void cargarCombos() {
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        java.util.ArrayList<pizzeria.model.Combo> combos =
+                ContextoVentasGUI.getInstancia().getMenu().getCombos();
+
+        System.out.println("Combos cargados en GUI: " + combos.size());
+
+        for (pizzeria.model.Combo combo : combos) {
+            modelo.addRow(new Object[]{
+                "Combo #" + combo.getNroCombo(),
+                obtenerContenidoCombo(combo),
+                "Bs. " + String.format("%.2f", combo.getPrecio())
+            });
+        }
+    }
+    
+    
+    
+    ///////////////////////2DO METODO AUXILIAR
+    private String obtenerContenidoCombo(pizzeria.model.Combo combo) {
+        StringBuilder contenido = new StringBuilder();
+
+        for (int i = 0; i < combo.getCombo().size(); i++) {
+            if (i > 0) {
+                contenido.append(" + ");
+            }
+
+            contenido.append(combo.getCombo().get(i).getNombre());
+        }
+
+        return contenido.toString();
+    }
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

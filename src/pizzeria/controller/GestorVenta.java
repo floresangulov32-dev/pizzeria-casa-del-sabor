@@ -685,6 +685,23 @@ public class GestorVenta {
             ventaActual.calcularTotal();
         }
     }
+    
+    //NUEVO METODO QUE QUITA COMBOS, SI YA SE TENIA IMPLEMENTADO SE PUEDE BORRAR
+    //////////////////////////////////////////////////////////////////////////
+    public void quitarCombo(int index) {
+        if (ventaActual == null) {
+            return;
+        }
+
+        java.util.ArrayList<pizzeria.model.DetalleCombo> combos = ventaActual.getCombos();
+
+        if (index >= 0 && index < combos.size()) {
+            combos.remove(index);
+            ventaActual.calcularTotal();
+        }
+    }
+    
+    ///////////////////////////////////////////////////////////////////////
 
     // Cancela el armado del pedido actual antes de cobrarlo
     public void cancelarArmadoPedido() {

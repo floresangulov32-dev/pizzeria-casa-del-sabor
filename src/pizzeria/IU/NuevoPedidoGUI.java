@@ -24,6 +24,8 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarPedidoActual();
     }
     
    
@@ -80,7 +82,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        jLabelTotal = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
@@ -307,9 +309,9 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
         jLabel12.setText("Bs. 0.00");
 
-        jLabel13.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel13.setText("Bs. 45.00");
+        jLabelTotal.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+        jLabelTotal.setForeground(new java.awt.Color(168, 27, 29));
+        jLabelTotal.setText("Bs. 45.00");
 
         jLabel14.setText("Descuento");
 
@@ -339,7 +341,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel12)
                                 .addComponent(jLabel11))
-                            .addComponent(jLabel13)))
+                            .addComponent(jLabelTotal)))
                     .addComponent(jLabel9))
                 .addContainerGap(30, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
@@ -366,7 +368,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(jLabel13))
+                    .addComponent(jLabelTotal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
@@ -594,6 +596,52 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    ////////////AQUI SE AGREGO EL NUEVO METODO PARA CARGAR PEDIDOS ACTUAL EN ESTA VENTANA
+    private void cargarPedidoActual() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        if (venta == null) {
+            return;
+        }
+
+        int numero = 1;
+
+        for (pizzeria.model.DetalleVenta detalle : venta.getItems()) {
+            modelo.addRow(new Object[]{
+                numero,
+                detalle.getProducto().getNombre(),
+                detalle.getCantidad(),
+                "Bs. " + String.format("%.2f", detalle.getSubTotal())
+            });
+            numero++;
+        }
+
+        for (pizzeria.model.DetalleCombo detalleCombo : venta.getCombos()) {
+            modelo.addRow(new Object[]{
+                numero,
+                "Combo #" + detalleCombo.getNroCombo(),
+                detalleCombo.getCantidad(),
+                "Bs. " + String.format("%.2f", detalleCombo.getSubTotal())
+            });
+            numero++;
+        }
+
+        venta.calcularTotal();
+
+        // Cambia jLabelTotal por el nombre real del label donde muestras el total.
+        // Ejemplo:
+        // jLabelTotal.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+        jLabelTotal.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+    }
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -636,7 +684,6 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel19;
@@ -646,6 +693,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelTotal;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
