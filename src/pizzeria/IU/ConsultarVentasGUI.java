@@ -6,6 +6,7 @@ package pizzeria.IU;
 
 public class ConsultarVentasGUI extends javax.swing.JFrame {
     
+    private java.util.ArrayList<pizzeria.model.Venta> ventasMostradas = new java.util.ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ConsultarVentasGUI.class.getName());
     private String nombreUsuario;
     private String rolUsuario;
@@ -24,26 +25,37 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarHistorialVentas();
+        txtBuscarVentaId.addActionListener(e -> buscarVentaPorId());
+        tblHistorialVentas.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                mostrarVentaSeleccionada();
+            }
+        });
     }
     
    
     
     public ConsultarVentasGUI(String rol, String nombre) {
-    initComponents();
-    setSize(1280, 720);
-    setLocationRelativeTo(null);
-    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
-    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
-    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
-    this.rolUsuario = rol;
-    this.nombreUsuario = nombre;
-    mostrarUsuario();
-    configurarHover();        
-    activarBoton(btnInicio);
-    
-    
-    
-}
+        initComponents();
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+        this.rolUsuario = rol;
+        this.nombreUsuario = nombre;
+        mostrarUsuario();
+        configurarHover();        
+        activarBoton(btnInicio);
+
+        cargarHistorialVentas();
+        ////por si acaso para buscar con enter en constructor con argumentos
+        ///
+        txtBuscarVentaId.addActionListener(e -> buscarVentaPorId());
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -77,21 +89,18 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        txtBuscarVentaId = new javax.swing.JTextField();
+        btnBuscarVenta = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblHistorialVentas = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        lblVentaSeleccionada = new javax.swing.JLabel();
+        lblClienteSeleccionado = new javax.swing.JLabel();
+        lblTotalSeleccionado = new javax.swing.JLabel();
+        lblEstadoSeleccionado = new javax.swing.JLabel();
+        lblDetalleSeleccionado = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -270,18 +279,19 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel14.setText("Buscar por ID:");
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        txtBuscarVentaId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
-        jButton5.setForeground(new java.awt.Color(168, 27, 29));
-        jButton5.setText("BUSCAR");
-        jButton5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(168, 27, 29)));
+        btnBuscarVenta.setForeground(new java.awt.Color(168, 27, 29));
+        btnBuscarVenta.setText("BUSCAR");
+        btnBuscarVenta.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(168, 27, 29)));
+        btnBuscarVenta.addActionListener(this::btnBuscarVentaActionPerformed);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel15.setFont(new java.awt.Font("Liberation Sans", 1, 17)); // NOI18N
         jLabel15.setText("HISTORIAL DE VENTAS");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblHistorialVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"001", "25/05/2026", "Juan Pérez", "Bs. 45", "Pendiente"},
                 {"002", "25/05/2026", "Ana López", "Bs. 80", "Entregado"},
@@ -289,32 +299,25 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Fecha", "Cliente", "Total", "Estado"
+                "ID", "Cliente", "Total", "Estado", "Metodo de Pago"
             }
         ));
-        jTable1.setRowHeight(25);
-        jScrollPane1.setViewportView(jTable1);
+        tblHistorialVentas.setRowHeight(25);
+        jScrollPane1.setViewportView(tblHistorialVentas);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
         jPanel2.setForeground(new java.awt.Color(252, 235, 235));
 
-        jLabel3.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel3.setText("Venta seleccionada:");
+        lblVentaSeleccionada.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        lblVentaSeleccionada.setText("Venta seleccionada:");
 
-        jLabel6.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel6.setText("N.º 001");
+        lblClienteSeleccionado.setText("Cliente:");
 
-        jLabel7.setText("Cliente:");
+        lblTotalSeleccionado.setText("Total:");
 
-        jLabel9.setText("Juan Pérez");
+        lblEstadoSeleccionado.setText("Estado:");
 
-        jLabel10.setText("Total:");
-
-        jLabel11.setText("Estado:");
-
-        jLabel12.setText("Bs. 45");
-
-        jLabel13.setText("Pendiente");
+        lblDetalleSeleccionado.setText("Detalle:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -324,38 +327,31 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel9)
-                        .addGap(100, 100, 100)
-                        .addComponent(jLabel10)
-                        .addGap(47, 47, 47)
-                        .addComponent(jLabel12)
-                        .addGap(104, 104, 104)
-                        .addComponent(jLabel11)
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel13))
+                        .addComponent(lblDetalleSeleccionado)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblVentaSeleccionada)
+                        .addContainerGap(601, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lblClienteSeleccionado)
+                        .addGap(221, 221, 221)
+                        .addComponent(lblTotalSeleccionado)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblEstadoSeleccionado)
+                        .addGap(186, 186, 186))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
+                .addComponent(lblVentaSeleccionada)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13))
+                    .addComponent(lblClienteSeleccionado)
+                    .addComponent(lblTotalSeleccionado)
+                    .addComponent(lblEstadoSeleccionado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(lblDetalleSeleccionado)
                 .addGap(18, 18, 18))
         );
 
@@ -384,7 +380,7 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -406,9 +402,9 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                                 .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel8))
                             .addGroup(InterfazLayout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtBuscarVentaId, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btnBuscarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(InterfazLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -429,8 +425,8 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBuscarVentaId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -512,6 +508,11 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         new CancelarVentaGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void btnBuscarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVentaActionPerformed
+        // TODO add your handling code here:
+        buscarVentaPorId();
+    }//GEN-LAST:event_btnBuscarVentaActionPerformed
     
     private void mostrarUsuario() {
     
@@ -569,6 +570,161 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    private void cargarHistorialVentas() {
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) tblHistorialVentas.getModel();
+
+        modelo.setRowCount(0);
+        ventasMostradas.clear();
+
+        java.util.ArrayList<pizzeria.model.Venta> ventas =
+                ContextoVentasGUI.getInstancia()
+                        .getGestorVenta()
+                        .getListaVenta();
+
+        System.out.println("Ventas cargadas en historial GUI: " + ventas.size());
+
+        for (pizzeria.model.Venta venta : ventas) {
+            ventasMostradas.add(venta);
+
+            modelo.addRow(new Object[]{
+                venta.getId(),
+                obtenerClienteVisual(venta),
+                "Bs. " + String.format("%.2f", venta.getTotal()),
+                venta.getEstado(),
+                venta.getMetodoPago()
+            });
+        }
+
+        limpiarVentaSeleccionada();
+    }
+    
+    private String obtenerClienteVisual(pizzeria.model.Venta venta) {
+        String cliente = venta.getNombreCliente();
+
+        if (cliente == null || cliente.trim().isEmpty()) {
+            return "Sin nombre";
+        }
+
+        cliente = cliente.trim();
+
+        try {
+            Double.parseDouble(cliente);
+            return "Sin nombre";
+        } catch (NumberFormatException e) {
+            return cliente;
+        }
+    }
+    
+    private void limpiarVentaSeleccionada() {
+            lblVentaSeleccionada.setText("Venta seleccionada: -");
+            lblClienteSeleccionado.setText("Cliente: -");
+            lblTotalSeleccionado.setText("Total: -");
+            lblEstadoSeleccionado.setText("Estado: -");
+            lblDetalleSeleccionado.setText("Detalle: seleccione una venta de la tabla");
+        }
+
+        private void mostrarVentaSeleccionada() {
+        int fila = tblHistorialVentas.getSelectedRow();
+
+        if (fila == -1) {
+            limpiarVentaSeleccionada();
+            return;
+        }
+
+        int filaModelo = tblHistorialVentas.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= ventasMostradas.size()) {
+            limpiarVentaSeleccionada();
+            return;
+        }
+
+        pizzeria.model.Venta venta = ventasMostradas.get(filaModelo);
+
+        lblVentaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
+        lblClienteSeleccionado.setText("Cliente: " + obtenerClienteVisual(venta));
+        lblTotalSeleccionado.setText("Total: Bs. " + String.format("%.2f", venta.getTotal()));
+        lblEstadoSeleccionado.setText("Estado: " + venta.getEstado());
+        lblDetalleSeleccionado.setText("Detalle: " + obtenerDetalleVisual(venta));
+    }
+    
+     private String obtenerDetalleVisual(pizzeria.model.Venta venta) {
+        StringBuilder detalle = new StringBuilder();
+
+        for (pizzeria.model.DetalleVenta item : venta.getItems()) {
+            if (detalle.length() > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(item.getCantidad())
+                    .append("x ")
+                    .append(item.getProducto().getNombre());
+        }
+
+        for (pizzeria.model.DetalleCombo combo : venta.getCombos()) {
+            if (detalle.length() > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(combo.getCantidad())
+                    .append("x Combo #")
+                    .append(combo.getNroCombo());
+        }
+
+        if (detalle.length() == 0) {
+            return "Sin detalle";
+        }
+
+        return detalle.toString();
+    }
+
+    private void buscarVentaPorId() {
+        String texto = txtBuscarVentaId.getText().trim();
+
+        if (texto.isEmpty()) {
+            cargarHistorialVentas();
+            return;
+        }
+
+        int idBuscado;
+
+        try {
+            idBuscado = Integer.parseInt(texto);
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un ID de venta válido.",
+                    "ID inválido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        for (int i = 0; i < ventasMostradas.size(); i++) {
+            pizzeria.model.Venta venta = ventasMostradas.get(i);
+
+            if (venta.getId() == idBuscado) {
+                tblHistorialVentas.setRowSelectionInterval(i, i);
+
+                java.awt.Rectangle rectangulo = tblHistorialVentas.getCellRect(i, 0, true);
+                tblHistorialVentas.scrollRectToVisible(rectangulo);
+
+                mostrarVentaSeleccionada();
+                return;
+            }
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "No se encontró una venta con ese ID.",
+                "Venta no encontrada",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+
+        limpiarVentaSeleccionada();
+    }
+     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -598,6 +754,7 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
     private javax.swing.JPanel Interfaz;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
+    private javax.swing.JButton btnBuscarVenta;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnReportes;
@@ -606,29 +763,25 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblClienteSeleccionado;
+    private javax.swing.JLabel lblDetalleSeleccionado;
+    private javax.swing.JLabel lblEstadoSeleccionado;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblTotalSeleccionado;
+    private javax.swing.JLabel lblVentaSeleccionada;
+    private javax.swing.JTable tblHistorialVentas;
+    private javax.swing.JTextField txtBuscarVentaId;
     // End of variables declaration//GEN-END:variables
 }
