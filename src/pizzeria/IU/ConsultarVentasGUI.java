@@ -518,6 +518,26 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
             return;
         }
 
+        if (ventaSeleccionada.getEstado() == pizzeria.model.EstadoPedido.ENTREGADO) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se puede cancelar una venta que ya fue entregada.",
+                    "Venta no cancelable",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (ventaSeleccionada.getEstado() == pizzeria.model.EstadoPedido.CANCELADO) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Esta venta ya fue cancelada anteriormente.",
+                    "Venta ya cancelada",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         new CancelarVentaGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
