@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package pizzeria.IU;
-
+import pizzeria.model.Inventario;
+import pizzeria.model.Insumo;
 /**
  *
  * @author BENJAMIN
@@ -11,12 +12,13 @@ package pizzeria.IU;
 public class InventarioPantallaInicial extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InventarioPantallaInicial.class.getName());
-
+    private final Inventario inventario = new Inventario();
     /**
      * Creates new form Inventario
      */
     public InventarioPantallaInicial() {
         initComponents();
+        inventario.cargarArchivo();
         configurarTabla();
     }
     
@@ -227,23 +229,7 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void configurarTabla(){
-    javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Nombre", "Unidad", "Stock","Stock Minimo", "Precio de Compra", "Cantidad por Piza"},0)
-    {
-        @Override
-        public boolean isCellEditable(int row, int column){
-        return column !=0;
-        }
-    };
-    jTable1.setModel(modelo);
-    jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);  // ID
-    jTable1.getColumnModel().getColumn(1).setPreferredWidth(150); // Nombre
-    jTable1.getColumnModel().getColumn(2).setPreferredWidth(70);  // Unidad
-    jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Stock
-    jTable1.getColumnModel().getColumn(4).setPreferredWidth(90);  // Stock Mínimo
-    jTable1.getColumnModel().getColumn(5).setPreferredWidth(120); // Precio
-    jTable1.getColumnModel().getColumn(6).setPreferredWidth(120); //Cantidad por Pizza
-    }
+
     private void btnBuscarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarInsumoActionPerformed
         new BuscarInsumos().setVisible(true);
         this.dispose();
@@ -265,7 +251,36 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     private void btnInvetario1btnGuardarCambiosPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetario1btnGuardarCambiosPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnInvetario1btnGuardarCambiosPerformed
-
+    
+    private void configurarTabla(){
+    javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+    new String[]{"ID", "Nombre", "Unidad", "Stock", "Stock Minimo", "Precio de Compra", "Cantidad por Pizza"}, 0
+    ){
+        @Override
+        public boolean isCellEditable(int row, int column){
+            return column !=0;
+        }
+    };
+    for(Insumo ins : inventario.getInsumos()){
+        modelo.addRow(new Object[]{
+            ins.getId(),
+            ins.getNombre(),
+            ins.getUnidad(),
+            String.format("%.2f", ins.getStockActual()),
+            String.format("%.2f", ins.getStockMinimo()),
+            String.format("%.2f", ins.getPrecioCompra()),
+            String.format("%.2f", ins.getCantidadPorPizza())
+        });
+    }
+    jTable1.setModel(modelo);
+    jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
+    jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+    jTable1.getColumnModel().getColumn(2).setPreferredWidth(70);
+    jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
+    jTable1.getColumnModel().getColumn(4).setPreferredWidth(90);
+    jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
+    jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
+}
     /**
      * @param args the command line arguments
      */

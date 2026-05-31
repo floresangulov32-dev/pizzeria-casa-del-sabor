@@ -24,6 +24,8 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarPedidoActual();
     }
     
    
@@ -41,7 +43,7 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     
-    
+    cargarPedidoActual();
     
 }
 
@@ -79,7 +81,7 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblTotalRevisar = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -285,9 +287,9 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         jLabel10.setText("Toral actual:");
 
-        jLabel3.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel3.setText("Bs. 90");
+        lblTotalRevisar.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
+        lblTotalRevisar.setForeground(new java.awt.Color(168, 27, 29));
+        lblTotalRevisar.setText("Bs. 90");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -302,7 +304,7 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
                             .addGap(6, 6, 6)
                             .addComponent(jLabel10)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3))
+                            .addComponent(lblTotalRevisar))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(187, Short.MAX_VALUE))
         );
@@ -316,7 +318,7 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel3))
+                    .addComponent(lblTotalRevisar))
                 .addGap(49, 49, 49))
         );
 
@@ -400,6 +402,8 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -419,6 +423,20 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .getVentaActual();
+
+        if (venta == null || (venta.getItems().isEmpty() && venta.getCombos().isEmpty())) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No hay productos ni combos en el pedido.",
+                    "Pedido vacío",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         new CobroPedidoGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -485,6 +503,55 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    ///////nuevo metodo PARA CARGAR PEDIDO ACTUAL
+    ///
+    private void cargarPedidoActual() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        if (venta == null) {
+            // Cambia lblTotalRevisar por el nombre real de tu JLabel del total.
+            lblTotalRevisar.setText("Bs. 0.00");
+            return;
+        }
+
+        for (pizzeria.model.DetalleVenta detalle : venta.getItems()) {
+            double precioUnitario = detalle.getProducto().getPrecio();
+
+            modelo.addRow(new Object[]{
+                detalle.getProducto().getNombre(),
+                detalle.getCantidad(),
+                "Bs. " + String.format("%.2f", precioUnitario),
+                "Bs. " + String.format("%.2f", detalle.getSubTotal())
+            });
+        }
+
+        for (pizzeria.model.DetalleCombo detalleCombo : venta.getCombos()) {
+            double precioUnitario = detalleCombo.getSubTotal() / detalleCombo.getCantidad();
+
+            modelo.addRow(new Object[]{
+                "Combo #" + detalleCombo.getNroCombo(),
+                detalleCombo.getCantidad(),
+                "Bs. " + String.format("%.2f", precioUnitario),
+                "Bs. " + String.format("%.2f", detalleCombo.getSubTotal())
+            });
+        }
+
+        venta.calcularTotal();
+
+        // Cambia lblTotalRevisar por el nombre real de tu JLabel del total.
+        lblTotalRevisar.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+    }
+    
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -524,7 +591,6 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
@@ -534,5 +600,6 @@ public class RevisarPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblTotalRevisar;
     // End of variables declaration//GEN-END:variables
 }

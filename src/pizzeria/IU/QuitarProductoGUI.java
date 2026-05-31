@@ -24,6 +24,8 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarPedidoActual();
     }
     
    
@@ -41,7 +43,7 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     
-    
+    cargarPedidoActual();
     
 }
 
@@ -277,7 +279,7 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -438,6 +440,8 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -457,6 +461,57 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un producto o combo de la tabla.",
+                    "Elemento no seleccionado",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de quitar este elemento del pedido?",
+                "Confirmar eliminación",
+                javax.swing.JOptionPane.YES_NO_OPTION
+        );
+
+        if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        if (venta == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No existe un pedido actual.",
+                    "Pedido no encontrado",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int cantidadProductos = venta.getItems().size();
+
+        if (fila < cantidadProductos) {
+            ContextoVentasGUI.getInstancia()
+                    .getGestorVenta()
+                    .quitarItem(fila);
+        } else {
+            int indiceCombo = fila - cantidadProductos;
+
+            ContextoVentasGUI.getInstancia()
+                    .getGestorVenta()
+                    .quitarCombo(indiceCombo);
+        }
+
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -523,6 +578,46 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    /////////////////////NUEVO METODO PARA CARGAR DATOS DE PEDIDO ACTUAL
+    private void cargarPedidoActual() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        if (venta == null) {
+            return;
+        }
+
+        int numero = 1;
+
+        for (pizzeria.model.DetalleVenta detalle : venta.getItems()) {
+            modelo.addRow(new Object[]{
+                numero,
+                detalle.getProducto().getNombre(),
+                detalle.getCantidad(),
+                "Bs. " + String.format("%.2f", detalle.getSubTotal())
+            });
+            numero++;
+        }
+
+        for (pizzeria.model.DetalleCombo detalleCombo : venta.getCombos()) {
+            modelo.addRow(new Object[]{
+                numero,
+                "Combo #" + detalleCombo.getNroCombo(),
+                detalleCombo.getCantidad(),
+                "Bs. " + String.format("%.2f", detalleCombo.getSubTotal())
+            });
+            numero++;
+        }
+    }
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

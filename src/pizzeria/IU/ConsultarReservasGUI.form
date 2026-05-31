@@ -393,7 +393,9 @@
                                   <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jButton3" min="-2" pref="176" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
+                                      <Component id="jButton6" min="-2" pref="176" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                                       <Component id="jButton4" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
@@ -401,9 +403,9 @@
                                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="txtBuscarVentaId" min="-2" pref="243" max="-2" attributes="0"/>
+                                      <Component id="txtBuscarReservaId" min="-2" pref="243" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnBuscarVenta" min="-2" pref="109" max="-2" attributes="0"/>
+                                      <Component id="btnBuscarReserva" min="-2" pref="109" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -412,7 +414,7 @@
                               <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="390" max="32767" attributes="0"/>
+                      <EmptySpace pref="370" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -420,9 +422,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jButton4" pref="40" max="32767" attributes="0"/>
-                          <Component id="jButton3" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jButton3" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="jButton6" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="jButton4" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
@@ -432,12 +435,12 @@
                       <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtBuscarVentaId" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                          <Component id="btnBuscarVenta" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="txtBuscarReservaId" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="btnBuscarReserva" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="462" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -451,7 +454,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="1d" green="1b" red="a8" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="CONSULTAR VENTAS"/>
+                <Property name="text" type="java.lang.String" value="CONSULTAR RESERVAS"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
@@ -459,7 +462,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="4a" green="4a" red="4a" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Busca una venta registrada o revisa el historial reciente."/>
+                <Property name="text" type="java.lang.String" value="Consulta, cancela o env&#xed;a reservas a cocina."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton3">
@@ -491,7 +494,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="CANCELAR VENTA PAGADA"/>
+                <Property name="text" type="java.lang.String" value="CANCELAR RESERVA"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
@@ -505,7 +508,7 @@
                 <Property name="text" type="java.lang.String" value="Buscar por ID:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtBuscarVentaId">
+            <Component class="javax.swing.JTextField" name="txtBuscarReservaId">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -516,7 +519,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnBuscarVenta">
+            <Component class="javax.swing.JButton" name="btnBuscarReserva">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="1d" green="1b" red="a8" type="rgb"/>
@@ -531,7 +534,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarVentaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarReservaActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel3">
@@ -547,7 +550,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="570" max="32767" attributes="0"/>
+                          <EmptySpace pref="590" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
@@ -592,10 +595,10 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tblHistorialVentas">
+                    <Component class="javax.swing.JTable" name="tblReservas">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="5" rowCount="4">
+                          <Table columnCount="6" rowCount="4">
                             <Column editable="false" title="ID" type="java.lang.Object">
                               <Data value="001"/>
                               <Data value="002"/>
@@ -608,24 +611,25 @@
                               <Data value="25/05/2026"/>
                               <Data value="null"/>
                             </Column>
-                            <Column editable="false" title="Total" type="java.lang.Object">
+                            <Column editable="false" title="Telefono" type="java.lang.Object">
                               <Data value="Juan P&#xe9;rez"/>
                               <Data value="Ana L&#xf3;pez"/>
                               <Data value="Sin nombre"/>
                               <Data value="null"/>
                             </Column>
-                            <Column editable="false" title="Estado" type="java.lang.Object">
+                            <Column editable="false" title="Fecha" type="java.lang.Object">
                               <Data value="Bs. 45"/>
                               <Data value="Bs. 80"/>
                               <Data value="Bs. 35"/>
                               <Data value="null"/>
                             </Column>
-                            <Column editable="false" title="Metodo de Pago" type="java.lang.Object">
+                            <Column editable="false" title="Estado" type="java.lang.Object">
                               <Data value="Pendiente"/>
                               <Data value="Entregado"/>
                               <Data value="Entregado"/>
                               <Data value="null"/>
                             </Column>
+                            <Column editable="false" title="Total" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="rowHeight" type="int" value="25"/>
@@ -654,20 +658,23 @@
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="lblDetalleSeleccionado" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblDetalleReservaSeleccionada" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lblVentaSeleccionada" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="601" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lblClienteSeleccionado" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="221" max="-2" attributes="0"/>
-                                      <Component id="lblTotalSeleccionado" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblReservaSeleccionada" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lblClienteReservaSeleccionada" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="143" max="-2" attributes="0"/>
+                                              <Component id="lblTelefonoReservaSeleccionada" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
+                                              <Component id="lblFechaReservaSeleccionada" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="135" max="-2" attributes="0"/>
+                                              <Component id="lblEstadoReservaSeleccionada" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="lblEstadoSeleccionado" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="186" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -677,53 +684,77 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                              <Component id="lblVentaSeleccionada" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblReservaSeleccionada" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lblClienteSeleccionado" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblTotalSeleccionado" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblEstadoSeleccionado" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblClienteReservaSeleccionada" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTelefonoReservaSeleccionada" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblFechaReservaSeleccionada" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblEstadoReservaSeleccionada" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="33" max="32767" attributes="0"/>
-                              <Component id="lblDetalleSeleccionado" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDetalleReservaSeleccionada" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="lblVentaSeleccionada">
+                    <Component class="javax.swing.JLabel" name="lblReservaSeleccionada">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Liberation Sans" size="15" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Venta seleccionada:"/>
+                        <Property name="text" type="java.lang.String" value="Reserva seleccionada:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lblClienteSeleccionado">
+                    <Component class="javax.swing.JLabel" name="lblClienteReservaSeleccionada">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Cliente:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lblTotalSeleccionado">
+                    <Component class="javax.swing.JLabel" name="lblTelefonoReservaSeleccionada">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Total:"/>
+                        <Property name="text" type="java.lang.String" value="Telefono:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lblEstadoSeleccionado">
+                    <Component class="javax.swing.JLabel" name="lblFechaReservaSeleccionada">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Estado:"/>
+                        <Property name="text" type="java.lang.String" value="Fecha:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lblDetalleSeleccionado">
+                    <Component class="javax.swing.JLabel" name="lblDetalleReservaSeleccionada">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Detalle:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lblEstadoReservaSeleccionada">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Estado:"/>
                       </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JButton" name="jButton6">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Liberation Sans" size="15" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="ENVIAR A COCINA"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                    <LineBorder>
+                      <Color PropertyName="color" blue="d9" green="d9" red="d9" type="rgb"/>
+                    </LineBorder>
+                  </Border>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

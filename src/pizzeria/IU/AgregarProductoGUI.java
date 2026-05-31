@@ -24,6 +24,7 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        cargarProductos();
     }
     
    
@@ -433,6 +434,8 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -452,6 +455,40 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un producto de la tabla.",
+                    "Producto no seleccionado",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int cantidad = (int) jSpinner1.getValue();
+
+        java.util.ArrayList<pizzeria.model.Producto> productos =
+                ContextoVentasGUI.getInstancia().getMenu().getProductos();
+
+        pizzeria.model.Producto productoSeleccionado = productos.get(fila);
+
+        
+        String error = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .agregarItemGUI(productoSeleccionado, cantidad);
+
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    error,
+                    "No se pudo agregar producto",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -518,6 +555,30 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    
+    private void cargarProductos() {
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        java.util.ArrayList<pizzeria.model.Producto> productos =
+                ContextoVentasGUI.getInstancia().getMenu().getProductos();
+
+        for (pizzeria.model.Producto producto : productos) {
+            String categoria = producto.getTipo().getNombre();
+
+            modelo.addRow(new Object[]{
+                producto.getNombre(),
+                categoria,
+                "Bs. " + String.format("%.2f", producto.getPrecio())
+        });
+    }
+}
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

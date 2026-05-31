@@ -24,6 +24,8 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        cargarResumenCobro();
+        configurarEventosCobro();
     }
     
    
@@ -41,7 +43,8 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     
-    
+    cargarResumenCobro();
+    configurarEventosCobro();
     
 }
 
@@ -79,28 +82,28 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtClienteCobro = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        rbVentaInmediata = new javax.swing.JRadioButton();
+        rbReserva = new javax.swing.JRadioButton();
         jLabel9 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton5 = new javax.swing.JRadioButton();
+        rbEfectivo = new javax.swing.JRadioButton();
+        rbQR = new javax.swing.JRadioButton();
+        rbTarjeta = new javax.swing.JRadioButton();
         jLabel10 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtMontoRecibido = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        lblCambioCobro = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        panel1 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        lblTotalCobro = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblResumenCobro = new javax.swing.JTable();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -287,26 +290,26 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel8.setText("Tipo de pedido");
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Venta inmediata");
+        buttonGroup1.add(rbVentaInmediata);
+        rbVentaInmediata.setSelected(true);
+        rbVentaInmediata.setText("Venta inmediata");
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Reserva");
+        buttonGroup1.add(rbReserva);
+        rbReserva.setText("Reserva");
 
         jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel9.setText("Tipo de pedido");
+        jLabel9.setText("Metodo de Pago");
 
-        buttonGroup2.add(jRadioButton3);
-        jRadioButton3.setSelected(true);
-        jRadioButton3.setText("Efectivo");
-        jRadioButton3.addActionListener(this::jRadioButton3ActionPerformed);
+        buttonGroup2.add(rbEfectivo);
+        rbEfectivo.setSelected(true);
+        rbEfectivo.setText("Efectivo");
+        rbEfectivo.addActionListener(this::rbEfectivoActionPerformed);
 
-        buttonGroup2.add(jRadioButton4);
-        jRadioButton4.setText("QR");
+        buttonGroup2.add(rbQR);
+        rbQR.setText("QR");
 
-        buttonGroup2.add(jRadioButton5);
-        jRadioButton5.setText("Tarjeta");
+        buttonGroup2.add(rbTarjeta);
+        rbTarjeta.setText("Tarjeta");
 
         jLabel10.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel10.setText("Monto recibido");
@@ -314,9 +317,9 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jLabel12.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel12.setText("Cambio:");
 
-        jLabel13.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel13.setText("Bs. 5");
+        lblCambioCobro.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblCambioCobro.setForeground(new java.awt.Color(168, 27, 29));
+        lblCambioCobro.setText("Bs. 5");
 
         jButton3.setForeground(new java.awt.Color(74, 74, 74));
         jButton3.setText("CANCELAR COBRO");
@@ -332,21 +335,21 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(jRadioButton3)
+                            .addComponent(rbEfectivo)
                             .addGap(40, 40, 40)
-                            .addComponent(jRadioButton4)
+                            .addComponent(rbQR)
                             .addGap(52, 52, 52)
-                            .addComponent(jRadioButton5))
+                            .addComponent(rbTarjeta))
                         .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(jRadioButton1)
+                            .addComponent(rbVentaInmediata)
                             .addGap(76, 76, 76)
-                            .addComponent(jRadioButton2)))
+                            .addComponent(rbReserva)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel8)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtClienteCobro, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel3)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -355,8 +358,8 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                                     .addComponent(jLabel12))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(lblCambioCobro)
+                                    .addComponent(txtMontoRecibido, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -368,42 +371,38 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtClienteCobro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton1))
+                    .addComponent(rbReserva)
+                    .addComponent(rbVentaInmediata))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton5))
+                    .addComponent(rbEfectivo)
+                    .addComponent(rbQR)
+                    .addComponent(rbTarjeta))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMontoRecibido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel13))
+                    .addComponent(lblCambioCobro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        panel1.setBackground(new java.awt.Color(255, 255, 255));
+        panel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
         jLabel14.setFont(new java.awt.Font("Liberation Sans", 1, 17)); // NOI18N
         jLabel14.setText("RESUMEN DEL PEDIDO");
-
-        jLabel15.setText("Pizza Hawaiana x1                     Bs. 35");
-
-        jLabel16.setText("Gaseosa 1.5 L x1                        Bs. 10");
 
         jLabel17.setText("Subtotal");
 
@@ -411,53 +410,73 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jLabel18.setForeground(new java.awt.Color(168, 27, 29));
         jLabel18.setText("TOTAL");
 
-        jLabel20.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel20.setText("Bs. 45");
+        lblTotalCobro.setFont(new java.awt.Font("Liberation Sans", 1, 20)); // NOI18N
+        lblTotalCobro.setForeground(new java.awt.Color(168, 27, 29));
+        lblTotalCobro.setText("Bs. 45");
 
+        jLabel21.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
         jLabel21.setText("Estado: Listo para cobro");
 
         jLabel22.setText("Bs. 45");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        tblResumenCobro.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
+        tblResumenCobro.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Detalle", "Subtotal"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblResumenCobro);
+
+        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
+        panel1.setLayout(panel1Layout);
+        panel1Layout.setHorizontalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel21)
-                    .addComponent(jLabel15)
                     .addComponent(jLabel14)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(panel1Layout.createSequentialGroup()
                             .addComponent(jLabel17)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel22))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createSequentialGroup()
                             .addComponent(jLabel18)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel20))
-                        .addComponent(jLabel16)))
-                .addContainerGap(113, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
+                            .addComponent(lblTotalCobro)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        panel1Layout.setVerticalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel14)
-                .addGap(38, 38, 38)
-                .addComponent(jLabel15)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel16)
-                .addGap(53, 53, 53)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jLabel20))
+                    .addComponent(lblTotalCobro))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel21)
                 .addContainerGap(27, Short.MAX_VALUE))
@@ -473,14 +492,14 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                     .addGroup(InterfazLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(49, 49, 49)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel19)
                     .addGroup(InterfazLayout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addGap(217, 217, 217)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
         InterfazLayout.setVerticalGroup(
             InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -495,7 +514,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addGap(18, 18, 18)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -546,6 +565,8 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -565,8 +586,180 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new VentaRegistradaGUI().setVisible(true);
+        
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .getVentaActual();
+
+        if (venta == null || (venta.getItems().isEmpty() && venta.getCombos().isEmpty())) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No hay productos ni combos en el pedido.",
+                    "Pedido vacío",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        String cliente = txtClienteCobro.getText().trim();
+
+        if (cliente.isEmpty()) {
+            cliente = "Sin nombre";
+        }
+
+        pizzeria.model.MetodoPago metodoEnum = obtenerMetodoPagoSeleccionado();
+        String metodoPago = metodoEnum.getNombre();
+
+        String tipoPedido;
+
+        if (rbReserva.isSelected()) {
+            tipoPedido = "Reserva";
+        } else {
+            tipoPedido = "Venta inmediata";
+        }
+
+        double montoRecibido = 0.0;
+        double cambio = 0.0;
+
+        if (rbEfectivo.isSelected()) {
+            try {
+                montoRecibido = Double.parseDouble(txtMontoRecibido.getText().trim());
+
+                if (montoRecibido < venta.getTotal()) {
+                    javax.swing.JOptionPane.showMessageDialog(
+                            this,
+                            "El monto recibido es menor al total del pedido.",
+                            "Monto insuficiente",
+                            javax.swing.JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+
+                cambio = montoRecibido - venta.getTotal();
+
+                if (cambio < 0) {
+                    cambio = 0.0;
+                }
+
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Ingrese un monto recibido válido.",
+                        "Monto inválido",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+        } else {
+            montoRecibido = venta.getTotal();
+            cambio = 0.0;
+        }
+
+        ContextoVentasGUI.getInstancia().guardarDatosCobro(
+                cliente,
+                metodoPago,
+                tipoPedido,
+                montoRecibido,
+                cambio
+        );
+
+        if (rbReserva.isSelected()) {
+
+        String telefono = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Ingrese el teléfono del cliente:",
+                "Datos de reserva",
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (telefono == null) {
+            return;
+        }
+
+        if (telefono.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Debe ingresar un teléfono para registrar la reserva.",
+                    "Teléfono requerido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        java.time.format.DateTimeFormatter formato =
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        String fechaTexto = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Ingrese fecha y hora de la reserva:\nFormato: yyyy-MM-dd HH:mm",
+                java.time.LocalDateTime.now().plusHours(1).format(formato)
+        );
+
+        if (fechaTexto == null) {
+            return;
+        }
+
+        java.time.LocalDateTime fechaReserva;
+
+        try {
+            fechaReserva = java.time.LocalDateTime.parse(fechaTexto.trim(), formato);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Formato de fecha inválido. Use: yyyy-MM-dd HH:mm",
+                    "Fecha inválida",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        pizzeria.model.Reserva reserva = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .registrarReservaPagadaGUI(
+                        metodoEnum,
+                        montoRecibido,
+                        cliente,
+                        telefono,
+                        fechaReserva
+                );
+
+        if (reserva == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo registrar la reserva. Revise el pedido, el pago o los datos ingresados.",
+                    "Error al registrar reserva",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        ContextoVentasGUI.getInstancia().setUltimaReservaRegistrada(reserva);
+
+        new ReservaRegistradaGUI().setVisible(true);
         this.dispose();
+        return;
+    }
+
+    pizzeria.model.Venta ventaFinalizada = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .finalizarVentaInmediataGUI(metodoEnum, montoRecibido, cliente);
+
+    if (ventaFinalizada == null) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "No se pudo registrar la venta. Revise el pedido o el monto recibido.",
+                "Error al registrar venta",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+    ContextoVentasGUI.getInstancia().setUltimaVentaRegistrada(ventaFinalizada);
+
+    new VentaRegistradaGUI().setVisible(true);
+    this.dispose();
+      
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -575,9 +768,9 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+    private void rbEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEfectivoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+    }//GEN-LAST:event_rbEfectivoActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
@@ -641,6 +834,100 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    ///////METODO PARA CARGAR RESUMEN COBRO
+    ///
+    private void cargarResumenCobro() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) tblResumenCobro.getModel();
+
+        modelo.setRowCount(0);
+
+        if (venta == null) {
+            lblTotalCobro.setText("Bs. 0.00");
+            lblCambioCobro.setText("Bs. 0.00");
+            return;
+        }
+
+        for (pizzeria.model.DetalleVenta detalle : venta.getItems()) {
+            modelo.addRow(new Object[]{
+                detalle.getProducto().getNombre() + " x" + detalle.getCantidad(),
+                "Bs. " + String.format("%.2f", detalle.getSubTotal())
+            });
+        }
+
+        for (pizzeria.model.DetalleCombo detalleCombo : venta.getCombos()) {
+            modelo.addRow(new Object[]{
+                "Combo #" + detalleCombo.getNroCombo() + " x" + detalleCombo.getCantidad(),
+                "Bs. " + String.format("%.2f", detalleCombo.getSubTotal())
+            });
+        }
+
+        venta.calcularTotal();
+
+        lblTotalCobro.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+        lblCambioCobro.setText("Bs. 0.00");
+    }
+    
+    private void calcularCambio() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        if (venta == null) {
+            lblCambioCobro.setText("Bs. 0.00");
+            return;
+        }
+
+        if (!rbEfectivo.isSelected()) {
+            lblCambioCobro.setText("Bs. 0.00");
+            return;
+        }
+
+        try {
+            double montoRecibido = Double.parseDouble(txtMontoRecibido.getText().trim());
+            double total = venta.getTotal();
+            double cambio = montoRecibido - total;
+
+            if (cambio < 0) {
+                lblCambioCobro.setText("Bs. 0.00");
+            } else {
+                lblCambioCobro.setText("Bs. " + String.format("%.2f", cambio));
+            }
+
+        } catch (NumberFormatException e) {
+            lblCambioCobro.setText("Bs. 0.00");
+        }
+    }
+    
+    private void configurarEventosCobro() {
+        txtMontoRecibido.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                calcularCambio();
+            }
+        });
+
+        rbEfectivo.addActionListener(e -> calcularCambio());
+        rbQR.addActionListener(e -> calcularCambio());
+        rbTarjeta.addActionListener(e -> calcularCambio());
+    }
+    
+    private pizzeria.model.MetodoPago obtenerMetodoPagoSeleccionado() {
+        if (rbQR.isSelected()) {
+            return pizzeria.model.MetodoPago.QR;
+        }
+
+        if (rbTarjeta.isSelected()) {
+            return pizzeria.model.MetodoPago.TARJETA;
+        }
+
+        return pizzeria.model.MetodoPago.EFECTIVO;
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -682,15 +969,11 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
@@ -702,14 +985,18 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCambioCobro;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblTotalCobro;
+    private javax.swing.JPanel panel1;
+    private javax.swing.JRadioButton rbEfectivo;
+    private javax.swing.JRadioButton rbQR;
+    private javax.swing.JRadioButton rbReserva;
+    private javax.swing.JRadioButton rbTarjeta;
+    private javax.swing.JRadioButton rbVentaInmediata;
+    private javax.swing.JTable tblResumenCobro;
+    private javax.swing.JTextField txtClienteCobro;
+    private javax.swing.JTextField txtMontoRecibido;
     // End of variables declaration//GEN-END:variables
 }

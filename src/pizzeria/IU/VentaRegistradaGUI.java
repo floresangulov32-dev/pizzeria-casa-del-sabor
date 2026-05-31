@@ -24,6 +24,8 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        
+        cargarDatosVentaRegistrada();
     }
     
    
@@ -41,6 +43,7 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     
+    cargarDatosVentaRegistrada();
     
     
 }
@@ -77,14 +80,15 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lblNumeroVentaRegistrada = new javax.swing.JLabel();
+        lblClienteRegistrado = new javax.swing.JLabel();
+        lblMetodoPagoRegistrado = new javax.swing.JLabel();
+        lblEstadoRegistrado = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel13 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblTotalRegistrado = new javax.swing.JLabel();
+        lblCambioRegistrado = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -267,14 +271,14 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
-        jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        jLabel9.setText("Venta N.º 001");
+        lblNumeroVentaRegistrada.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        lblNumeroVentaRegistrada.setText("Venta N.º 001");
 
-        jLabel10.setText("Cliente: Juan Pérez");
+        lblClienteRegistrado.setText("Cliente: Juan Pérez");
 
-        jLabel11.setText("Método de pago: Efectivo");
+        lblMetodoPagoRegistrado.setText("Método de pago: Efectivo");
 
-        jLabel12.setText("Estado: Pendiente para cocina");
+        lblEstadoRegistrado.setText("Estado: Pendiente para cocina");
 
         jLabel7.setFont(new java.awt.Font("Liberation Sans", 1, 30)); // NOI18N
         jLabel7.setText("OK");
@@ -283,10 +287,13 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(168, 27, 29));
         jLabel13.setText("TOTAL");
 
-        jLabel3.setFont(new java.awt.Font("Liberation Sans", 1, 22)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Bs.  45");
+        lblTotalRegistrado.setFont(new java.awt.Font("Liberation Sans", 1, 22)); // NOI18N
+        lblTotalRegistrado.setForeground(new java.awt.Color(168, 27, 29));
+        lblTotalRegistrado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotalRegistrado.setText("Bs.  45");
+
+        lblCambioRegistrado.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+        lblCambioRegistrado.setText("Cambio: Bs. 0.00");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -297,19 +304,20 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel9)
+                            .addComponent(lblMetodoPagoRegistrado)
+                            .addComponent(lblClienteRegistrado)
+                            .addComponent(lblNumeroVentaRegistrada)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(64, 64, 64)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(68, 68, 68)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel12)
+                            .addComponent(lblEstadoRegistrado)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(100, 100, 100)
+                                .addComponent(lblTotalRegistrado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblCambioRegistrado)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(174, 174, 174)
                         .addComponent(jLabel6))
@@ -332,18 +340,20 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jLabel9)
+                .addComponent(lblNumeroVentaRegistrada)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel10)
+                .addComponent(lblClienteRegistrado)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel11)
+                .addComponent(lblMetodoPagoRegistrado)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel12)
+                .addComponent(lblEstadoRegistrado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblCambioRegistrado)
+                .addGap(16, 16, 16)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                    .addComponent(lblTotalRegistrado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -419,6 +429,8 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -438,6 +450,7 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        ContextoVentasGUI.getInstancia().getGestorVenta().crearVenta(1);
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -504,6 +517,35 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
     }
+    
+    private void cargarDatosVentaRegistrada() {
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+            .getUltimaVentaRegistrada();
+
+        ContextoVentasGUI contexto = ContextoVentasGUI.getInstancia();
+
+        if (venta == null) {
+            lblNumeroVentaRegistrada.setText("Venta N.º -");
+            lblClienteRegistrado.setText("Cliente: " + contexto.getClienteCobro());
+            lblMetodoPagoRegistrado.setText("Método de pago: " + contexto.getMetodoPagoCobro());
+            lblEstadoRegistrado.setText("Estado: Registrado");
+            lblTotalRegistrado.setText("Bs. 0.00");
+            lblCambioRegistrado.setText("Cambio: Bs. " + String.format("%.2f", contexto.getCambioCobro()));
+            return;
+        }
+
+        venta.calcularTotal();
+
+        lblNumeroVentaRegistrada.setText("Venta N.º " + String.format("%03d", venta.getId()));
+        lblClienteRegistrado.setText("Cliente: " + contexto.getClienteCobro());
+        lblMetodoPagoRegistrado.setText("Método de pago: " + contexto.getMetodoPagoCobro());
+        lblEstadoRegistrado.setText("Estado: " + contexto.getTipoPedidoCobro() + " registrada");
+        lblTotalRegistrado.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+        lblCambioRegistrado.setText("Cambio: Bs. " + String.format("%.2f", contexto.getCambioCobro()));
+    }
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -542,21 +584,22 @@ public class VentaRegistradaGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblCambioRegistrado;
+    private javax.swing.JLabel lblClienteRegistrado;
+    private javax.swing.JLabel lblEstadoRegistrado;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblMetodoPagoRegistrado;
+    private javax.swing.JLabel lblNumeroVentaRegistrada;
+    private javax.swing.JLabel lblTotalRegistrado;
     // End of variables declaration//GEN-END:variables
 }
