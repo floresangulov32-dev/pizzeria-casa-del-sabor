@@ -10,29 +10,28 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
-import java.awt.RenderingHints;
+import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.EmptyBorder;
 
 import pizzeria.controller.GestorUsuarios;
-import pizzeria.model.Rol;
 import pizzeria.model.Usuario;
-
 
 /**
  *
@@ -45,13 +44,36 @@ public class LoginGUI extends javax.swing.JFrame {
     private JPasswordField txtPassword;
     private JButton btnIniciarSesion;
     private JButton btnCancelar;
+    private Image fondoImagen;
     
     public LoginGUI(){
         initComponents();
+        setSize(1280, 720);
         setLocationRelativeTo(null);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cambiado para no cerrar toda la app
         gestorUsuarios = new GestorUsuarios();
         gestorUsuarios.cargarDesdeArchivo();
+        cargarImagenFondo();
         configurarApariencia();
+    }
+    
+    private void cargarImagenFondo() {
+        try {
+            String rutaFondo = "resources/imagenes/FondoBlanco.png";
+            File archivoFondo = new File(rutaFondo);
+            if (archivoFondo.exists()) {
+                ImageIcon fondoIcon = new ImageIcon(archivoFondo.getAbsolutePath());
+                fondoImagen = fondoIcon.getImage();
+                System.out.println("Fondo cargado desde: " + archivoFondo.getAbsolutePath());
+            } else {
+                System.out.println("No se encontró el fondo en: " + rutaFondo);
+                fondoImagen = null;
+            }
+        } catch (Exception e) {
+            System.out.println("Error cargando fondo: " + e.getMessage());
+            fondoImagen = null;
+        }
     }
     
     private void configurarApariencia() {        
@@ -59,19 +81,11 @@ public class LoginGUI extends javax.swing.JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                
-                Color color1 = new Color(20, 20, 20);
-                Color color2 = new Color(80, 0, 0);
-                
-                GradientPaint gp = new GradientPaint(0, 0, color1, 0, getHeight(), color2);
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-                                
-                g2d.setColor(new Color(100, 0, 0, 30));
-                for (int i = -getHeight(); i < getWidth() + getHeight(); i += 30) {
-                    g2d.drawLine(i, 0, i + getHeight(), getHeight());
+                if (fondoImagen != null) {
+                    g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
@@ -91,21 +105,21 @@ public class LoginGUI extends javax.swing.JFrame {
         JPanel panelCabecera = new JPanel();
         panelCabecera.setOpaque(false);
         panelCabecera.setLayout(new BoxLayout(panelCabecera, BoxLayout.Y_AXIS));
-        panelCabecera.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        panelCabecera.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
         panelCabecera.setAlignmentX(Component.CENTER_ALIGNMENT);
              
         JLabel lblTitulo = new JLabel("INICIAR SESIÓN", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitulo.setForeground(new Color(255, 215, 0));
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblTitulo.setForeground(Color.BLACK);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
                 
         JLabel lblSubtitulo = new JLabel("Ingrese sus credenciales para acceder al sistema", SwingConstants.CENTER);
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblSubtitulo.setForeground(Color.LIGHT_GRAY);
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblSubtitulo.setForeground(Color.DARK_GRAY);
         lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panelCabecera.add(lblTitulo);
-        panelCabecera.add(Box.createRigidArea(new Dimension(0, 5)));
+        panelCabecera.add(Box.createRigidArea(new Dimension(0, 10)));
         panelCabecera.add(lblSubtitulo);
         
         return panelCabecera;
@@ -114,98 +128,111 @@ public class LoginGUI extends javax.swing.JFrame {
     private JPanel crearPanelLogin() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
         
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-                
+        
+        // Label USUARIO
         JLabel lblUsuario = new JLabel("USUARIO");
-        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblUsuario.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;         
         panel.add(lblUsuario, gbc);
         
-        txtUsuario = new JTextField(20);
-        txtUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        txtUsuario.setBackground(new Color(40, 40, 40));
-        txtUsuario.setForeground(Color.WHITE);
-        txtUsuario.setCaretColor(Color.WHITE);
+        // Campo USUARIO - Blanco con borde negro
+        txtUsuario = new JTextField(25);
+        txtUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        txtUsuario.setBackground(Color.WHITE);
+        txtUsuario.setForeground(Color.BLACK);
+        txtUsuario.setCaretColor(Color.BLACK);
         txtUsuario.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(100, 0, 0), 1),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+            BorderFactory.createLineBorder(Color.BLACK, 2),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(txtUsuario, gbc);
         
+        // Label CONTRASEÑA
         JLabel lblPassword = new JLabel("CONTRASEÑA");
-        lblPassword.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblPassword.setForeground(Color.WHITE);
+        lblPassword.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblPassword.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 2;
         panel.add(lblPassword, gbc);
         
-        txtPassword = new JPasswordField(20);
-        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        txtPassword.setBackground(new Color(40, 40, 40));
-        txtPassword.setForeground(Color.WHITE);
-        txtPassword.setCaretColor(Color.WHITE);
+        // Campo CONTRASEÑA - Blanco con borde negro
+        txtPassword = new JPasswordField(25);
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        txtPassword.setBackground(Color.WHITE);
+        txtPassword.setForeground(Color.BLACK);
+        txtPassword.setCaretColor(Color.BLACK);
         txtPassword.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(100, 0, 0), 1),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+            BorderFactory.createLineBorder(Color.BLACK, 2),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel.add(txtPassword, gbc);
         
+        // Panel de botones
         JPanel panelBotones = new JPanel();
         panelBotones.setOpaque(false);
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.X_AXIS));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
         
+        // Botón INICIAR SESIÓN - Color FF1010 con letras blancas
         btnIniciarSesion = new JButton("INICIAR SESIÓN");
-        btnIniciarSesion.setBackground(new Color(180, 0, 0));
+        btnIniciarSesion.setBackground(new Color(0xFF, 0x10, 0x10));
         btnIniciarSesion.setForeground(Color.WHITE);
-        btnIniciarSesion.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnIniciarSesion.setPreferredSize(new Dimension(150, 40));
+        btnIniciarSesion.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        btnIniciarSesion.setPreferredSize(new Dimension(280, 65));
+        btnIniciarSesion.setMinimumSize(new Dimension(280, 65));
+        btnIniciarSesion.setMaximumSize(new Dimension(280, 65));
         btnIniciarSesion.setFocusPainted(false);
         btnIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnIniciarSesion.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         
         btnIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnIniciarSesion.setBackground(new Color(220, 0, 0));
+                btnIniciarSesion.setBackground(new Color(0xFF, 0x40, 0x40));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnIniciarSesion.setBackground(new Color(180, 0, 0));
+                btnIniciarSesion.setBackground(new Color(0xFF, 0x10, 0x10));
             }
         });
         btnIniciarSesion.addActionListener(e -> iniciarSesion());
         
+        // Botón CANCELAR - Blanco con borde negro y letras rojas
         btnCancelar = new JButton("CANCELAR");
-        btnCancelar.setBackground(new Color(40, 40, 40));
-        btnCancelar.setForeground(Color.WHITE);
-        btnCancelar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnCancelar.setPreferredSize(new Dimension(120, 40));
+        btnCancelar.setBackground(Color.WHITE);
+        btnCancelar.setForeground(new Color(0xFF, 0x10, 0x10));
+        btnCancelar.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        btnCancelar.setPreferredSize(new Dimension(280, 65));
+        btnCancelar.setMinimumSize(new Dimension(280, 65));
+        btnCancelar.setMaximumSize(new Dimension(280, 65));
         btnCancelar.setFocusPainted(false);
         btnCancelar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCancelar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btnCancelar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(new Color(80, 0, 0));
+                btnCancelar.setBackground(new Color(240, 240, 240));
+                btnCancelar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCancelar.setBackground(new Color(40, 40, 40));
+                btnCancelar.setBackground(Color.WHITE);
+                btnCancelar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             }
         });
-        btnCancelar.addActionListener(e -> dispose());
+        btnCancelar.addActionListener(e -> volverPantallaInicial());
         
         panelBotones.add(btnIniciarSesion);
-        panelBotones.add(Box.createRigidArea(new Dimension(15, 0)));
+        panelBotones.add(Box.createRigidArea(new Dimension(25, 0)));
         panelBotones.add(btnCancelar);
         
         gbc.gridx = 0;
@@ -219,10 +246,10 @@ public class LoginGUI extends javax.swing.JFrame {
     private JPanel crearPie() {
         JPanel panelPie = new JPanel();
         panelPie.setOpaque(false);
-        panelPie.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        panelPie.setBorder(BorderFactory.createEmptyBorder(20, 20, 30, 20));
         
         JLabel lblInfo = new JLabel("La Casa del Sabor - Sistema de Gestión Integral");
-        lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(Color.GRAY);
         lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
         
@@ -233,7 +260,7 @@ public class LoginGUI extends javax.swing.JFrame {
     private void iniciarSesion() {
         String usuario = txtUsuario.getText().trim();
         String password = new String(txtPassword.getPassword()).trim();
-        
+
         if (usuario.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Por favor, complete todos los campos",
@@ -241,16 +268,39 @@ public class LoginGUI extends javax.swing.JFrame {
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         Usuario user = gestorUsuarios.login(usuario, password);
-        
+
         if (user != null) {
             JOptionPane.showMessageDialog(this,
                 "Bienvenido/a " + user.getNombre() + "\nRol: " + user.getRol().name(),
                 "Login Exitoso",
-                JOptionPane.INFORMATION_MESSAGE);                
-            
+                JOptionPane.INFORMATION_MESSAGE);
+
             dispose();
+
+            // Verificar el rol y abrir la interfaz correspondiente
+            switch (user.getRol().name()) {
+                case "GERENTE":
+                    abrirInterfazGerente(user);
+                    break;
+                case "CAJERO":
+                    mostrarMensajeEnDesarrollo("Módulo de Cajero");
+                    volverPantallaInicial();
+                    break;
+                case "COCINA":
+                    mostrarMensajeEnDesarrollo("Módulo de Cocina");
+                    volverPantallaInicial();
+                    break;
+                case "CLIENTE":
+                    mostrarMensajeEnDesarrollo("Módulo de Cliente");
+                    volverPantallaInicial();
+                    break;
+                default:
+                    mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
+                    volverPantallaInicial();
+                    break;
+            }
         } else {
             JOptionPane.showMessageDialog(this,
                 "Usuario o contraseña incorrectos",
@@ -260,6 +310,30 @@ public class LoginGUI extends javax.swing.JFrame {
             txtUsuario.requestFocus();
         }
     }
+    
+    private void abrirInterfazGerente(Usuario user) {
+        try {
+            InterfazGerenteP1 gerenteFrame = new InterfazGerenteP1(user.getRol().name(), user.getNombre());
+            gerenteFrame.setVisible(true);
+        } catch (Exception e) {
+            System.out.println("Error al abrir InterfazGerenteP1: " + e.getMessage());
+            mostrarMensajeEnDesarrollo("Módulo de Gerente");
+            volverPantallaInicial();
+        }
+    }
+    
+    private void mostrarMensajeEnDesarrollo(String modulo) {
+        JOptionPane.showMessageDialog(null,
+            modulo + " en desarrollo.\nSerá implementado próximamente.",
+            "Información",
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void volverPantallaInicial() {
+        this.dispose();
+        new PantallaInicial().setVisible(true);
+    }
+
     
     
     /**
