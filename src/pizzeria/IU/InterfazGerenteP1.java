@@ -559,14 +559,8 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
 
     private void btnFinanzasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinanzasActionPerformed
         activarBoton(btnFinanzas);
-        
-        JLabel lblMensaje = new JLabel("Módulo de Finanzas - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
+        GestionFinanzasGUI panelFinanzas = new GestionFinanzasGUI();
+        cargarPanel(panelFinanzas);;
     }//GEN-LAST:event_btnFinanzasActionPerformed
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
