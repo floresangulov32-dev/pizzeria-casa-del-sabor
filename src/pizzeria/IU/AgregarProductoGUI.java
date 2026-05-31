@@ -434,6 +434,8 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -472,9 +474,20 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
         pizzeria.model.Producto productoSeleccionado = productos.get(fila);
 
-        ContextoVentasGUI.getInstancia()
-                .getGestorVenta()
-                .agregarItem(productoSeleccionado, cantidad);
+        
+        String error = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .agregarItemGUI(productoSeleccionado, cantidad);
+
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    error,
+                    "No se pudo agregar producto",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();

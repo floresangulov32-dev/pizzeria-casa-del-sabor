@@ -553,11 +553,11 @@
                               <Data value="Pizza Hawaiana"/>
                               <Data value="Gaseosa 1.5 L"/>
                             </Column>
-                            <Column editable="true" title="Cantidad" type="java.lang.Object">
+                            <Column editable="false" title="Cantidad" type="java.lang.Object">
                               <Data value="1"/>
                               <Data value="1"/>
                             </Column>
-                            <Column editable="true" title="Subtotal" type="java.lang.Object">
+                            <Column editable="false" title="Subtotal" type="java.lang.Object">
                               <Data value="Bs. 35"/>
                               <Data value="Bs. 10"/>
                             </Column>

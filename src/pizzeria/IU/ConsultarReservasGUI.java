@@ -4,18 +4,20 @@
  */
 package pizzeria.IU;
 
-public class ConsultarVentasGUI extends javax.swing.JFrame {
+public class ConsultarReservasGUI extends javax.swing.JFrame {
     
     private java.util.ArrayList<pizzeria.model.Venta> ventasMostradas = new java.util.ArrayList<>();
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ConsultarVentasGUI.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ConsultarReservasGUI.class.getName());
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private java.util.List<pizzeria.model.Reserva> reservasMostradas = new java.util.ArrayList<>();
+    private pizzeria.model.Reserva reservaSeleccionada = null;
 
     /**
      * Creates new form MenuGerente
      */
-    public ConsultarVentasGUI() {
+    public ConsultarReservasGUI() {
         initComponents();
         setSize(1280, 720);
         setLocationRelativeTo(null);
@@ -24,20 +26,22 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
         
         configurarHover();        
-        activarBoton(btnInicio);
-        
-        cargarHistorialVentas();
-        txtBuscarVentaId.addActionListener(e -> buscarVentaPorId());
-        tblHistorialVentas.getSelectionModel().addListSelectionListener(e -> {
+        activarBoton(btnUsuarios);
+
+        cargarReservas();
+
+        txtBuscarReservaId.addActionListener(e -> buscarReservaPorId());
+
+        tblReservas.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                mostrarVentaSeleccionada();
+                mostrarReservaSeleccionada();
             }
         });
     }
     
    
     
-    public ConsultarVentasGUI(String rol, String nombre) {
+    public ConsultarReservasGUI(String rol, String nombre) {
         initComponents();
         setSize(1280, 720);
         setLocationRelativeTo(null);
@@ -53,7 +57,7 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         cargarHistorialVentas();
         ////por si acaso para buscar con enter en constructor con argumentos
         ///
-        txtBuscarVentaId.addActionListener(e -> buscarVentaPorId());
+        txtBuscarReservaId.addActionListener(e -> buscarVentaPorId());
 
     }
 
@@ -89,18 +93,20 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        txtBuscarVentaId = new javax.swing.JTextField();
-        btnBuscarVenta = new javax.swing.JButton();
+        txtBuscarReservaId = new javax.swing.JTextField();
+        btnBuscarReserva = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblHistorialVentas = new javax.swing.JTable();
+        tblReservas = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        lblVentaSeleccionada = new javax.swing.JLabel();
-        lblClienteSeleccionado = new javax.swing.JLabel();
-        lblTotalSeleccionado = new javax.swing.JLabel();
-        lblEstadoSeleccionado = new javax.swing.JLabel();
-        lblDetalleSeleccionado = new javax.swing.JLabel();
+        lblReservaSeleccionada = new javax.swing.JLabel();
+        lblClienteReservaSeleccionada = new javax.swing.JLabel();
+        lblTelefonoReservaSeleccionada = new javax.swing.JLabel();
+        lblFechaReservaSeleccionada = new javax.swing.JLabel();
+        lblDetalleReservaSeleccionada = new javax.swing.JLabel();
+        lblEstadoReservaSeleccionada = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -260,10 +266,10 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Liberation Sans", 1, 28)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel19.setText("CONSULTAR VENTAS");
+        jLabel19.setText("CONSULTAR RESERVAS");
 
         jLabel8.setForeground(new java.awt.Color(74, 74, 74));
-        jLabel8.setText("Busca una venta registrada o revisa el historial reciente.");
+        jLabel8.setText("Consulta, cancela o envía reservas a cocina.");
 
         jButton3.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton3.setText("VOLVER A VENTAS");
@@ -273,59 +279,61 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
         jButton4.setBackground(new java.awt.Color(168, 27, 29));
         jButton4.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("CANCELAR VENTA PAGADA");
+        jButton4.setText("CANCELAR RESERVA");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jLabel14.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel14.setText("Buscar por ID:");
 
-        txtBuscarVentaId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        txtBuscarReservaId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
-        btnBuscarVenta.setForeground(new java.awt.Color(168, 27, 29));
-        btnBuscarVenta.setText("BUSCAR");
-        btnBuscarVenta.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(168, 27, 29)));
-        btnBuscarVenta.addActionListener(this::btnBuscarVentaActionPerformed);
+        btnBuscarReserva.setForeground(new java.awt.Color(168, 27, 29));
+        btnBuscarReserva.setText("BUSCAR");
+        btnBuscarReserva.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(168, 27, 29)));
+        btnBuscarReserva.addActionListener(this::btnBuscarReservaActionPerformed);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel15.setFont(new java.awt.Font("Liberation Sans", 1, 17)); // NOI18N
         jLabel15.setText("HISTORIAL DE VENTAS");
 
-        tblHistorialVentas.setModel(new javax.swing.table.DefaultTableModel(
+        tblReservas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"001", "25/05/2026", "Juan Pérez", "Bs. 45", "Pendiente"},
-                {"002", "25/05/2026", "Ana López", "Bs. 80", "Entregado"},
-                {"003", "25/05/2026", "Sin nombre", "Bs. 35", "Entregado"},
-                {null, null, null, null, null}
+                {"001", "25/05/2026", "Juan Pérez", "Bs. 45", "Pendiente", null},
+                {"002", "25/05/2026", "Ana López", "Bs. 80", "Entregado", null},
+                {"003", "25/05/2026", "Sin nombre", "Bs. 35", "Entregado", null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Cliente", "Total", "Estado", "Metodo de Pago"
+                "ID", "Cliente", "Telefono", "Fecha", "Estado", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblHistorialVentas.setRowHeight(25);
-        jScrollPane1.setViewportView(tblHistorialVentas);
+        tblReservas.setRowHeight(25);
+        jScrollPane1.setViewportView(tblReservas);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
         jPanel2.setForeground(new java.awt.Color(252, 235, 235));
 
-        lblVentaSeleccionada.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        lblVentaSeleccionada.setText("Venta seleccionada:");
+        lblReservaSeleccionada.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        lblReservaSeleccionada.setText("Reserva seleccionada:");
 
-        lblClienteSeleccionado.setText("Cliente:");
+        lblClienteReservaSeleccionada.setText("Cliente:");
 
-        lblTotalSeleccionado.setText("Total:");
+        lblTelefonoReservaSeleccionada.setText("Telefono:");
 
-        lblEstadoSeleccionado.setText("Estado:");
+        lblFechaReservaSeleccionada.setText("Fecha:");
 
-        lblDetalleSeleccionado.setText("Detalle:");
+        lblDetalleReservaSeleccionada.setText("Detalle:");
+
+        lblEstadoReservaSeleccionada.setText("Estado:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -335,31 +343,34 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblDetalleSeleccionado)
+                        .addComponent(lblDetalleReservaSeleccionada)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblVentaSeleccionada)
-                        .addContainerGap(601, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblClienteSeleccionado)
-                        .addGap(221, 221, 221)
-                        .addComponent(lblTotalSeleccionado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblEstadoSeleccionado)
-                        .addGap(186, 186, 186))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblReservaSeleccionada)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblClienteReservaSeleccionada)
+                                .addGap(143, 143, 143)
+                                .addComponent(lblTelefonoReservaSeleccionada)
+                                .addGap(124, 124, 124)
+                                .addComponent(lblFechaReservaSeleccionada)
+                                .addGap(135, 135, 135)
+                                .addComponent(lblEstadoReservaSeleccionada)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(lblVentaSeleccionada)
+                .addComponent(lblReservaSeleccionada)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblClienteSeleccionado)
-                    .addComponent(lblTotalSeleccionado)
-                    .addComponent(lblEstadoSeleccionado))
+                    .addComponent(lblClienteReservaSeleccionada)
+                    .addComponent(lblTelefonoReservaSeleccionada)
+                    .addComponent(lblFechaReservaSeleccionada)
+                    .addComponent(lblEstadoReservaSeleccionada))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(lblDetalleSeleccionado)
+                .addComponent(lblDetalleReservaSeleccionada)
                 .addGap(18, 18, 18))
         );
 
@@ -370,7 +381,7 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel15)
-                .addContainerGap(570, Short.MAX_VALUE))
+                .addContainerGap(590, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,6 +403,11 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jButton6.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jButton6.setText("ENVIAR A COCINA");
+        jButton6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        jButton6.addActionListener(this::jButton6ActionPerformed);
+
         javax.swing.GroupLayout InterfazLayout = new javax.swing.GroupLayout(Interfaz);
         Interfaz.setLayout(InterfazLayout);
         InterfazLayout.setHorizontalGroup(
@@ -404,27 +420,30 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                             .addComponent(jLabel19)
                             .addGroup(InterfazLayout.createSequentialGroup()
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(125, 125, 125)
+                                .addGap(96, 96, 96)
+                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(93, 93, 93)
                                 .addComponent(jButton4))
                             .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel8))
                             .addGroup(InterfazLayout.createSequentialGroup()
-                                .addComponent(txtBuscarVentaId, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtBuscarReservaId, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnBuscarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btnBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(InterfazLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(390, Short.MAX_VALUE))
+                .addContainerGap(370, Short.MAX_VALUE))
         );
         InterfazLayout.setVerticalGroup(
             InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(InterfazLayout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -433,11 +452,11 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscarVentaId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBuscarReservaId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(462, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
@@ -489,7 +508,7 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
         new ConsultarReservasGUI().setVisible(true);
-this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -515,47 +534,123 @@ this.dispose();
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        pizzeria.model.Venta ventaSeleccionada = ContextoVentasGUI.getInstancia()
-            .getVentaSeleccionadaConsulta();
-
-        if (ventaSeleccionada == null) {
+        if (reservaSeleccionada == null) {
             javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "Seleccione una venta de la tabla antes de continuar.",
-                    "Venta no seleccionada",
+                    "Seleccione una reserva de la tabla.",
+                    "Reserva no seleccionada",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
             return;
         }
 
-        if (ventaSeleccionada.getEstado() == pizzeria.model.EstadoPedido.ENTREGADO) {
+        if (reservaSeleccionada.getEstado() == pizzeria.model.EstadoReserva.CANCELADA) {
             javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "No se puede cancelar una venta que ya fue entregada.",
-                    "Venta no cancelable",
+                    "Esta reserva ya fue cancelada.",
+                    "Reserva ya cancelada",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
             return;
         }
 
-        if (ventaSeleccionada.getEstado() == pizzeria.model.EstadoPedido.CANCELADO) {
+        if (reservaSeleccionada.getEstado() == pizzeria.model.EstadoReserva.LISTA
+                || reservaSeleccionada.getEstado() == pizzeria.model.EstadoReserva.ENTREGADA) {
             javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "Esta venta ya fue cancelada anteriormente.",
-                    "Venta ya cancelada",
+                    "No se puede cancelar una reserva lista o entregada.",
+                    "Reserva no cancelable",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
             return;
         }
 
-        new CancelarVentaGUI().setVisible(true);
-        this.dispose();
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de cancelar la reserva N.º "
+                        + reservaSeleccionada.getId()
+                        + "?\nSe registrará el reembolso correspondiente.",
+                "Confirmar cancelación",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean cancelada = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .cancelarReservaGUI(reservaSeleccionada.getId());
+
+        if (cancelada) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Reserva cancelada correctamente.",
+                    "Cancelación exitosa",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarReservas();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo cancelar la reserva.\nPuede que ya esté cancelada, lista, entregada o no esté disponible en cocina.",
+                    "No se pudo cancelar",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void btnBuscarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVentaActionPerformed
+    private void btnBuscarReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarReservaActionPerformed
         // TODO add your handling code here:
         buscarVentaPorId();
-    }//GEN-LAST:event_btnBuscarVentaActionPerformed
+    }//GEN-LAST:event_btnBuscarReservaActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        if (reservaSeleccionada == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione una reserva de la tabla.",
+                    "Reserva no seleccionada",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (reservaSeleccionada.getEstado() != pizzeria.model.EstadoReserva.PENDIENTE) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Solo se pueden enviar a cocina reservas en estado PENDIENTE.",
+                    "Reserva no disponible",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        boolean enviada = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .enviarReservaACocinaGUI(reservaSeleccionada.getId());
+
+        if (enviada) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Reserva enviada a cocina correctamente.",
+                    "Reserva enviada",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarReservas();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo enviar la reserva a cocina.",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
     
     private void mostrarUsuario() {
     
@@ -616,7 +711,7 @@ this.dispose();
     
     private void cargarHistorialVentas() {
         javax.swing.table.DefaultTableModel modelo =
-                (javax.swing.table.DefaultTableModel) tblHistorialVentas.getModel();
+                (javax.swing.table.DefaultTableModel) tblReservas.getModel();
 
         modelo.setRowCount(0);
         ventasMostradas.clear();
@@ -661,24 +756,24 @@ this.dispose();
     }
     
     private void limpiarVentaSeleccionada() {
-            lblVentaSeleccionada.setText("Venta seleccionada: -");
-            lblClienteSeleccionado.setText("Cliente: -");
-            lblTotalSeleccionado.setText("Total: -");
-            lblEstadoSeleccionado.setText("Estado: -");
-            lblDetalleSeleccionado.setText("Detalle: seleccione una venta de la tabla");
+            lblReservaSeleccionada.setText("Venta seleccionada: -");
+            lblClienteReservaSeleccionada.setText("Cliente: -");
+            lblTelefonoReservaSeleccionada.setText("Total: -");
+            lblFechaReservaSeleccionada.setText("Estado: -");
+            lblDetalleReservaSeleccionada.setText("Detalle: seleccione una venta de la tabla");
             
             ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(null);
         }
 
         private void mostrarVentaSeleccionada() {
-        int fila = tblHistorialVentas.getSelectedRow();
+        int fila = tblReservas.getSelectedRow();
 
         if (fila == -1) {
             limpiarVentaSeleccionada();
             return;
         }
 
-        int filaModelo = tblHistorialVentas.convertRowIndexToModel(fila);
+        int filaModelo = tblReservas.convertRowIndexToModel(fila);
 
         if (filaModelo < 0 || filaModelo >= ventasMostradas.size()) {
             limpiarVentaSeleccionada();
@@ -689,11 +784,11 @@ this.dispose();
         
         ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(venta);
 
-        lblVentaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
-        lblClienteSeleccionado.setText("Cliente: " + obtenerClienteVisual(venta));
-        lblTotalSeleccionado.setText("Total: Bs. " + String.format("%.2f", venta.getTotal()));
-        lblEstadoSeleccionado.setText("Estado: " + venta.getEstado());
-        lblDetalleSeleccionado.setText("Detalle: " + obtenerDetalleVisual(venta));
+        lblReservaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
+        lblClienteReservaSeleccionada.setText("Cliente: " + obtenerClienteVisual(venta));
+        lblTelefonoReservaSeleccionada.setText("Total: Bs. " + String.format("%.2f", venta.getTotal()));
+        lblFechaReservaSeleccionada.setText("Estado: " + venta.getEstado());
+        lblDetalleReservaSeleccionada.setText("Detalle: " + obtenerDetalleVisual(venta));
     }
     
      private String obtenerDetalleVisual(pizzeria.model.Venta venta) {
@@ -727,7 +822,7 @@ this.dispose();
     }
 
     private void buscarVentaPorId() {
-        String texto = txtBuscarVentaId.getText().trim();
+        String texto = txtBuscarReservaId.getText().trim();
 
         if (texto.isEmpty()) {
             cargarHistorialVentas();
@@ -752,10 +847,10 @@ this.dispose();
             pizzeria.model.Venta venta = ventasMostradas.get(i);
 
             if (venta.getId() == idBuscado) {
-                tblHistorialVentas.setRowSelectionInterval(i, i);
+                tblReservas.setRowSelectionInterval(i, i);
 
-                java.awt.Rectangle rectangulo = tblHistorialVentas.getCellRect(i, 0, true);
-                tblHistorialVentas.scrollRectToVisible(rectangulo);
+                java.awt.Rectangle rectangulo = tblReservas.getCellRect(i, 0, true);
+                tblReservas.scrollRectToVisible(rectangulo);
 
                 mostrarVentaSeleccionada();
                 return;
@@ -772,6 +867,157 @@ this.dispose();
         limpiarVentaSeleccionada();
     }
      
+    private void cargarReservas() {
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) tblReservas.getModel();
+
+        modelo.setRowCount(0);
+        reservasMostradas.clear();
+
+        java.util.List<pizzeria.model.Reserva> reservas =
+                ContextoVentasGUI.getInstancia()
+                        .getGestorReserva()
+                        .getListaReservas();
+
+        for (pizzeria.model.Reserva reserva : reservas) {
+            reservasMostradas.add(reserva);
+
+            modelo.addRow(new Object[]{
+                reserva.getId(),
+                obtenerClienteReservaVisual(reserva),
+                reserva.getTelefono(),
+                reserva.getFechaReserva(),
+                reserva.getEstado(),
+                "Bs. " + String.format("%.2f", reserva.calcularTotal())
+            });
+        }
+
+        limpiarReservaSeleccionada();
+    }
+    
+    private String obtenerClienteReservaVisual(pizzeria.model.Reserva reserva) {
+        String cliente = reserva.getNombreCliente();
+
+        if (cliente == null || cliente.trim().isEmpty()) {
+            return "Sin nombre";
+        }
+
+        return cliente.trim();
+    }
+    
+    private void limpiarReservaSeleccionada() {
+        reservaSeleccionada = null;
+
+        lblReservaSeleccionada.setText("Reserva seleccionada: -");
+        lblClienteReservaSeleccionada.setText("Cliente: -");
+        lblTelefonoReservaSeleccionada.setText("Teléfono: -");
+        lblFechaReservaSeleccionada.setText("Fecha: -");
+        lblEstadoReservaSeleccionada.setText("Estado: -");
+        lblDetalleReservaSeleccionada.setText("Detalle: seleccione una reserva");
+    }
+    
+    private void mostrarReservaSeleccionada() {
+        int fila = tblReservas.getSelectedRow();
+
+        if (fila == -1) {
+            limpiarReservaSeleccionada();
+            return;
+        }
+
+        int filaModelo = tblReservas.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= reservasMostradas.size()) {
+            limpiarReservaSeleccionada();
+            return;
+        }
+
+        reservaSeleccionada = reservasMostradas.get(filaModelo);
+
+        lblReservaSeleccionada.setText("Reserva seleccionada: N.º "
+                + String.format("%03d", reservaSeleccionada.getId()));
+
+        lblClienteReservaSeleccionada.setText("Cliente: "
+                + obtenerClienteReservaVisual(reservaSeleccionada));
+
+        lblTelefonoReservaSeleccionada.setText("Teléfono: "
+                + reservaSeleccionada.getTelefono());
+
+        lblFechaReservaSeleccionada.setText("Fecha: "
+                + reservaSeleccionada.getFechaReserva());
+
+        lblEstadoReservaSeleccionada.setText("Estado: "
+                + reservaSeleccionada.getEstado());
+
+        lblDetalleReservaSeleccionada.setText("Detalle: "
+                + obtenerDetalleReserva(reservaSeleccionada));
+    }
+    
+    private String obtenerDetalleReserva(pizzeria.model.Reserva reserva) {
+        StringBuilder detalle = new StringBuilder();
+
+        for (pizzeria.model.DetalleVenta item : reserva.getPedido()) {
+            if (detalle.length() > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(item.getCantidad())
+                    .append("x ")
+                    .append(item.getProducto().getNombre());
+        }
+
+        if (detalle.length() == 0) {
+            return "Sin detalle";
+        }
+
+        return detalle.toString();
+    }
+    
+    private void buscarReservaPorId() {
+        String texto = txtBuscarReservaId.getText().trim();
+
+        if (texto.isEmpty()) {
+            cargarReservas();
+            return;
+        }
+
+        int idBuscado;
+
+        try {
+            idBuscado = Integer.parseInt(texto);
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un ID de reserva válido.",
+                    "ID inválido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        for (int i = 0; i < reservasMostradas.size(); i++) {
+            pizzeria.model.Reserva reserva = reservasMostradas.get(i);
+
+            if (reserva.getId() == idBuscado) {
+                tblReservas.setRowSelectionInterval(i, i);
+
+                java.awt.Rectangle rectangulo = tblReservas.getCellRect(i, 0, true);
+                tblReservas.scrollRectToVisible(rectangulo);
+
+                mostrarReservaSeleccionada();
+                return;
+            }
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "No se encontró una reserva con ese ID.",
+                "Reserva no encontrada",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+
+        limpiarReservaSeleccionada();
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -791,7 +1037,7 @@ this.dispose();
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ConsultarVentasGUI().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ConsultarReservasGUI().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -801,7 +1047,7 @@ this.dispose();
     private javax.swing.JPanel Interfaz;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
-    private javax.swing.JButton btnBuscarVenta;
+    private javax.swing.JButton btnBuscarReserva;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnReportes;
@@ -810,6 +1056,7 @@ this.dispose();
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -822,13 +1069,14 @@ this.dispose();
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblClienteSeleccionado;
-    private javax.swing.JLabel lblDetalleSeleccionado;
-    private javax.swing.JLabel lblEstadoSeleccionado;
+    private javax.swing.JLabel lblClienteReservaSeleccionada;
+    private javax.swing.JLabel lblDetalleReservaSeleccionada;
+    private javax.swing.JLabel lblEstadoReservaSeleccionada;
+    private javax.swing.JLabel lblFechaReservaSeleccionada;
     private javax.swing.JLabel lblLogo;
-    private javax.swing.JLabel lblTotalSeleccionado;
-    private javax.swing.JLabel lblVentaSeleccionada;
-    private javax.swing.JTable tblHistorialVentas;
-    private javax.swing.JTextField txtBuscarVentaId;
+    private javax.swing.JLabel lblReservaSeleccionada;
+    private javax.swing.JLabel lblTelefonoReservaSeleccionada;
+    private javax.swing.JTable tblReservas;
+    private javax.swing.JTextField txtBuscarReservaId;
     // End of variables declaration//GEN-END:variables
 }

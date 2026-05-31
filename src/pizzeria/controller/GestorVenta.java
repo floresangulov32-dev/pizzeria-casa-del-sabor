@@ -566,6 +566,64 @@ public class GestorVenta {
 
         ventaActual = null;
     }
+    
+    //// Metodo para la GUI
+    public Reserva registrarReservaPagadaGUI(MetodoPago metodo, double montoPagado,
+                                         String nombreCliente, String telefono,
+                                         LocalDateTime fechaReserva) {
+        if (ventaActual == null || ventaActual.estaVacio()) {
+            return null;
+        }
+
+        if (gestorReserva == null) {
+            return null;
+        }
+
+        
+        
+        
+        
+
+        if (nombreCliente == null || nombreCliente.trim().isEmpty()) {
+            nombreCliente = "Sin nombre";
+        }
+
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return null;
+        }
+
+        ventaActual.setNombreCliente(nombreCliente);
+        ventaActual.setMetodoPago(metodo);
+        ventaActual.calcularTotal();
+        ventaActual.calcularCambio(montoPagado);
+
+        if (ventaActual.getCambio() < 0) {
+            return null;
+        }
+
+        //List<DetalleVenta> copiaPedido = copiarItems(ventaActual.getItems());
+        List<DetalleVenta> copiaPedido = copiarPedidoParaReservaConCombos(ventaActual);
+        
+        Reserva reserva = gestorReserva.nuevaReserva(
+                nombreCliente,
+                telefono.trim(),
+                fechaReserva,
+                copiaPedido
+        );
+
+        registrarCobro(
+                reserva.calcularTotal(),
+                metodo,
+                ventaActual.getCambio(),
+                "Reserva #" + reserva.getId()
+        );
+
+        gestorReserva.guardarArchivo("resources/data/reservas.txt");
+
+        ventaActual = null;
+
+        return reserva;
+    }
 
     // Registra en caja el ingreso y, si corresponde, el egreso por cambio
     private void registrarCobro(double total, MetodoPago metodo, double cambio, String descripcion) {
@@ -711,7 +769,113 @@ public class GestorVenta {
         ventaActual.getItems().add(new DetalleVenta(p, cantidad));
         ventaActual.calcularTotal();
     }
+    
+    ///Método para agregar producto validando stock
+    public String agregarItemGUI(Producto producto, int cantidad) {
+        if (ventaActual == null) {
+            return "No existe un pedido actual.";
+        }
 
+        if (producto == null) {
+            return "Producto no válido.";
+        }
+
+        if (cantidad <= 0) {
+            return "La cantidad debe ser mayor a 0.";
+        }
+
+        String mensajeStock = validarStockProducto(producto, cantidad);
+
+        if (mensajeStock != null) {
+            return mensajeStock;
+        }
+
+        agregarItem(producto, cantidad);
+        return null;
+    }
+    
+    /////Método para agregar combo validando stock
+    public String agregarComboGUI(Combo combo, int cantidad) {
+        if (ventaActual == null) {
+            return "No existe un pedido actual.";
+        }
+
+        if (combo == null) {
+            return "Combo no válido.";
+        }
+
+        if (cantidad <= 0) {
+            return "La cantidad debe ser mayor a 0.";
+        }
+
+        String mensajeStock = validarStockCombo(combo, cantidad);
+
+        if (mensajeStock != null) {
+            return mensajeStock;
+        }
+
+        agregarCombo(combo, cantidad);
+        return null;
+    }
+    
+    ////Validar stock de producto
+    private String validarStockProducto(Producto producto, int cantidad) {
+        for (int idInsumo : producto.getIngredientes()) {
+            Insumo insumo = inventario.buscarId(idInsumo);
+
+            if (insumo == null) {
+                return "Falta configurar un insumo del producto: " + producto.getNombre();
+            }
+
+            double requerido = insumo.getCantidadPorPizza() * cantidad;
+
+            if (requerido > insumo.getStockActual()) {
+                return "Stock insuficiente para " + producto.getNombre()
+                        + ". Insumo: " + insumo.getNombre()
+                        + ". Disponible: " + String.format("%.3f", insumo.getStockActual())
+                        + ". Requerido: " + String.format("%.3f", requerido);
+            }
+        }
+
+        return null;
+    }
+    
+    ///VALIDAR STOCK DE COMBO
+    private String validarStockCombo(Combo combo, int cantidad) {
+        for (Producto producto : combo.getCombo()) {
+            for (int idInsumo : producto.getIngredientes()) {
+                Insumo insumo = inventario.buscarId(idInsumo);
+
+                if (insumo == null) {
+                    return "Falta configurar un insumo del producto: " + producto.getNombre();
+                }
+
+                double requerido = insumo.getCantidadPorPizza() * cantidad;
+
+                if (requerido > insumo.getStockActual()) {
+                    return "Stock insuficiente para el combo #" + combo.getNroCombo()
+                            + ". Producto: " + producto.getNombre()
+                            + ". Insumo: " + insumo.getNombre()
+                            + ". Disponible: " + String.format("%.3f", insumo.getStockActual())
+                            + ". Requerido: " + String.format("%.3f", requerido);
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // Quita un item del pedido actual según su índice
     public void quitarItem(int index) {
         if (ventaActual == null) {
@@ -1104,5 +1268,75 @@ public class GestorVenta {
                                        dc.getPrecioUnitario(), dc.getCantidad()));
         }
         return copia;
+    }
+    
+    ///////////METODO AUXILIAR PARA COMBOS
+    private List<DetalleVenta> copiarPedidoParaReservaConCombos(Venta venta) {
+        List<DetalleVenta> pedidoReserva = new ArrayList<>();
+
+        for (DetalleVenta detalle : venta.getItems()) {
+            Producto p = detalle.getProducto();
+
+            Producto copiaProducto = new Producto(
+                    p.getID(),
+                    p.getTipo(),
+                    p.getNombre(),
+                    p.getDescripcion(),
+                    p.getPrecio()
+            );
+
+            copiaProducto.getIngredientes().addAll(p.getIngredientes());
+
+            pedidoReserva.add(new DetalleVenta(copiaProducto, detalle.getCantidad()));
+        }
+
+        for (DetalleCombo detalleCombo : venta.getCombos()) {
+            int idComboComoProducto = 9000 + detalleCombo.getNroCombo();
+
+            Producto comboComoProducto = new Producto(
+                    idComboComoProducto,
+                    TipoProducto.PRODUCTO,
+                    "Combo #" + detalleCombo.getNroCombo(),
+                    detalleCombo.getDescripcion(),
+                    detalleCombo.getPrecioUnitario()
+            );
+
+            pedidoReserva.add(new DetalleVenta(comboComoProducto, detalleCombo.getCantidad()));
+        }
+
+        return pedidoReserva;
+    }
+    
+    
+    public boolean cancelarReservaGUI(int idReserva) {
+        if (gestorReserva == null) {
+            return false;
+        }
+
+        boolean cancelada = gestorReserva.cancelarReserva(
+                idReserva,
+                gestorFinanzas,
+                gestorCocina
+        );
+
+        if (cancelada) {
+            gestorReserva.guardarArchivo("resources/data/reservas.txt");
+        }
+
+        return cancelada;
+    }
+
+    public boolean enviarReservaACocinaGUI(int idReserva) {
+        if (gestorReserva == null || gestorCocina == null) {
+            return false;
+        }
+
+        boolean enviada = gestorReserva.enviarACocina(idReserva, gestorCocina);
+
+        if (enviada) {
+            gestorReserva.guardarArchivo("resources/data/reservas.txt");
+        }
+
+        return enviada;
     }
 }
