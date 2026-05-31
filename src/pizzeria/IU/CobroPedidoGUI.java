@@ -589,85 +589,171 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
             .getGestorVenta()
             .getVentaActual();
 
-    if (venta == null || (venta.getItems().isEmpty() && venta.getCombos().isEmpty())) {
-        javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "No hay productos ni combos en el pedido.",
-                "Pedido vacío",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-        );
-        return;
-    }
-
-    String cliente = txtClienteCobro.getText().trim();
-
-    if (cliente.isEmpty()) {
-        cliente = "Sin nombre";
-    }
-
-    pizzeria.model.MetodoPago metodoEnum = obtenerMetodoPagoSeleccionado();
-    String metodoPago = metodoEnum.getNombre();
-
-    String tipoPedido;
-
-    if (rbReserva.isSelected()) {
-        tipoPedido = "Reserva";
-    } else {
-        tipoPedido = "Venta inmediata";
-    }
-
-    double montoRecibido = 0.0;
-    double cambio = 0.0;
-
-    if (rbEfectivo.isSelected()) {
-        try {
-            montoRecibido = Double.parseDouble(txtMontoRecibido.getText().trim());
-
-            if (montoRecibido < venta.getTotal()) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "El monto recibido es menor al total del pedido.",
-                        "Monto insuficiente",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            cambio = montoRecibido - venta.getTotal();
-
-            if (cambio < 0) {
-                cambio = 0.0;
-            }
-
-        } catch (NumberFormatException e) {
+        if (venta == null || (venta.getItems().isEmpty() && venta.getCombos().isEmpty())) {
             javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "Ingrese un monto recibido válido.",
-                    "Monto inválido",
+                    "No hay productos ni combos en el pedido.",
+                    "Pedido vacío",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
             return;
         }
-    } else {
-        montoRecibido = venta.getTotal();
-        cambio = 0.0;
-    }
 
-    ContextoVentasGUI.getInstancia().guardarDatosCobro(
-            cliente,
-            metodoPago,
-            tipoPedido,
-            montoRecibido,
-            cambio
-    );
+        String cliente = txtClienteCobro.getText().trim();
 
-    if (rbReserva.isSelected()) {
+        if (cliente.isEmpty()) {
+            cliente = "Sin nombre";
+        }
+
+        pizzeria.model.MetodoPago metodoEnum = obtenerMetodoPagoSeleccionado();
+        String metodoPago = metodoEnum.getNombre();
+
+        String tipoPedido;
+
+        if (rbReserva.isSelected()) {
+            tipoPedido = "Reserva";
+        } else {
+            tipoPedido = "Venta inmediata";
+        }
+
+        double montoRecibido = 0.0;
+        double cambio = 0.0;
+
+        if (rbEfectivo.isSelected()) {
+            try {
+                montoRecibido = Double.parseDouble(txtMontoRecibido.getText().trim());
+
+                if (montoRecibido < venta.getTotal()) {
+                    javax.swing.JOptionPane.showMessageDialog(
+                            this,
+                            "El monto recibido es menor al total del pedido.",
+                            "Monto insuficiente",
+                            javax.swing.JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+
+                cambio = montoRecibido - venta.getTotal();
+
+                if (cambio < 0) {
+                    cambio = 0.0;
+                }
+
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Ingrese un monto recibido válido.",
+                        "Monto inválido",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+        } else {
+            montoRecibido = venta.getTotal();
+            cambio = 0.0;
+        }
+
+        ContextoVentasGUI.getInstancia().guardarDatosCobro(
+                cliente,
+                metodoPago,
+                tipoPedido,
+                montoRecibido,
+                cambio
+        );
+
+        if (rbReserva.isSelected()) {
+
+        if (!venta.getCombos().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Por ahora las reservas desde la interfaz solo admiten productos individuales.\n"
+                    + "Este pedido contiene combos, por eso no se puede registrar como reserva sin perder información.",
+                    "Reserva no disponible para combos",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        String telefono = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Ingrese el teléfono del cliente:",
+                "Datos de reserva",
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (telefono == null) {
+            return;
+        }
+
+        if (telefono.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Debe ingresar un teléfono para registrar la reserva.",
+                    "Teléfono requerido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        java.time.format.DateTimeFormatter formato =
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        String fechaTexto = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Ingrese fecha y hora de la reserva:\nFormato: yyyy-MM-dd HH:mm",
+                java.time.LocalDateTime.now().plusHours(1).format(formato)
+        );
+
+        if (fechaTexto == null) {
+            return;
+        }
+
+        java.time.LocalDateTime fechaReserva;
+
+        try {
+            fechaReserva = java.time.LocalDateTime.parse(fechaTexto.trim(), formato);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Formato de fecha inválido. Use: yyyy-MM-dd HH:mm",
+                    "Fecha inválida",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        pizzeria.model.Reserva reserva = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .registrarReservaPagadaGUI(
+                        metodoEnum,
+                        montoRecibido,
+                        cliente,
+                        telefono,
+                        fechaReserva
+                );
+
+        if (reserva == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo registrar la reserva. Revise el pedido, el pago o los datos ingresados.",
+                    "Error al registrar reserva",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         javax.swing.JOptionPane.showMessageDialog(
                 this,
-                "El registro de reservas desde la interfaz se conectará después. Por ahora use Venta inmediata.",
-                "Reserva pendiente",
+                "Reserva registrada correctamente.\n"
+                + "N.º de reserva: " + reserva.getId()
+                + "\nCliente: " + reserva.getNombreCliente()
+                + "\nFecha: " + reserva.getFechaReserva(),
+                "Reserva registrada",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE
         );
+
+        new VentasGUI().setVisible(true);
+        this.dispose();
         return;
     }
 

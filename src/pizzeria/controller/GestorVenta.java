@@ -566,6 +566,63 @@ public class GestorVenta {
 
         ventaActual = null;
     }
+    
+    //// Metodo para la GUI
+    public Reserva registrarReservaPagadaGUI(MetodoPago metodo, double montoPagado,
+                                         String nombreCliente, String telefono,
+                                         LocalDateTime fechaReserva) {
+        if (ventaActual == null || ventaActual.estaVacio()) {
+            return null;
+        }
+
+        if (gestorReserva == null) {
+            return null;
+        }
+
+        // Por seguridad: las reservas actuales solo guardan productos individuales, no combos.
+        if (!ventaActual.getCombos().isEmpty()) {
+            return null;
+        }
+
+        if (nombreCliente == null || nombreCliente.trim().isEmpty()) {
+            nombreCliente = "Sin nombre";
+        }
+
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return null;
+        }
+
+        ventaActual.setNombreCliente(nombreCliente);
+        ventaActual.setMetodoPago(metodo);
+        ventaActual.calcularTotal();
+        ventaActual.calcularCambio(montoPagado);
+
+        if (ventaActual.getCambio() < 0) {
+            return null;
+        }
+
+        List<DetalleVenta> copiaPedido = copiarItems(ventaActual.getItems());
+
+        Reserva reserva = gestorReserva.nuevaReserva(
+                nombreCliente,
+                telefono.trim(),
+                fechaReserva,
+                copiaPedido
+        );
+
+        registrarCobro(
+                reserva.calcularTotal(),
+                metodo,
+                ventaActual.getCambio(),
+                "Reserva #" + reserva.getId()
+        );
+
+        gestorReserva.guardarArchivo("resources/data/reservas.txt");
+
+        ventaActual = null;
+
+        return reserva;
+    }
 
     // Registra en caja el ingreso y, si corresponde, el egreso por cambio
     private void registrarCobro(double total, MetodoPago metodo, double cambio, String descripcion) {
