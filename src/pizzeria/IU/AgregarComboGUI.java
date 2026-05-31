@@ -456,9 +456,19 @@ public class AgregarComboGUI extends javax.swing.JFrame {
 
         pizzeria.model.Combo comboSeleccionado = combos.get(fila);
 
-        ContextoVentasGUI.getInstancia()
-                .getGestorVenta()
-                .agregarCombo(comboSeleccionado, cantidad);
+        String error = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .agregarComboGUI(comboSeleccionado, cantidad);
+
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    error,
+                    "No se pudo agregar combo",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();

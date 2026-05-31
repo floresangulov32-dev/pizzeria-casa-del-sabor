@@ -711,7 +711,113 @@ public class GestorVenta {
         ventaActual.getItems().add(new DetalleVenta(p, cantidad));
         ventaActual.calcularTotal();
     }
+    
+    ///Método para agregar producto validando stock
+    public String agregarItemGUI(Producto producto, int cantidad) {
+        if (ventaActual == null) {
+            return "No existe un pedido actual.";
+        }
 
+        if (producto == null) {
+            return "Producto no válido.";
+        }
+
+        if (cantidad <= 0) {
+            return "La cantidad debe ser mayor a 0.";
+        }
+
+        String mensajeStock = validarStockProducto(producto, cantidad);
+
+        if (mensajeStock != null) {
+            return mensajeStock;
+        }
+
+        agregarItem(producto, cantidad);
+        return null;
+    }
+    
+    /////Método para agregar combo validando stock
+    public String agregarComboGUI(Combo combo, int cantidad) {
+        if (ventaActual == null) {
+            return "No existe un pedido actual.";
+        }
+
+        if (combo == null) {
+            return "Combo no válido.";
+        }
+
+        if (cantidad <= 0) {
+            return "La cantidad debe ser mayor a 0.";
+        }
+
+        String mensajeStock = validarStockCombo(combo, cantidad);
+
+        if (mensajeStock != null) {
+            return mensajeStock;
+        }
+
+        agregarCombo(combo, cantidad);
+        return null;
+    }
+    
+    ////Validar stock de producto
+    private String validarStockProducto(Producto producto, int cantidad) {
+        for (int idInsumo : producto.getIngredientes()) {
+            Insumo insumo = inventario.buscarId(idInsumo);
+
+            if (insumo == null) {
+                return "Falta configurar un insumo del producto: " + producto.getNombre();
+            }
+
+            double requerido = insumo.getCantidadPorPizza() * cantidad;
+
+            if (requerido > insumo.getStockActual()) {
+                return "Stock insuficiente para " + producto.getNombre()
+                        + ". Insumo: " + insumo.getNombre()
+                        + ". Disponible: " + String.format("%.3f", insumo.getStockActual())
+                        + ". Requerido: " + String.format("%.3f", requerido);
+            }
+        }
+
+        return null;
+    }
+    
+    ///VALIDAR STOCK DE COMBO
+    private String validarStockCombo(Combo combo, int cantidad) {
+        for (Producto producto : combo.getCombo()) {
+            for (int idInsumo : producto.getIngredientes()) {
+                Insumo insumo = inventario.buscarId(idInsumo);
+
+                if (insumo == null) {
+                    return "Falta configurar un insumo del producto: " + producto.getNombre();
+                }
+
+                double requerido = insumo.getCantidadPorPizza() * cantidad;
+
+                if (requerido > insumo.getStockActual()) {
+                    return "Stock insuficiente para el combo #" + combo.getNroCombo()
+                            + ". Producto: " + producto.getNombre()
+                            + ". Insumo: " + insumo.getNombre()
+                            + ". Disponible: " + String.format("%.3f", insumo.getStockActual())
+                            + ". Requerido: " + String.format("%.3f", requerido);
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // Quita un item del pedido actual según su índice
     public void quitarItem(int index) {
         if (ventaActual == null) {

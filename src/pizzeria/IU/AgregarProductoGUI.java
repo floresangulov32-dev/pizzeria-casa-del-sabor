@@ -472,9 +472,20 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
         pizzeria.model.Producto productoSeleccionado = productos.get(fila);
 
-        ContextoVentasGUI.getInstancia()
-                .getGestorVenta()
-                .agregarItem(productoSeleccionado, cantidad);
+        
+        String error = ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .agregarItemGUI(productoSeleccionado, cantidad);
+
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    error,
+                    "No se pudo agregar producto",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
