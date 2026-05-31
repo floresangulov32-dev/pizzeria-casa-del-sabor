@@ -1306,4 +1306,37 @@ public class GestorVenta {
 
         return pedidoReserva;
     }
+    
+    
+    public boolean cancelarReservaGUI(int idReserva) {
+        if (gestorReserva == null) {
+            return false;
+        }
+
+        boolean cancelada = gestorReserva.cancelarReserva(
+                idReserva,
+                gestorFinanzas,
+                gestorCocina
+        );
+
+        if (cancelada) {
+            gestorReserva.guardarArchivo("resources/data/reservas.txt");
+        }
+
+        return cancelada;
+    }
+
+    public boolean enviarReservaACocinaGUI(int idReserva) {
+        if (gestorReserva == null || gestorCocina == null) {
+            return false;
+        }
+
+        boolean enviada = gestorReserva.enviarACocina(idReserva, gestorCocina);
+
+        if (enviada) {
+            gestorReserva.guardarArchivo("resources/data/reservas.txt");
+        }
+
+        return enviada;
+    }
 }

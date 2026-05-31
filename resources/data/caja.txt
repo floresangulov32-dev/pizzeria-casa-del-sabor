@@ -74,3 +74,11 @@
 72|INGRESO|80.00|2026-05-30 16:38|Venta|Venta inmediata #35
 73|EGRESO|220.00|2026-05-30 16:38|Otro|Cambio entregado de Venta inmediata #35
 74|EGRESO|80.00|2026-05-30 17:36|Otro|Reembolso venta #35
+75|INGRESO|175.00|2026-05-31 11:26|Venta|Venta inmediata #36
+76|EGRESO|175.00|2026-05-31 11:27|Otro|Reembolso venta #36
+77|INGRESO|100.00|2026-05-31 11:42|Venta|Reserva #8
+78|INGRESO|95.00|2026-05-31 12:07|Venta|Reserva #9
+79|INGRESO|20.00|2026-05-31 12:08|Venta|Venta inmediata #37
+80|INGRESO|65.00|2026-05-31 12:31|Venta|Reserva #10
+81|EGRESO|5.00|2026-05-31 12:31|Otro|Cambio entregado de Reserva #10
+82|EGRESO|95.00|2026-05-31 13:14|Otro|Reembolso reserva #9
