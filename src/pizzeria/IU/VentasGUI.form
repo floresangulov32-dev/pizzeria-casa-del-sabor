@@ -515,10 +515,10 @@
                         </Property>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="4" rowCount="2">
-                            <Column editable="true" title="#" type="java.lang.Object"/>
-                            <Column editable="true" title="Producto/Combo" type="java.lang.Object"/>
-                            <Column editable="true" title="Cant." type="java.lang.Object"/>
-                            <Column editable="true" title="Subtotal" type="java.lang.Object"/>
+                            <Column editable="false" title="#" type="java.lang.Object"/>
+                            <Column editable="false" title="Producto/Combo" type="java.lang.Object"/>
+                            <Column editable="false" title="Cant." type="java.lang.Object"/>
+                            <Column editable="false" title="Subtotal" type="java.lang.Object"/>
                           </Table>
                         </Property>
                       </Properties>

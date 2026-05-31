@@ -301,7 +301,15 @@ public class ConsultarVentasGUI extends javax.swing.JFrame {
             new String [] {
                 "ID", "Cliente", "Total", "Estado", "Metodo de Pago"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblHistorialVentas.setRowHeight(25);
         jScrollPane1.setViewportView(tblHistorialVentas);
 

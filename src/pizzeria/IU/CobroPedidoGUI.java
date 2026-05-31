@@ -430,7 +430,15 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
             new String [] {
                 "Detalle", "Subtotal"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblResumenCobro);
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);

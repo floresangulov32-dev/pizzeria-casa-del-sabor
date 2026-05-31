@@ -269,7 +269,15 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
             new String [] {
                 "#", "Producto/Combo", "Cant.", "Subtotal"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.setRowHeight(28);
         jScrollPane1.setViewportView(jTable1);
 
