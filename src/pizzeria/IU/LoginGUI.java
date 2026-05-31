@@ -406,9 +406,7 @@ public class LoginGUI extends javax.swing.JFrame {
 
 
     
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
