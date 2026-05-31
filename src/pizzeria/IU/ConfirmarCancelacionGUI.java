@@ -387,6 +387,17 @@ public class ConfirmarCancelacionGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .cancelarArmadoPedido();
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "El cobro fue cancelado y el pedido actual fue descartado.",
+                "Cobro cancelado",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+
         new VentasGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
