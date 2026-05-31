@@ -663,17 +663,6 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
         if (rbReserva.isSelected()) {
 
-        if (!venta.getCombos().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Por ahora las reservas desde la interfaz solo admiten productos individuales.\n"
-                    + "Este pedido contiene combos, por eso no se puede registrar como reserva sin perder información.",
-                    "Reserva no disponible para combos",
-                    javax.swing.JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-
         String telefono = javax.swing.JOptionPane.showInputDialog(
                 this,
                 "Ingrese el teléfono del cliente:",
@@ -742,17 +731,9 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
             return;
         }
 
-        javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Reserva registrada correctamente.\n"
-                + "N.º de reserva: " + reserva.getId()
-                + "\nCliente: " + reserva.getNombreCliente()
-                + "\nFecha: " + reserva.getFechaReserva(),
-                "Reserva registrada",
-                javax.swing.JOptionPane.INFORMATION_MESSAGE
-        );
+        ContextoVentasGUI.getInstancia().setUltimaReservaRegistrada(reserva);
 
-        new VentasGUI().setVisible(true);
+        new ReservaRegistradaGUI().setVisible(true);
         this.dispose();
         return;
     }

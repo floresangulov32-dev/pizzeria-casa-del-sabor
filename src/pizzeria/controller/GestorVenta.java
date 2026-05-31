@@ -579,10 +579,10 @@ public class GestorVenta {
             return null;
         }
 
-        // Por seguridad: las reservas actuales solo guardan productos individuales, no combos.
-        if (!ventaActual.getCombos().isEmpty()) {
-            return null;
-        }
+        
+        
+        
+        
 
         if (nombreCliente == null || nombreCliente.trim().isEmpty()) {
             nombreCliente = "Sin nombre";
@@ -601,8 +601,9 @@ public class GestorVenta {
             return null;
         }
 
-        List<DetalleVenta> copiaPedido = copiarItems(ventaActual.getItems());
-
+        //List<DetalleVenta> copiaPedido = copiarItems(ventaActual.getItems());
+        List<DetalleVenta> copiaPedido = copiarPedidoParaReservaConCombos(ventaActual);
+        
         Reserva reserva = gestorReserva.nuevaReserva(
                 nombreCliente,
                 telefono.trim(),
@@ -1267,5 +1268,42 @@ public class GestorVenta {
                                        dc.getPrecioUnitario(), dc.getCantidad()));
         }
         return copia;
+    }
+    
+    ///////////METODO AUXILIAR PARA COMBOS
+    private List<DetalleVenta> copiarPedidoParaReservaConCombos(Venta venta) {
+        List<DetalleVenta> pedidoReserva = new ArrayList<>();
+
+        for (DetalleVenta detalle : venta.getItems()) {
+            Producto p = detalle.getProducto();
+
+            Producto copiaProducto = new Producto(
+                    p.getID(),
+                    p.getTipo(),
+                    p.getNombre(),
+                    p.getDescripcion(),
+                    p.getPrecio()
+            );
+
+            copiaProducto.getIngredientes().addAll(p.getIngredientes());
+
+            pedidoReserva.add(new DetalleVenta(copiaProducto, detalle.getCantidad()));
+        }
+
+        for (DetalleCombo detalleCombo : venta.getCombos()) {
+            int idComboComoProducto = 9000 + detalleCombo.getNroCombo();
+
+            Producto comboComoProducto = new Producto(
+                    idComboComoProducto,
+                    TipoProducto.PRODUCTO,
+                    "Combo #" + detalleCombo.getNroCombo(),
+                    detalleCombo.getDescripcion(),
+                    detalleCombo.getPrecioUnitario()
+            );
+
+            pedidoReserva.add(new DetalleVenta(comboComoProducto, detalleCombo.getCantidad()));
+        }
+
+        return pedidoReserva;
     }
 }
