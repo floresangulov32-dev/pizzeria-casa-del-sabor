@@ -10,7 +10,7 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
-
+    private java.util.ArrayList<Integer> indicesMostrados = new java.util.ArrayList<>();
     /**
      * Creates new form MenuGerente
      */
@@ -26,26 +26,28 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
         activarBoton(btnInicio);
         
         cargarPedidoActual();
+        configurarBusquedaYSeleccion();
     }
     
    
     
     public QuitarProductoGUI(String rol, String nombre) {
-    initComponents();
-    setSize(1280, 720);
-    setLocationRelativeTo(null);
-    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
-    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
-    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
-    this.rolUsuario = rol;
-    this.nombreUsuario = nombre;
-    mostrarUsuario();
-    configurarHover();        
-    activarBoton(btnInicio);
-    
-    cargarPedidoActual();
-    
-}
+        initComponents();
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+        this.rolUsuario = rol;
+        this.nombreUsuario = nombre;
+        mostrarUsuario();
+        configurarHover();        
+        activarBoton(btnInicio);
+
+        cargarPedidoActual();
+        configurarBusquedaYSeleccion();
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -322,8 +324,6 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(74, 74, 74));
         jLabel3.setText("Producto seleccionado:");
 
-        jTextField2.setText("Pizza Hawaiana");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -335,8 +335,8 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(278, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,6 +462,7 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
         int fila = jTable1.getSelectedRow();
 
         if (fila == -1) {
@@ -469,6 +470,18 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
                     this,
                     "Seleccione un producto o combo de la tabla.",
                     "Elemento no seleccionado",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= indicesMostrados.size()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo identificar el elemento seleccionado.",
+                    "Error de selección",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
             return;
@@ -499,14 +512,15 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
             return;
         }
 
+        int indiceReal = indicesMostrados.get(filaModelo);
         int cantidadProductos = venta.getItems().size();
 
-        if (fila < cantidadProductos) {
+        if (indiceReal < cantidadProductos) {
             ContextoVentasGUI.getInstancia()
                     .getGestorVenta()
-                    .quitarItem(fila);
+                    .quitarItem(indiceReal);
         } else {
-            int indiceCombo = fila - cantidadProductos;
+            int indiceCombo = indiceReal - cantidadProductos;
 
             ContextoVentasGUI.getInstancia()
                     .getGestorVenta()
@@ -515,6 +529,7 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
 
         new NuevoPedidoGUI().setVisible(true);
         this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -582,6 +597,10 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
     
     /////////////////////NUEVO METODO PARA CARGAR DATOS DE PEDIDO ACTUAL
     private void cargarPedidoActual() {
+    cargarPedidoActual("");
+}
+
+    private void cargarPedidoActual(String filtro) {
         pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
                 .getGestorVenta()
                 .getVentaActual();
@@ -590,31 +609,140 @@ public class QuitarProductoGUI extends javax.swing.JFrame {
                 (javax.swing.table.DefaultTableModel) jTable1.getModel();
 
         modelo.setRowCount(0);
+        indicesMostrados.clear();
 
         if (venta == null) {
             return;
         }
 
-        int numero = 1;
+        String filtroLower = filtro == null ? "" : filtro.trim().toLowerCase();
 
-        for (pizzeria.model.DetalleVenta detalle : venta.getItems()) {
+        int numeroVisible = 1;
+
+        for (int i = 0; i < venta.getItems().size(); i++) {
+            pizzeria.model.DetalleVenta detalle = venta.getItems().get(i);
+
+            String nombre = detalle.getProducto().getNombre();
+
+            if (!filtroLower.isEmpty()
+                    && !nombre.toLowerCase().contains(filtroLower)) {
+                continue;
+            }
+
             modelo.addRow(new Object[]{
-                numero,
-                detalle.getProducto().getNombre(),
+                numeroVisible,
+                nombre,
                 detalle.getCantidad(),
                 "Bs. " + String.format("%.2f", detalle.getSubTotal())
             });
-            numero++;
+
+            indicesMostrados.add(i);
+            numeroVisible++;
         }
 
-        for (pizzeria.model.DetalleCombo detalleCombo : venta.getCombos()) {
+        int cantidadProductos = venta.getItems().size();
+
+        for (int i = 0; i < venta.getCombos().size(); i++) {
+            pizzeria.model.DetalleCombo detalleCombo = venta.getCombos().get(i);
+
+            String nombre = "Combo #" + detalleCombo.getNroCombo();
+
+            if (!filtroLower.isEmpty()
+                    && !nombre.toLowerCase().contains(filtroLower)) {
+                continue;
+            }
+
             modelo.addRow(new Object[]{
-                numero,
-                "Combo #" + detalleCombo.getNroCombo(),
+                numeroVisible,
+                nombre,
                 detalleCombo.getCantidad(),
                 "Bs. " + String.format("%.2f", detalleCombo.getSubTotal())
             });
-            numero++;
+
+            indicesMostrados.add(cantidadProductos + i);
+            numeroVisible++;
+        }
+    }
+    
+    private void configurarBusquedaYSeleccion() {
+        jTextField2.setEditable(false);
+
+        jTextField1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarPedido();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarPedido();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarPedido();
+            }
+        });
+
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                mostrarElementoSeleccionado();
+            }
+        });
+    }
+    
+    private void filtrarPedido() {
+        String filtro = jTextField1.getText().trim();
+        cargarPedidoActual(filtro);
+        jTextField2.setText("");
+    }
+    
+    
+    private void mostrarElementoSeleccionado() {
+        int fila = jTable1.getSelectedRow();
+
+        if (fila == -1) {
+            jTextField2.setText("");
+            return;
+        }
+
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= indicesMostrados.size()) {
+            jTextField2.setText("");
+            return;
+        }
+
+        pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
+                .getGestorVenta()
+                .getVentaActual();
+
+        if (venta == null) {
+            jTextField2.setText("");
+            return;
+        }
+
+        int indiceReal = indicesMostrados.get(filaModelo);
+        int cantidadProductos = venta.getItems().size();
+
+        if (indiceReal < cantidadProductos) {
+            pizzeria.model.DetalleVenta detalle = venta.getItems().get(indiceReal);
+
+            jTextField2.setText(
+                    detalle.getProducto().getNombre()
+                    + " | Cantidad: " + detalle.getCantidad()
+                    + " | Subtotal: Bs. " + String.format("%.2f", detalle.getSubTotal())
+            );
+
+        } else {
+            int indiceCombo = indiceReal - cantidadProductos;
+            pizzeria.model.DetalleCombo combo = venta.getCombos().get(indiceCombo);
+
+            jTextField2.setText(
+                    "Combo #" + combo.getNroCombo()
+                    + " | Cantidad: " + combo.getCantidad()
+                    + " | Subtotal: Bs. " + String.format("%.2f", combo.getSubTotal())
+            );
         }
     }
     

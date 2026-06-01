@@ -10,6 +10,7 @@ public class AgregarComboGUI extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private java.util.ArrayList<pizzeria.model.Combo> combosMostrados = new java.util.ArrayList<>();
 
     /**
      * Creates new form MenuGerente
@@ -26,26 +27,27 @@ public class AgregarComboGUI extends javax.swing.JFrame {
         activarBoton(btnInicio);
         
         cargarCombos();
+        configurarBusquedaCombos();
     }
     
    
     
     public AgregarComboGUI(String rol, String nombre) {
-    initComponents();
-    setSize(1280, 720);
-    setLocationRelativeTo(null);
-    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
-    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
-    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
-    this.rolUsuario = rol;
-    this.nombreUsuario = nombre;
-    mostrarUsuario();
-    configurarHover();        
-    activarBoton(btnInicio);
-    cargarCombos();
-    
-    
-}
+        initComponents();
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+        this.rolUsuario = rol;
+        this.nombreUsuario = nombre;
+        mostrarUsuario();
+        configurarHover();        
+        activarBoton(btnInicio);
+        cargarCombos();
+        configurarBusquedaCombos();
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -259,7 +261,7 @@ public class AgregarComboGUI extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(168, 27, 29));
         jLabel19.setText("AGREGAR COMBO");
 
-        jLabel6.setText("Buscar producto");
+        jLabel6.setText("Buscar combo o contenido:");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
@@ -452,16 +454,25 @@ public class AgregarComboGUI extends javax.swing.JFrame {
             return;
         }
 
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= combosMostrados.size()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo identificar el combo seleccionado.",
+                    "Error de selección",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         int cantidad = (int) jSpinner1.getValue();
 
-        java.util.ArrayList<pizzeria.model.Combo> combos =
-                ContextoVentasGUI.getInstancia().getMenu().getCombos();
-
-        pizzeria.model.Combo comboSeleccionado = combos.get(fila);
+        pizzeria.model.Combo comboSeleccionado = combosMostrados.get(filaModelo);
 
         String error = ContextoVentasGUI.getInstancia()
-            .getGestorVenta()
-            .agregarComboGUI(comboSeleccionado, cantidad);
+                .getGestorVenta()
+                .agregarComboGUI(comboSeleccionado, cantidad);
 
         if (error != null) {
             javax.swing.JOptionPane.showMessageDialog(
@@ -470,11 +481,12 @@ public class AgregarComboGUI extends javax.swing.JFrame {
                     "No se pudo agregar combo",
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
-            return;
-        }
+        return;
+    }
 
-        new NuevoPedidoGUI().setVisible(true);
-        this.dispose();
+    new NuevoPedidoGUI().setVisible(true);
+    this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -542,26 +554,68 @@ public class AgregarComboGUI extends javax.swing.JFrame {
     
     //////////////////////NUEVO METODO DE CARGAR COMBOS
     private void cargarCombos() {
+        cargarCombos("");
+    }
+
+    private void cargarCombos(String filtro) {
         javax.swing.table.DefaultTableModel modelo =
                 (javax.swing.table.DefaultTableModel) jTable1.getModel();
 
         modelo.setRowCount(0);
+        combosMostrados.clear();
 
         java.util.ArrayList<pizzeria.model.Combo> combos =
                 ContextoVentasGUI.getInstancia().getMenu().getCombos();
 
-        System.out.println("Combos cargados en GUI: " + combos.size());
+        String filtroLower = filtro == null ? "" : filtro.trim().toLowerCase();
 
         for (pizzeria.model.Combo combo : combos) {
+            String nombreCombo = "Combo #" + combo.getNroCombo();
+            String contenidoCombo = obtenerContenidoCombo(combo);
+
+            boolean coincide = filtroLower.isEmpty()
+                    || nombreCombo.toLowerCase().contains(filtroLower)
+                    || contenidoCombo.toLowerCase().contains(filtroLower);
+
+            if (!coincide) {
+                continue;
+            }
+
+            combosMostrados.add(combo);
+
             modelo.addRow(new Object[]{
-                "Combo #" + combo.getNroCombo(),
-                obtenerContenidoCombo(combo),
+                nombreCombo,
+                contenidoCombo,
                 "Bs. " + String.format("%.2f", combo.getPrecio())
             });
         }
     }
     
     
+    private void configurarBusquedaCombos() {
+        jTextField1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCombos();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCombos();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCombos();
+            }
+        });
+    }
+    
+    
+    private void filtrarCombos() {
+        String filtro = jTextField1.getText().trim();
+        cargarCombos(filtro);
+    }
     
     ///////////////////////2DO METODO AUXILIAR
     private String obtenerContenidoCombo(pizzeria.model.Combo combo) {

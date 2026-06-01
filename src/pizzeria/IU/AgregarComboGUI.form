@@ -491,7 +491,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Buscar producto"/>
+                <Property name="text" type="java.lang.String" value="Buscar combo o contenido:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField1">
