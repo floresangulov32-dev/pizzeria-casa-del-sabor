@@ -513,6 +513,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -887,7 +888,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
                 obtenerClienteReservaVisual(reserva),
                 reserva.getTelefono(),
                 reserva.getFechaReserva(),
-                reserva.getEstado(),
+                obtenerEstadoReservaVisual(reserva),
                 "Bs. " + String.format("%.2f", reserva.calcularTotal())
             });
         }
@@ -945,8 +946,8 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         lblFechaReservaSeleccionada.setText("Fecha: "
                 + reservaSeleccionada.getFechaReserva());
 
-        lblEstadoReservaSeleccionada.setText("Estado: "
-                + reservaSeleccionada.getEstado());
+        lblEstadoReservaSeleccionada.setText("Estado: " 
+                + obtenerEstadoReservaVisual(reservaSeleccionada));
 
         lblDetalleReservaSeleccionada.setText("Detalle: "
                 + obtenerDetalleReserva(reservaSeleccionada));
@@ -1016,6 +1017,34 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         );
 
         limpiarReservaSeleccionada();
+    }
+    
+    private String obtenerEstadoReservaVisual(pizzeria.model.Reserva reserva) {
+        if (reserva == null || reserva.getEstado() == null) {
+            return "-";
+        }
+
+        if (reserva.getEstado() == pizzeria.model.EstadoReserva.PENDIENTE) {
+            return "PENDIENTE";
+        }
+
+        if (reserva.getEstado() == pizzeria.model.EstadoReserva.EN_COCINA) {
+            return "EN COCINA";
+        }
+
+        if (reserva.getEstado() == pizzeria.model.EstadoReserva.LISTA) {
+            return "LISTA PARA ENTREGAR";
+        }
+
+        if (reserva.getEstado() == pizzeria.model.EstadoReserva.ENTREGADA) {
+            return "ENTREGADA";
+        }
+
+        if (reserva.getEstado() == pizzeria.model.EstadoReserva.CANCELADA) {
+            return "CANCELADA";
+        }
+
+        return reserva.getEstado().toString();
     }
     
     public static void main(String args[]) {

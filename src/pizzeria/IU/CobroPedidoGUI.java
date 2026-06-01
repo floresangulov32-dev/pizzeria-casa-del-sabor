@@ -101,7 +101,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         lblTotalCobro = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        lblSubtotalCobro = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblResumenCobro = new javax.swing.JTable();
 
@@ -417,7 +417,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         jLabel21.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
         jLabel21.setText("Estado: Listo para cobro");
 
-        jLabel22.setText("Bs. 45");
+        lblSubtotalCobro.setText("Bs. 45");
 
         tblResumenCobro.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
         tblResumenCobro.setModel(new javax.swing.table.DefaultTableModel(
@@ -454,7 +454,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                         .addGroup(panel1Layout.createSequentialGroup()
                             .addComponent(jLabel17)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel22))
+                            .addComponent(lblSubtotalCobro))
                         .addGroup(panel1Layout.createSequentialGroup()
                             .addComponent(jLabel18)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
@@ -472,7 +472,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jLabel22))
+                    .addComponent(lblSubtotalCobro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
@@ -571,6 +571,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -837,6 +838,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     ///////METODO PARA CARGAR RESUMEN COBRO
     ///
     private void cargarResumenCobro() {
+       
         pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
                 .getGestorVenta()
                 .getVentaActual();
@@ -847,6 +849,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         if (venta == null) {
+            lblSubtotalCobro.setText("Bs. 0.00");
             lblTotalCobro.setText("Bs. 0.00");
             lblCambioCobro.setText("Bs. 0.00");
             return;
@@ -868,9 +871,17 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
 
         venta.calcularTotal();
 
+        lblSubtotalCobro.setText("Bs. " + String.format("%.2f", venta.getTotal()));
         lblTotalCobro.setText("Bs. " + String.format("%.2f", venta.getTotal()));
         lblCambioCobro.setText("Bs. 0.00");
     }
+    
+    
+    
+    
+    
+    
+    
     
     private void calcularCambio() {
         pizzeria.model.Venta venta = ContextoVentasGUI.getInstancia()
@@ -975,7 +986,6 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -988,6 +998,7 @@ public class CobroPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCambioCobro;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblSubtotalCobro;
     private javax.swing.JLabel lblTotalCobro;
     private javax.swing.JPanel panel1;
     private javax.swing.JRadioButton rbEfectivo;
