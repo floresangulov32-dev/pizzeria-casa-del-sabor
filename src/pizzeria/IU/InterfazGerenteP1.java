@@ -486,7 +486,7 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 795, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 798, Short.MAX_VALUE)
                 .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -576,15 +576,8 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
-        activarBoton(btnInvetario);
-        
-        JLabel lblMensaje = new JLabel("Módulo de Inventario - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
+        new InventarioPantallaInicial().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInvetarioActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
