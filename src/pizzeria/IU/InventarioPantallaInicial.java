@@ -123,7 +123,7 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         btnInvetario1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnInvetario1.setText("Insumos con Bajo Stock");
         btnInvetario1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnInvetario1.addActionListener(this::btnInvetario1btnGuardarCambiosPerformed);
+        btnInvetario1.addActionListener(this::btnInvetario1btnInsumoBajoStockPerformed);
 
         javax.swing.GroupLayout BarraNavLayout = new javax.swing.GroupLayout(BarraNav);
         BarraNav.setLayout(BarraNavLayout);
@@ -245,12 +245,24 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVolverPerformed
 
     private void btnAgregarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarInsumoActionPerformed
-        // TODO add your handling code here:
+        jScrollPane1.setVisible(false);
+        AgregarInsumo panelAgregar = new AgregarInsumo(this);
+        panelAgregar.setBounds(jScrollPane1.getBounds());
+        getContentPane().add(panelAgregar);
+        panelAgregar.setVisible(true);
+        revalidate();
+        repaint();
     }//GEN-LAST:event_btnAgregarInsumoActionPerformed
 
-    private void btnInvetario1btnGuardarCambiosPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetario1btnGuardarCambiosPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInvetario1btnGuardarCambiosPerformed
+    private void btnInvetario1btnInsumoBajoStockPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetario1btnInsumoBajoStockPerformed
+        jScrollPane1.setVisible(false);
+        InsumosBajoStock panel = new InsumosBajoStock(this);
+        panel.setBounds(jScrollPane1.getBounds());
+        getContentPane().add(panel);
+        panel.setVisible(true);
+        revalidate();
+        repaint();
+    }//GEN-LAST:event_btnInvetario1btnInsumoBajoStockPerformed
     
     private void configurarTabla(){
     javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
@@ -281,6 +293,12 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
     jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
 }
+    
+    public void mostrarTabla() {
+        jScrollPane1.setVisible(true);
+        revalidate();
+        repaint();
+    }
     /**
      * @param args the command line arguments
      */
