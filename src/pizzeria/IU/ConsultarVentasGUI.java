@@ -494,6 +494,7 @@ this.dispose();
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -635,7 +636,7 @@ this.dispose();
                 venta.getId(),
                 obtenerClienteVisual(venta),
                 "Bs. " + String.format("%.2f", venta.getTotal()),
-                venta.getEstado(),
+                obtenerEstadoVentaVisual(venta),
                 venta.getMetodoPago()
             });
         }
@@ -671,30 +672,30 @@ this.dispose();
         }
 
         private void mostrarVentaSeleccionada() {
-        int fila = tblHistorialVentas.getSelectedRow();
+            int fila = tblHistorialVentas.getSelectedRow();
 
-        if (fila == -1) {
-            limpiarVentaSeleccionada();
-            return;
+            if (fila == -1) {
+                limpiarVentaSeleccionada();
+                return;
+            }
+
+            int filaModelo = tblHistorialVentas.convertRowIndexToModel(fila);
+
+            if (filaModelo < 0 || filaModelo >= ventasMostradas.size()) {
+                limpiarVentaSeleccionada();
+                return;
+            }
+
+            pizzeria.model.Venta venta = ventasMostradas.get(filaModelo);
+
+            ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(venta);
+
+            lblVentaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
+            lblClienteSeleccionado.setText("Cliente: " + obtenerClienteVisual(venta));
+            lblTotalSeleccionado.setText("Total: Bs. " + String.format("%.2f", venta.getTotal()));
+            lblEstadoSeleccionado.setText("Estado: " + obtenerEstadoVentaVisual(venta));
+            lblDetalleSeleccionado.setText("Detalle: " + obtenerDetalleVisual(venta));
         }
-
-        int filaModelo = tblHistorialVentas.convertRowIndexToModel(fila);
-
-        if (filaModelo < 0 || filaModelo >= ventasMostradas.size()) {
-            limpiarVentaSeleccionada();
-            return;
-        }
-
-        pizzeria.model.Venta venta = ventasMostradas.get(filaModelo);
-        
-        ContextoVentasGUI.getInstancia().setVentaSeleccionadaConsulta(venta);
-
-        lblVentaSeleccionada.setText("Venta seleccionada: N.º " + String.format("%03d", venta.getId()));
-        lblClienteSeleccionado.setText("Cliente: " + obtenerClienteVisual(venta));
-        lblTotalSeleccionado.setText("Total: Bs. " + String.format("%.2f", venta.getTotal()));
-        lblEstadoSeleccionado.setText("Estado: " + venta.getEstado());
-        lblDetalleSeleccionado.setText("Detalle: " + obtenerDetalleVisual(venta));
-    }
     
      private String obtenerDetalleVisual(pizzeria.model.Venta venta) {
         StringBuilder detalle = new StringBuilder();
@@ -770,6 +771,35 @@ this.dispose();
         );
 
         limpiarVentaSeleccionada();
+    }
+    
+    
+    private String obtenerEstadoVentaVisual(pizzeria.model.Venta venta) {
+        if (venta == null || venta.getEstado() == null) {
+            return "-";
+        }
+
+        if (venta.getEstado() == pizzeria.model.EstadoPedido.PENDIENTE) {
+            return "EN COLA DE COCINA";
+        }
+
+        if (venta.getEstado() == pizzeria.model.EstadoPedido.EN_PREPARACION) {
+            return "EN PREPARACIÓN";
+        }
+
+        if (venta.getEstado() == pizzeria.model.EstadoPedido.LISTO) {
+            return "LISTO PARA ENTREGAR";
+        }
+
+        if (venta.getEstado() == pizzeria.model.EstadoPedido.ENTREGADO) {
+            return "ENTREGADO";
+        }
+
+        if (venta.getEstado() == pizzeria.model.EstadoPedido.CANCELADO) {
+            return "CANCELADO";
+        }
+
+        return venta.getEstado().toString();
     }
      
     public static void main(String args[]) {

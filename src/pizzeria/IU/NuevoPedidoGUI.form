@@ -582,7 +582,7 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblSubtotalPedido" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jLabelTotal" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -605,7 +605,7 @@
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSubtotalPedido" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -644,7 +644,7 @@
                     <Property name="text" type="java.lang.String" value="Subtotal"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel11">
+                <Component class="javax.swing.JLabel" name="lblSubtotalPedido">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Bs. 45.00"/>
                   </Properties>
