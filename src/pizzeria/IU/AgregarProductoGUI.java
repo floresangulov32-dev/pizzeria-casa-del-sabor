@@ -10,6 +10,7 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private java.util.ArrayList<pizzeria.model.Producto> productosMostrados = new java.util.ArrayList<>();
 
     /**
      * Creates new form MenuGerente
@@ -25,26 +26,26 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
         configurarHover();        
         activarBoton(btnInicio);
         cargarProductos();
+        configurarFiltrosProductos();
     }
     
    
     
     public AgregarProductoGUI(String rol, String nombre) {
-    initComponents();
-    setSize(1280, 720);
-    setLocationRelativeTo(null);
-    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
-    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
-    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
-    this.rolUsuario = rol;
-    this.nombreUsuario = nombre;
-    mostrarUsuario();
-    configurarHover();        
-    activarBoton(btnInicio);
-    
-    
-    
-}
+        initComponents();
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+        this.rolUsuario = rol;
+        this.nombreUsuario = nombre;
+        mostrarUsuario();
+        configurarHover();        
+        activarBoton(btnInicio);
+        cargarProductos();
+        configurarFiltrosProductos();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -261,9 +262,9 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
         jLabel3.setText("Categoria");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "Pizzas", "Bebidas", " " }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "Pizzas", "Bebidas" }));
 
-        jLabel6.setText("Buscar producto");
+        jLabel6.setText("Buscar producto:");
 
         jLabel8.setText("Cantidad");
 
@@ -434,10 +435,13 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -465,19 +469,38 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
             return;
         }
 
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+
+        if (filaModelo < 0 || filaModelo >= productosMostrados.size()) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo identificar el producto seleccionado.",
+                    "Error de selección",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
         int cantidad = (int) jSpinner1.getValue();
 
-        java.util.ArrayList<pizzeria.model.Producto> productos =
-                ContextoVentasGUI.getInstancia().getMenu().getProductos();
+        pizzeria.model.Producto productoSeleccionado = productosMostrados.get(filaModelo);
 
-        pizzeria.model.Producto productoSeleccionado = productos.get(fila);
-
-        ContextoVentasGUI.getInstancia()
+        String error = ContextoVentasGUI.getInstancia()
                 .getGestorVenta()
-                .agregarItem(productoSeleccionado, cantidad);
+                .agregarItemGUI(productoSeleccionado, cantidad);
+
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    error,
+                    "No se pudo agregar producto",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
         new NuevoPedidoGUI().setVisible(true);
-        this.dispose();
+        this.dispose();       
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -544,28 +567,105 @@ public class AgregarProductoGUI extends javax.swing.JFrame {
     }
     
     
-    private void cargarProductos() {
+   private void cargarProductos() {
+        cargarProductos("", "Todas");
+    }
+
+    private void cargarProductos(String filtroTexto, String categoriaSeleccionada) {
         javax.swing.table.DefaultTableModel modelo =
                 (javax.swing.table.DefaultTableModel) jTable1.getModel();
 
         modelo.setRowCount(0);
+        productosMostrados.clear();
 
         java.util.ArrayList<pizzeria.model.Producto> productos =
                 ContextoVentasGUI.getInstancia().getMenu().getProductos();
 
+        String filtro = filtroTexto == null ? "" : filtroTexto.trim().toLowerCase();
+        String categoria = categoriaSeleccionada == null ? "Todas" : categoriaSeleccionada.trim();
+
         for (pizzeria.model.Producto producto : productos) {
-            String categoria = producto.getTipo().getNombre();
+            String nombre = producto.getNombre();
+            String categoriaReal = producto.getTipo().getNombre();
+            String categoriaVisual = obtenerCategoriaVisual(producto);
+
+            boolean coincideTexto = filtro.isEmpty()
+                    || nombre.toLowerCase().contains(filtro)
+                    || categoriaReal.toLowerCase().contains(filtro)
+                    || categoriaVisual.toLowerCase().contains(filtro);
+
+            boolean coincideCategoria = categoria.equalsIgnoreCase("Todas")
+                    || categoria.isBlank()
+                    || categoriaVisual.equalsIgnoreCase(categoria);
+
+            if (!coincideTexto || !coincideCategoria) {
+                continue;
+            }
+
+            productosMostrados.add(producto);
 
             modelo.addRow(new Object[]{
                 producto.getNombre(),
-                categoria,
+                categoriaVisual,
                 "Bs. " + String.format("%.2f", producto.getPrecio())
-        });
+            });
+        }
     }
-}
+    
+    private String obtenerCategoriaVisual(pizzeria.model.Producto producto) {
+        String tipo = producto.getTipo().getNombre();
+
+        if (tipo == null) {
+            return "Producto";
+        }
+
+        String tipoLower = tipo.toLowerCase();
+        String nombreLower = producto.getNombre().toLowerCase();
+
+        if (tipoLower.contains("bebida")
+                || tipoLower.contains("refresco")
+                || nombreLower.contains("gaseosa")
+                || nombreLower.contains("coca")
+                || nombreLower.contains("jugo")
+                || nombreLower.contains("agua")
+                || nombreLower.contains("refresco")) {
+            return "Bebidas";
+        }
+
+        return "Pizzas";
+    }
+
+    private void configurarFiltrosProductos() {
+        jTextField1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                aplicarFiltrosProductos();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                aplicarFiltrosProductos();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                aplicarFiltrosProductos();
+            }
+        });
+
+        jComboBox1.addActionListener(e -> aplicarFiltrosProductos());
+    }
     
     
-    
+    private void aplicarFiltrosProductos() {
+        String texto = jTextField1.getText().trim();
+        String categoria = jComboBox1.getSelectedItem() == null
+                ? "Todas"
+                : jComboBox1.getSelectedItem().toString();
+
+        cargarProductos(texto, categoria);
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

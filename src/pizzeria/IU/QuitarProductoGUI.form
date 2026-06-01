@@ -553,11 +553,11 @@
                               <Data value="Pizza Hawaiana"/>
                               <Data value="Gaseosa 1.5 L"/>
                             </Column>
-                            <Column editable="true" title="Cantidad" type="java.lang.Object">
+                            <Column editable="false" title="Cantidad" type="java.lang.Object">
                               <Data value="1"/>
                               <Data value="1"/>
                             </Column>
-                            <Column editable="true" title="Subtotal" type="java.lang.Object">
+                            <Column editable="false" title="Subtotal" type="java.lang.Object">
                               <Data value="Bs. 35"/>
                               <Data value="Bs. 10"/>
                             </Column>
@@ -594,10 +594,10 @@
                               <Group type="102" attributes="0">
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTextField2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jTextField2" min="-2" pref="291" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="278" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -637,9 +637,6 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTextField2">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Pizza Hawaiana"/>
-                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

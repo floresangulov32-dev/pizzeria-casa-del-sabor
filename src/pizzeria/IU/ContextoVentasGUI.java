@@ -24,6 +24,8 @@ public class ContextoVentasGUI {
     private double cambioCobro = 0.0;
     private pizzeria.model.Venta ultimaVentaRegistrada;
     private pizzeria.model.Venta ventaSeleccionadaConsulta;
+    private pizzeria.model.Reserva ultimaReservaRegistrada;
+    private final pizzeria.controller.GestorReserva gestorReserva;
 
     private ContextoVentasGUI() {
         ArchivoMenu archivoMenu = new ArchivoMenu();
@@ -44,7 +46,8 @@ public class ContextoVentasGUI {
         GestorFinanzas gestorFinanzas = new GestorFinanzas();
         gestorFinanzas.cargarArchivos();
 
-        GestorReserva gestorReserva = new GestorReserva();
+        gestorReserva = new GestorReserva();
+        gestorReserva.cargarArchivo("resources/data/reservas.txt");
 
         GestorCocina gestorCocina = new GestorCocina(inventario, menu);
 
@@ -125,5 +128,14 @@ public class ContextoVentasGUI {
     public pizzeria.model.Venta getVentaSeleccionadaConsulta() {
         return ventaSeleccionadaConsulta;
     }
-    
+    public pizzeria.controller.GestorReserva getGestorReserva() {
+        return gestorReserva;
+    }
+    public void setUltimaReservaRegistrada(pizzeria.model.Reserva reserva) {
+        this.ultimaReservaRegistrada = reserva;
+    }
+
+    public pizzeria.model.Reserva getUltimaReservaRegistrada() {
+        return ultimaReservaRegistrada;
+    }
 }

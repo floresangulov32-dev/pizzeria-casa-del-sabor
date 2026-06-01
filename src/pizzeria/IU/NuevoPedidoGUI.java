@@ -80,7 +80,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        lblSubtotalPedido = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabelTotal = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -269,7 +269,15 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
             new String [] {
                 "#", "Producto/Combo", "Cant.", "Subtotal"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.setRowHeight(28);
         jScrollPane1.setViewportView(jTable1);
 
@@ -305,7 +313,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
         jLabel10.setText("Subtotal");
 
-        jLabel11.setText("Bs. 45.00");
+        lblSubtotalPedido.setText("Bs. 45.00");
 
         jLabel12.setText("Bs. 0.00");
 
@@ -340,7 +348,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel12)
-                                .addComponent(jLabel11))
+                                .addComponent(lblSubtotalPedido))
                             .addComponent(jLabelTotal)))
                     .addComponent(jLabel9))
                 .addContainerGap(30, Short.MAX_VALUE))
@@ -356,7 +364,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addGap(37, 37, 37)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSubtotalPedido, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel10))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -495,10 +503,13 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -608,6 +619,8 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         if (venta == null) {
+            lblSubtotalPedido.setText("Bs. 0.00");
+            jLabelTotal.setText("Bs. 0.00");
             return;
         }
 
@@ -635,10 +648,10 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
         venta.calcularTotal();
 
-        // Cambia jLabelTotal por el nombre real del label donde muestras el total.
-        // Ejemplo:
-        // jLabelTotal.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+        lblSubtotalPedido.setText("Bs. " + String.format("%.2f", venta.getTotal()));
         jLabelTotal.setText("Bs. " + String.format("%.2f", venta.getTotal()));
+
+
     }
     
     
@@ -682,7 +695,6 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -700,5 +712,6 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblSubtotalPedido;
     // End of variables declaration//GEN-END:variables
 }

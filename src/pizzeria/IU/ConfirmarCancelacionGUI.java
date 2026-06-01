@@ -368,10 +368,13 @@ public class ConfirmarCancelacionGUI extends javax.swing.JFrame {
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
+        new ConsultarReservasGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -387,6 +390,17 @@ public class ConfirmarCancelacionGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        ContextoVentasGUI.getInstancia()
+            .getGestorVenta()
+            .cancelarArmadoPedido();
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "El cobro fue cancelado y el pedido actual fue descartado.",
+                "Cobro cancelado",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+
         new VentasGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
