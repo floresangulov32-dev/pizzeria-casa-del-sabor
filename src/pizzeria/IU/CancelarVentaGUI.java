@@ -481,6 +481,7 @@ public class CancelarVentaGUI extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        PantallaMenuPublico.mostrar(this);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
