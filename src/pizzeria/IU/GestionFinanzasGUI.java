@@ -81,19 +81,19 @@ public class GestionFinanzasGUI extends JPanel {
         
         // Tarjeta Saldo
         gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(crearTarjeta("💰 SALDO ACTUAL", "Bs. 0.00", new Color(52, 152, 219)), gbc);
+        panel.add(crearTarjeta(" SALDO ACTUAL", "Bs. 0.00", new Color(52, 152, 219)), gbc);
         
         // Tarjeta Ingresos del día
         gbc.gridx = 1; gbc.gridy = 0;
-        panel.add(crearTarjeta("📈 INGRESOS DEL DÍA", "Bs. 0.00", new Color(46, 204, 113)), gbc);
+        panel.add(crearTarjeta(" INGRESOS DEL DÍA", "Bs. 0.00", new Color(46, 204, 113)), gbc);
         
         // Tarjeta Egresos del día
         gbc.gridx = 2; gbc.gridy = 0;
-        panel.add(crearTarjeta("📉 EGRESOS DEL DÍA", "Bs. 0.00", new Color(231, 76, 60)), gbc);
+        panel.add(crearTarjeta(" EGRESOS DEL DÍA", "Bs. 0.00", new Color(231, 76, 60)), gbc);
         
         // Tarjeta Deuda Pendiente
         gbc.gridx = 3; gbc.gridy = 0;
-        panel.add(crearTarjeta("⚠️ DEUDA PENDIENTE", "Bs. 0.00", new Color(241, 196, 15)), gbc);
+        panel.add(crearTarjeta(" DEUDA PENDIENTE", "Bs. 0.00", new Color(241, 196, 15)), gbc);
         
         // Tarjeta Saldo Disponible
         gbc.gridx = 4; gbc.gridy = 0;
@@ -182,8 +182,8 @@ public class GestionFinanzasGUI extends JPanel {
             BorderFactory.createEmptyBorder(10, 15, 15, 15)
         ));
         
-        btnVerHistorial = crearBotonAccion("📋 Ver Historial de movimientos", new Color(52, 152, 219));
-        btnRegistrarEgreso = crearBotonAccion("💸 Registrar egreso directo", new Color(231, 76, 60));
+        btnVerHistorial = crearBotonAccion(" Ver Historial de movimientos", new Color(52, 152, 219));
+        btnRegistrarEgreso = crearBotonAccion(" Registrar egreso directo", new Color(231, 76, 60));
         
         panel.add(javax.swing.Box.createRigidArea(new Dimension(0, 10)));
         panel.add(btnVerHistorial);
@@ -347,22 +347,14 @@ public class GestionFinanzasGUI extends JPanel {
     }
     
     private void verHistorial() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== HISTORIAL DE MOVIMIENTOS ===\n\n");
-        
-        for (MovimientoCaja m : gestorFinanzas.getTodosLosMovimientos()) {
-            sb.append(String.format("[%s] %s: Bs. %.2f - %s\n",
-                m.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-                m.getTipo().name(),
-                m.getMonto(),
-                m.getDescripcion()));
+        // Reemplazar el panel actual con el historial
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new HistorialMovimientosGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
         }
-        
-        if (gestorFinanzas.getTodosLosMovimientos().isEmpty()) {
-            sb.append("No hay movimientos registrados.");
-        }
-        
-        mostrarTextoEnDialogo("Historial de Movimientos", sb.toString());
     }
     
     private void registrarEgresoDirecto() {
@@ -481,21 +473,17 @@ public class GestionFinanzasGUI extends JPanel {
     }
     
     private void verDeudasPendientes() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== DEUDAS PENDIENTES ===\n\n");
-        
-        for (Deuda d : gestorFinanzas.getDeudasPendientes()) {
-            sb.append(String.format("ID: %d | %s | Bs. %.2f | Proveedor: %s\n",
-                d.getId(), d.getTipo(), d.getMontoTotal(), d.getProveedor()));
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            TodasDeudasGUI panelDeudas = new TodasDeudasGUI();
+            panelDeudas.filtrar("PENDIENTES");
+            parent.removeAll();
+            parent.add(panelDeudas, BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
         }
-        
-        if (gestorFinanzas.getDeudasPendientes().isEmpty()) {
-            sb.append("No hay deudas pendientes.");
-        }
-        
-        mostrarTextoEnDialogo("Deudas Pendientes", sb.toString());
     }
-    
+
     private void pagarDeuda() {
         if (gestorFinanzas.getDeudasPendientes().isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay deudas pendientes.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -535,22 +523,15 @@ public class GestionFinanzasGUI extends JPanel {
         }
     }
     
-    private void verTodasDeudas() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== TODAS LAS DEUDAS ===\n\n");
-        
-        for (Deuda d : gestorFinanzas.getTodasLasDeudas()) {
-            sb.append(String.format("ID: %d | %s | Bs. %.2f | %s | Estado: %s\n",
-                d.getId(), d.getTipo(), d.getMontoTotal(), d.getProveedor(), d.getEstado()));
+    private void verTodasDeudas() {    
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new TodasDeudasGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
         }
-        
-        if (gestorFinanzas.getTodasLasDeudas().isEmpty()) {
-            sb.append("No hay deudas registradas.");
-        }
-        
-        mostrarTextoEnDialogo("Todas las Deudas", sb.toString());
-    }
-    
+    }    
     private void reporteDiario() {
         gestorFinanzas.reporteDiario(LocalDate.now());
         JOptionPane.showMessageDialog(this, "Reporte diario generado. Revise la consola para más detalles.", 
