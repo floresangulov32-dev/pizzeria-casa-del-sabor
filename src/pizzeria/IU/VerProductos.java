@@ -6,6 +6,13 @@ package pizzeria.IU;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JLabel;
+import pizzeria.model.Menu;
+import pizzeria.model.Inventario;
+import pizzeria.util.ArchivoMenu;
+import pizzeria.model.Producto;
+import javax.swing.table.DefaultTableModel;
+
+
 
 public class VerProductos extends javax.swing.JFrame {
     
@@ -13,6 +20,11 @@ public class VerProductos extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private Menu menu;
+    private ArchivoMenu archivoMenu;
+    private final Inventario inventario = new Inventario();
+    
+ 
 
     /**
      * Creates new form MenuGerente
@@ -25,10 +37,20 @@ public class VerProductos extends javax.swing.JFrame {
         BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
         PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
         
-        configurarHover();        
+        configurarHover();
+        activarBoton(btnProductos);
         
        cargarImagen(lblLogo,
             "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+       
+        archivoMenu = new ArchivoMenu();
+        java.util.ArrayList<Producto> productos = 
+        archivoMenu.cargarProductos("resources/data/productos.txt");
+        menu = new pizzeria.model.Menu(productos, new java.util.ArrayList<>());
+         inventario.cargarArchivo();
+         
+        cargarTablaProductos();
+        configurarPlaceholder();
     }
     
     public VerProductos(String rol, String nombre) {
@@ -43,10 +65,40 @@ public class VerProductos extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     activarBoton(btnProductos);
-    cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(lblLogo,"/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+     inventario.cargarArchivo();
     
+    cargarTablaProductos();
+    configurarPlaceholder();
+     
+}
     
+    public VerProductos(String rol, String nombre,
+                    pizzeria.model.Menu menu,
+                    pizzeria.util.ArchivoMenu archivoMenu,
+                    pizzeria.model.Inventario inventario) {
+    initComponents();
+    setSize(1280, 720);
+    setLocationRelativeTo(null);
+    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+    BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
+    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+ 
+    this.rolUsuario   = rol;
+    this.nombreUsuario = nombre;
+    this.menu          = menu;
+    this.archivoMenu   = archivoMenu;
+    //this.inventario    = inventario;
+     inventario.cargarArchivo();
+    mostrarUsuario();
+    configurarHover();
+    activarBoton(btnProductos);
+    cargarImagen(lblLogo, "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+ 
+    // Cargar tabla al abrir
+    cargarTablaProductos();
+    configurarPlaceholder();
+ 
     
 }
 
@@ -79,12 +131,12 @@ public class VerProductos extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnAgregarP = new javax.swing.JButton();
+        btnEliminarP = new javax.swing.JButton();
+        btnAgregarI = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        idBuscar = new javax.swing.JTextField();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -286,6 +338,7 @@ public class VerProductos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 38)); // NOI18N
@@ -294,36 +347,35 @@ public class VerProductos extends javax.swing.JFrame {
         jLabel1.setText("Gestionar Productos");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(217, 217, 217));
-        jLabel3.setText("Buscar producto por ID: ");
-        jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        btnBuscar.setBackground(new java.awt.Color(168, 27, 29));
+        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
-        jButton1.setBackground(new java.awt.Color(168, 27, 29));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnAgregarP.setBackground(new java.awt.Color(168, 27, 29));
+        btnAgregarP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnAgregarP.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarP.setText("Agregar Producto");
+        btnAgregarP.addActionListener(this::btnAgregarPActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(168, 27, 29));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Agregar Producto");
+        btnEliminarP.setBackground(new java.awt.Color(168, 27, 29));
+        btnEliminarP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnEliminarP.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarP.setText("Eliminar Producto");
 
-        jButton3.setBackground(new java.awt.Color(168, 27, 29));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Eliminar Producto");
-
-        jButton4.setBackground(new java.awt.Color(168, 27, 29));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Agregar Ingrediente ");
+        btnAgregarI.setBackground(new java.awt.Color(168, 27, 29));
+        btnAgregarI.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnAgregarI.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarI.setText("Agregar Ingrediente ");
 
         jButton5.setBackground(new java.awt.Color(168, 27, 29));
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Agregar Ingrediente ");
+
+        idBuscar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        idBuscar.setForeground(new java.awt.Color(217, 217, 217));
 
         javax.swing.GroupLayout InterfazLayout = new javax.swing.GroupLayout(Interfaz);
         Interfaz.setLayout(InterfazLayout);
@@ -335,20 +387,21 @@ public class VerProductos extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addGroup(InterfazLayout.createSequentialGroup()
-                        .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, InterfazLayout.createSequentialGroup()
+                                .addComponent(idBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(335, 335, 335))
                             .addGroup(InterfazLayout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(InterfazLayout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnAgregarP, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 46, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         InterfazLayout.setVerticalGroup(
@@ -357,14 +410,14 @@ public class VerProductos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -416,7 +469,7 @@ public class VerProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVerMenuActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCombosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCombosActionPerformed
@@ -435,18 +488,53 @@ public class VerProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        // TODO add your handling code here:
+        GestionMenu ventana = new GestionMenu(rolUsuario, nombreUsuario);
+        ventana.setVisible(true);
+        this.dispose();
+// TODO add your handling code here:
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+        int id = Integer.parseInt(idBuscar.getText());
+        Producto p = menu.buscarProducto(id);
+        
+        if (p == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "No se encontró un producto con ese ID"
+            );
+            return;
+        }
+        
+        DefaultTableModel modelo =
+            (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Limpia las filas
+
+        modelo.addRow(new Object[]{
+            p.getID(),
+            p.getNombre(),
+            String.format("%.2f", p.getPrecio()),
+            p.getDescripcion(), "xd"
+            });   
+
+        } catch(NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "Ingrese un número válido"
+            );
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnAgregarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPActionPerformed
+            cargarPanel(new MenuAgregarProducto(inventario));
+
+    }//GEN-LAST:event_btnAgregarPActionPerformed
     
     private void mostrarUsuario() {
     
         Rol.setText(rolUsuario + ": " + nombreUsuario);
     }
-    
     
     private void configurarHover() {
         javax.swing.JButton[] botones = {btnVolver, btnVerMenu, btnProductos,
@@ -504,6 +592,63 @@ public class VerProductos extends javax.swing.JFrame {
 
     label.setIcon(new ImageIcon(imgEscalada));
     }
+    
+    private void cargarTablaProductos(){
+     DefaultTableModel modelo =
+            (DefaultTableModel) jTable1.getModel();
+
+    modelo.setRowCount(0); // Limpia las filas
+
+        for(Producto p : menu.getProductos()){
+        modelo.addRow(new Object[]{
+            p.getID(),
+            p.getNombre(),
+            String.format("%.2f", p.getPrecio()),
+            p.getDescripcion(), "xd"
+            });
+    }
+    jTable1.setModel(modelo);
+    jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
+    jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+    jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
+    jTable1.getColumnModel().getColumn(3).setPreferredWidth(300);
+    jTable1.getColumnModel().getColumn(4).setPreferredWidth(200);
+         
+    }
+    
+    private void cargarPanel(javax.swing.JPanel panel) {
+    Interfaz.removeAll();                    // limpia el contenido anterior
+    Interfaz.setLayout(new java.awt.BorderLayout());
+    Interfaz.add(panel, java.awt.BorderLayout.CENTER);
+    Interfaz.revalidate();                   // refresca el layout
+    Interfaz.repaint();                      // redibuja
+}
+    
+    private void configurarPlaceholder() {
+        idBuscar.setText("Ingrese un ID:");
+        idBuscar.setForeground(java.awt.Color.GRAY);
+
+        idBuscar.addFocusListener(new java.awt.event.FocusAdapter() {
+
+    @Override
+    public void focusGained(java.awt.event.FocusEvent e) {
+        if (idBuscar.getText().equals("Ingrese un ID:")) {
+            idBuscar.setText("");
+            idBuscar.setForeground(new java.awt.Color(0,0,0));
+        }
+    }
+
+    @Override
+    public void focusLost(java.awt.event.FocusEvent e) {
+        if (idBuscar.getText().trim().isEmpty()) {
+            idBuscar.setText("Ingrese un ID:");
+            idBuscar.setForeground(new java.awt.Color(217,217,217));
+        }
+    }
+});// código anterior
+}
+    
+   
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -533,19 +678,19 @@ public class VerProductos extends javax.swing.JFrame {
     private javax.swing.JPanel Interfaz;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
+    private javax.swing.JButton btnAgregarI;
+    private javax.swing.JButton btnAgregarP;
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnCombos;
+    private javax.swing.JButton btnEliminarP;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnVerMenu;
     private javax.swing.JButton btnVolver;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTextField idBuscar;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
