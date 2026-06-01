@@ -56,6 +56,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
+        jCheckBox4 = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -118,6 +119,8 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
 
         jCheckBox3.setText("jCheckBox3");
 
+        jCheckBox4.setText("jCheckBox4");
+
         javax.swing.GroupLayout panelInsumosLayout = new javax.swing.GroupLayout(panelInsumos);
         panelInsumos.setLayout(panelInsumosLayout);
         panelInsumosLayout.setHorizontalGroup(
@@ -125,6 +128,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
             .addGroup(panelInsumosLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(panelInsumosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBox4)
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox1))
@@ -139,7 +143,9 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
                 .addComponent(jCheckBox2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox3)
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBox4)
+                .addContainerGap(142, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(panelInsumos);
@@ -255,6 +261,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
