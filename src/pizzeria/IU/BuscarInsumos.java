@@ -120,7 +120,6 @@ public class BuscarInsumos extends javax.swing.JFrame {
         btnCerrar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCerrar.addActionListener(this::btnVolverActionPerformed);
 
-        jTextField1.setText("Buscar...");
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         javax.swing.GroupLayout BarraNavLayout = new javax.swing.GroupLayout(BarraNav);
@@ -275,7 +274,7 @@ public class BuscarInsumos extends javax.swing.JFrame {
     
     private void buscarInsumo(){
     String texto = jTextField1.getText().trim();
-    if (texto.isEmpty() || texto.equals("Buscar...")) {
+    if (texto.isEmpty()) {
         configurarTabla();
         return;
     }
