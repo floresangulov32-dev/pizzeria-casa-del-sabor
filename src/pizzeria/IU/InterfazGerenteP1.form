@@ -261,7 +261,7 @@
                       <Component id="jLabel1" alignment="0" min="-2" pref="394" max="-2" attributes="0"/>
                       <Component id="jLabel4" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="795" max="32767" attributes="0"/>
+                  <EmptySpace pref="798" max="32767" attributes="0"/>
                   <Component id="Rol" min="-2" pref="136" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

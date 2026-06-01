@@ -96,6 +96,7 @@ public class PlantillaGerente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         Fondo.setBackground(new java.awt.Color(255, 255, 255));
+        Fondo.setPreferredSize(new java.awt.Dimension(1280, 720));
 
         Encabezado.setBackground(new java.awt.Color(168, 27, 29));
         Encabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
@@ -236,7 +237,7 @@ public class PlantillaGerente extends javax.swing.JFrame {
                 .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         PiePag.setBackground(new java.awt.Color(0, 0, 0));
@@ -342,7 +343,8 @@ public class PlantillaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
-        // TODO add your handling code here:
+        new InventarioPantallaInicial().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInvetarioActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
