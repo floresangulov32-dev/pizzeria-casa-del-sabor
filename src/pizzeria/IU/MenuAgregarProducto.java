@@ -3,11 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package pizzeria.IU;
+
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.BoxLayout;
 import pizzeria.model.Inventario;
 import pizzeria.model.Insumo;
+import pizzeria.model.Menu;
+import pizzeria.model.Producto;
+import pizzeria.util.ArchivoMenu;
 
 /**
  *
@@ -20,6 +24,10 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
      */
     private ArrayList<JCheckBox> checkboxesInsumos = new ArrayList<>();
     private Inventario inventario;
+    private Menu menu;
+    private ArchivoMenu archivoMenu;
+    private Runnable onProductoAgregado;
+
     
     public MenuAgregarProducto() {
         initComponents();
@@ -158,11 +166,6 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
                 .addGap(97, 97, 97)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(216, 216, 216)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -180,7 +183,12 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
                                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(36, 36, 36)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37))))
+                        .addGap(37, 37, 37))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(165, 165, 165)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(177, 177, 177))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
@@ -231,29 +239,35 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     
-    private void cargarInsumos() {
+private void cargarInsumos() {
+        panelInsumos.removeAll();
+        checkboxesInsumos.clear();
+        panelInsumos.setLayout(new BoxLayout(panelInsumos, BoxLayout.Y_AXIS));
 
-    panelInsumos.removeAll();
-    checkboxesInsumos.clear();
+        if (inventario != null) {
+            for (Insumo ins : inventario.getInsumos()) {
+                JCheckBox chk = new JCheckBox(ins.getNombre());
+                chk.setBackground(java.awt.Color.WHITE);
+                chk.setFont(new java.awt.Font("Segoe UI", 0, 16));
+                checkboxesInsumos.add(chk);
+                panelInsumos.add(chk);
+            }
+        }
 
-    panelInsumos.setLayout(
-        new BoxLayout(panelInsumos, BoxLayout.Y_AXIS)
-    );
-
-    for (Insumo ins : inventario.getInsumos()) {
-
-        JCheckBox chk = new JCheckBox(ins.getNombre());
-
-        chk.setBackground(java.awt.Color.WHITE);
-        chk.setFont(new java.awt.Font("Segoe UI", 0, 16));
-
-        checkboxesInsumos.add(chk);
-        panelInsumos.add(chk);
+        panelInsumos.revalidate();
+        panelInsumos.repaint();
     }
 
-    panelInsumos.revalidate();
-    panelInsumos.repaint();
-}
+private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        txtDescrip.setText("");
+        tipoP.setSelectedIndex(0);
+        for (JCheckBox chk : checkboxesInsumos) {
+            chk.setSelected(false);
+        }
+        //actualizarVisibilidadInsumos();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
