@@ -653,7 +653,7 @@ public class GestionFinanzasGUI extends JPanel {
             parent.repaint();
         }
     }
-    
+     
     private void reporteMensual() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
