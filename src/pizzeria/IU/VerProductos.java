@@ -469,7 +469,9 @@ public class VerProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVerMenuActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        
+        VerProductos ventana = new VerProductos();
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCombosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCombosActionPerformed
