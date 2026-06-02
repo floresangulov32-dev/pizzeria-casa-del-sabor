@@ -6,6 +6,13 @@ package pizzeria.IU;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JLabel;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import pizzeria.model.Inventario;
+import pizzeria.model.Menu;
+import pizzeria.model.Producto;
+import pizzeria.model.Combo;
+import pizzeria.util.ArchivoMenu;
 
 public class GestionMenu extends javax.swing.JFrame {
     
@@ -13,6 +20,9 @@ public class GestionMenu extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private Menu menu;
+    private ArchivoMenu archivoMenu;
+    private Inventario inventario = new Inventario();
 
     /**
      * Creates new form MenuGerente
@@ -31,7 +41,14 @@ public class GestionMenu extends javax.swing.JFrame {
             "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
         cargarImagen(ImgPres,
             "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+        
+        archivoMenu = new ArchivoMenu();
+        ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+        ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
+        menu = new Menu(productos, combos);
+        inventario.cargarArchivo();
     }
+    
     
     public GestionMenu(String rol, String nombre) {
     initComponents();
@@ -50,6 +67,11 @@ public class GestionMenu extends javax.swing.JFrame {
     cargarImagen(ImgPres,
             "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
     
+        archivoMenu = new ArchivoMenu();
+        ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+        ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
+        menu = new Menu(productos, combos);
+        inventario.cargarArchivo();
     
     
 }
@@ -377,9 +399,7 @@ public class GestionMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVerMenuActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        VerProductos ventana = new VerProductos();
-        ventana.setVisible(true);
-        this.dispose();
+         cargarPanel(new PVerProductos(Interfaz, menu, archivoMenu, inventario));
 // TODO add your handling code here:
     }//GEN-LAST:event_btnProductosActionPerformed
 
@@ -467,6 +487,14 @@ public class GestionMenu extends javax.swing.JFrame {
 
     label.setIcon(new ImageIcon(imgEscalada));
     }
+ 
+    private void cargarPanel(javax.swing.JPanel panel) {
+        Interfaz.removeAll();                    // limpia el contenido anterior
+        Interfaz.setLayout(new java.awt.BorderLayout());
+        Interfaz.add(panel, java.awt.BorderLayout.CENTER);
+        Interfaz.revalidate();                   // refresca el layout
+        Interfaz.repaint();                      // redibuja
+}
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

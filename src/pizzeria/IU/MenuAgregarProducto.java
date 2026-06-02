@@ -13,6 +13,7 @@ import pizzeria.model.Menu;
 import pizzeria.model.Producto;
 import pizzeria.model.TipoProducto;
 import pizzeria.util.ArchivoMenu;
+import javax.swing.JPanel;
 
 /**
  *
@@ -25,20 +26,23 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
     private Menu menu;
     private ArchivoMenu archivoMenu;
     private Runnable onProductoAgregado;
+    private JPanel interfaz;
+    
 
     
     public MenuAgregarProducto() {
         initComponents();
     }
     
-    public MenuAgregarProducto(Inventario inventario) {
+    public MenuAgregarProducto(JPanel interfaz,Inventario inventario) {
         initComponents();
         this.inventario = inventario;
         cargarInsumos();
     }
     
-     public MenuAgregarProducto(Menu menu, Inventario inventario,
+     public MenuAgregarProducto(JPanel interfaz, Menu menu, Inventario inventario,
                                ArchivoMenu archivoMenu, Runnable onProductoAgregado) {
+        this.interfaz = interfaz;
         this.menu = menu;
         this.inventario = inventario;
         this.archivoMenu = archivoMenu;

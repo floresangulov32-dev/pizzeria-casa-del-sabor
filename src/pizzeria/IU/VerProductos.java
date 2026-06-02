@@ -47,7 +47,7 @@ public class VerProductos extends javax.swing.JFrame {
         java.util.ArrayList<Producto> productos = 
         archivoMenu.cargarProductos("resources/data/productos.txt");
         menu = new pizzeria.model.Menu(productos, new java.util.ArrayList<>());
-         inventario.cargarArchivo();
+        inventario.cargarArchivo();
          
         cargarTablaProductos();
         configurarPlaceholder();
@@ -135,7 +135,6 @@ public class VerProductos extends javax.swing.JFrame {
         btnAgregarP = new javax.swing.JButton();
         btnEliminarP = new javax.swing.JButton();
         btnAgregarI = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         idBuscar = new javax.swing.JTextField();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -369,11 +368,6 @@ public class VerProductos extends javax.swing.JFrame {
         btnAgregarI.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarI.setText("Agregar Ingrediente ");
 
-        jButton5.setBackground(new java.awt.Color(168, 27, 29));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Agregar Ingrediente ");
-
         idBuscar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         idBuscar.setForeground(new java.awt.Color(217, 217, 217));
 
@@ -392,16 +386,14 @@ public class VerProductos extends javax.swing.JFrame {
                                 .addComponent(idBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(335, 335, 335))
+                                .addGap(317, 317, 317))
                             .addGroup(InterfazLayout.createSequentialGroup()
                                 .addComponent(btnAgregarP, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)))
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 46, Short.MAX_VALUE)))
+                                .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         InterfazLayout.setVerticalGroup(
@@ -413,12 +405,11 @@ public class VerProductos extends javax.swing.JFrame {
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(idBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(InterfazLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -690,7 +681,6 @@ public class VerProductos extends javax.swing.JFrame {
     private javax.swing.JButton btnVerMenu;
     private javax.swing.JButton btnVolver;
     private javax.swing.JTextField idBuscar;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
