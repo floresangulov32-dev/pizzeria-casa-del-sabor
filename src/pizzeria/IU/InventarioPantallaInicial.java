@@ -32,10 +32,10 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     private void initComponents() {
 
         Encabezado = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         Rol = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
         BarraNav = new javax.swing.JPanel();
         btnFinanzas = new javax.swing.JButton();
         btnMenu = new javax.swing.JButton();
@@ -51,21 +51,23 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(214, 69, 69));
 
-        Encabezado.setBackground(new java.awt.Color(255, 255, 255));
+        Encabezado.setBackground(new java.awt.Color(168, 27, 29));
         Encabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel2.setText("LA CASA DEL SABOR");
 
         jLabel3.setText("LOGO");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(74, 74, 74));
-        jLabel4.setText("PIZZERIA");
-
         Rol.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         Rol.setText("Rol: Usuario");
+
+        jLabel4.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(217, 217, 217));
+        jLabel4.setText("PIZZERIA");
+
+        lblTitulo.setBackground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setText("LA CASA DEL SABOR");
 
         javax.swing.GroupLayout EncabezadoLayout = new javax.swing.GroupLayout(Encabezado);
         Encabezado.setLayout(EncabezadoLayout);
@@ -74,53 +76,64 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
             .addGroup(EncabezadoLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(40, 40, 40)
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 630, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(EncabezadoLayout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(EncabezadoLayout.createSequentialGroup()
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         EncabezadoLayout.setVerticalGroup(
             EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EncabezadoLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EncabezadoLayout.createSequentialGroup()
-                        .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        BarraNav.setBackground(new java.awt.Color(255, 255, 255));
+        BarraNav.setBackground(new java.awt.Color(0, 0, 0));
         BarraNav.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
+        btnFinanzas.setBackground(new java.awt.Color(0, 0, 0));
         btnFinanzas.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnFinanzas.setForeground(new java.awt.Color(255, 255, 255));
         btnFinanzas.setText("Buscar Insumo");
         btnFinanzas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnFinanzas.addActionListener(this::btnBuscarInsumoActionPerformed);
 
+        btnMenu.setBackground(new java.awt.Color(0, 0, 0));
         btnMenu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnMenu.setForeground(new java.awt.Color(255, 255, 255));
         btnMenu.setText("Agregar Insumo");
         btnMenu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnMenu.addActionListener(this::btnAgregarInsumoActionPerformed);
 
+        btnInvetario.setBackground(new java.awt.Color(0, 0, 0));
         btnInvetario.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnInvetario.setForeground(new java.awt.Color(255, 255, 255));
         btnInvetario.setText("Guardar Cambios");
         btnInvetario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnInvetario.addActionListener(this::btnGuardarCambiosPerformed);
 
+        btnCerrar.setBackground(new java.awt.Color(0, 0, 0));
         btnCerrar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnCerrar.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrar.setText("Volver");
         btnCerrar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCerrar.addActionListener(this::btnVolverPerformed);
 
+        btnInvetario1.setBackground(new java.awt.Color(0, 0, 0));
         btnInvetario1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnInvetario1.setForeground(new java.awt.Color(255, 255, 255));
         btnInvetario1.setText("Insumos con Bajo Stock");
         btnInvetario1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnInvetario1.addActionListener(this::btnInvetario1btnInsumoBajoStockPerformed);
@@ -130,21 +143,14 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         BarraNavLayout.setHorizontalGroup(
             BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BarraNavLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(BarraNavLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(262, 262, 262))
-                    .addGroup(BarraNavLayout.createSequentialGroup()
-                        .addGroup(BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnFinanzas, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnInvetario1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(BarraNavLayout.createSequentialGroup()
-                        .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                .addGap(17, 17, 17)
+                .addGroup(BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInvetario1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFinanzas, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
         BarraNavLayout.setVerticalGroup(
             BarraNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,16 +165,18 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
                 .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
-        PiePag.setBackground(new java.awt.Color(255, 255, 255));
+        PiePag.setBackground(new java.awt.Color(0, 0, 0));
         PiePag.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(74, 74, 74));
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Powered by StarTech");
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Logo");
 
         javax.swing.GroupLayout PiePagLayout = new javax.swing.GroupLayout(PiePag);
@@ -210,9 +218,9 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 997, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -221,8 +229,8 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
                 .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -263,6 +271,10 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         revalidate();
         repaint();
     }//GEN-LAST:event_btnInvetario1btnInsumoBajoStockPerformed
+    
+    public Inventario getInventario(){
+        return inventario;
+    }
     
     private void configurarTabla(){
     javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
@@ -334,12 +346,12 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     private javax.swing.JButton btnInvetario;
     private javax.swing.JButton btnInvetario1;
     private javax.swing.JButton btnMenu;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }
