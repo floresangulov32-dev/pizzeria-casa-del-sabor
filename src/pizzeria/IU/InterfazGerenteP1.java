@@ -320,17 +320,13 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
      * Carga un panel en el área de interfaz
      */
     private void cargarPanel(JPanel panel) {
-        // Limpiar el panel Interfaz
+        
         Interfaz.removeAll();
+       
+        Interfaz.setLayout(new BorderLayout());
 
-        // Configurar layout
-        Interfaz.setLayout(new java.awt.BorderLayout());
+        Interfaz.add(panel, BorderLayout.CENTER);
 
-        // Hacer que el panel se expanda
-        panel.setOpaque(false);  // Importante: para ver el fondo
-        Interfaz.add(panel, java.awt.BorderLayout.CENTER);
-
-        // Forzar actualización
         Interfaz.revalidate();
         Interfaz.repaint();
     }
