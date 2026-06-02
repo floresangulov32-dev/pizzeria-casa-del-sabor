@@ -302,10 +302,13 @@ public class ReportesGUI extends JPanel {
     }
     
     private void reporteTopProductos() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteTopProductosGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteReservasDiario() {
