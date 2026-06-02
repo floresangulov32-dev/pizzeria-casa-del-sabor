@@ -26,6 +26,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,6 +56,7 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
         configurarComponentes();
         configurarHover();
         activarBoton(btnInicio);
+        verificarDeudasProximas();
     }
     
     /**
@@ -316,20 +320,69 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
      * Carga un panel en el área de interfaz
      */
     private void cargarPanel(JPanel panel) {
-        // Limpiar el panel Interfaz
+        
         Interfaz.removeAll();
+       
+        Interfaz.setLayout(new BorderLayout());
 
-        // Configurar layout
-        Interfaz.setLayout(new java.awt.BorderLayout());
+        Interfaz.add(panel, BorderLayout.CENTER);
 
-        // Hacer que el panel se expanda
-        panel.setOpaque(false);  // Importante: para ver el fondo
-        Interfaz.add(panel, java.awt.BorderLayout.CENTER);
-
-        // Forzar actualización
         Interfaz.revalidate();
         Interfaz.repaint();
     }
+    
+    /**
+    * Verifica deudas próximas a vencer (menos de 7 días) y muestra advertencia
+    */
+    private void verificarDeudasProximas() {
+       try {
+           pizzeria.controller.GestorFinanzas gestorFinanzas = new pizzeria.controller.GestorFinanzas();
+           gestorFinanzas.cargarArchivos();
+
+           LocalDate hoy = LocalDate.now();
+           LocalDate limite = hoy.plusDays(7);
+
+           List<pizzeria.model.Deuda> deudasPendientes = gestorFinanzas.getDeudasPendientes();
+           List<pizzeria.model.Deuda> deudasProximas = new ArrayList<>();
+
+           for (pizzeria.model.Deuda d : deudasPendientes) {
+               LocalDate fechaVencimiento = d.getFechaCompromiso().toLocalDate();
+               if (!fechaVencimiento.isBefore(hoy) && !fechaVencimiento.isAfter(limite)) {
+                   deudasProximas.add(d);
+               }
+           }
+
+           if (!deudasProximas.isEmpty()) {
+               StringBuilder mensaje = new StringBuilder();
+               mensaje.append(" ATENCIÓN: Tiene deudas por vencer en los próximos 7 días \n\n");
+
+               double totalProximas = 0;
+               for (pizzeria.model.Deuda d : deudasProximas) {
+                   LocalDate fechaVencimiento = d.getFechaCompromiso().toLocalDate();
+                   long diasRestantes = java.time.temporal.ChronoUnit.DAYS.between(hoy, fechaVencimiento);
+                   mensaje.append(String.format("• ID: %d | %s | Bs. %.2f | Vence en %d día%s | %s\n",
+                       d.getId(),
+                       d.getTipo(),
+                       d.getMontoTotal(),
+                       diasRestantes,
+                       diasRestantes == 1 ? "" : "s",
+                       d.getDescripcion()));
+                   totalProximas += d.getMontoTotal();
+               }
+
+               mensaje.append("\n").append("═".repeat(50)).append("\n");
+               mensaje.append(String.format("TOTAL DEUDAS PRÓXIMAS: Bs. %.2f\n", totalProximas));
+               mensaje.append("\nPor favor, revise el módulo de Finanzas para gestionar los pagos.");
+
+               JOptionPane.showMessageDialog(this,
+                   mensaje.toString(),
+                   "Deudas por Vencer",
+                   JOptionPane.WARNING_MESSAGE);
+           }
+       } catch (Exception e) {
+           System.out.println("Error al verificar deudas próximas: " + e.getMessage());
+       }
+   }
     
     /**
      * Limpia el área de interfaz (muestra solo el fondo)
@@ -582,14 +635,8 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         activarBoton(btnReportes);
-        
-        JLabel lblMensaje = new JLabel("Módulo de Reportes - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
+        ReportesGUI panelReportes = new ReportesGUI();
+        cargarPanel(panelReportes);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed

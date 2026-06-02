@@ -1,5 +1,6 @@
 package pizzeria.model;
 
+import java.io.File;
 import pizzeria.model.Insumo;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,10 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.io.BufferedWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Inventario{
 
     private static final String ARCHIVO = "resources/data/Insumos.txt";
+    
+    private List<MovimientoInventario> movimientos;
+    private int proximoIdMovimiento = 1;
+    private static final String ARCHIVO_MOVIMIENTOS = "resources/data/movimientos_inventario.txt";
 
     private ArrayList<Insumo> insumos    = new ArrayList<>();
     private int proximoId  = 1;
@@ -268,4 +278,114 @@ public class Inventario{
                     ". Se iniciará con inventario vacío.");
         }
     }
+    // Inicializar lista de movimientos en el constructor
+    public Inventario() {
+        insumos = new ArrayList<>();
+        movimientos = new ArrayList<>();
+        cargarMovimientos();
+    }
+
+    // Registrar un movimiento
+    public void registrarMovimiento(int idInsumo, String nombreInsumo, String tipoMovimiento, 
+                                     double cantidad, double stockResultante, String usuario, 
+                                     String observacion) {
+        MovimientoInventario mov = new MovimientoInventario(
+            proximoIdMovimiento++, idInsumo, nombreInsumo, tipoMovimiento, 
+            cantidad, stockResultante, usuario, observacion, LocalDateTime.now()
+        );
+        movimientos.add(mov);
+        guardarMovimientos();
+    }
+
+    // Obtener movimientos por período
+    public List<MovimientoInventario> getMovimientosPeriodo(LocalDate inicio, LocalDate fin) {
+        LocalDateTime desde = inicio.atStartOfDay();
+        LocalDateTime hasta = fin.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return movimientos.stream()
+            .filter(m -> !m.getFecha().isBefore(desde))
+            .filter(m -> !m.getFecha().isAfter(hasta))
+            .sorted((a, b) -> b.getFecha().compareTo(a.getFecha()))
+            .collect(Collectors.toList());
+    }
+
+    // Obtener todos los movimientos
+    public List<MovimientoInventario> getTodosLosMovimientos() {
+        return new ArrayList<>(movimientos);
+    }
+
+    // Guardar movimientos en archivo
+    private void guardarMovimientos() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO_MOVIMIENTOS))) {
+            bw.write("# Sistema Pizzeria — Movimientos de Inventario");
+            bw.newLine();
+            bw.write("# Formato: id|idInsumo|nombreInsumo|tipoMovimiento|cantidad|stockResultante|usuario|observacion|fecha");
+            bw.newLine();
+            for (MovimientoInventario m : movimientos) {
+                bw.write(m.escribirTexto());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error al guardar movimientos: " + e.getMessage());
+        }
+    }
+
+    // Cargar movimientos desde archivo
+    private void cargarMovimientos() {
+        File archivo = new File(ARCHIVO_MOVIMIENTOS);
+        if (!archivo.exists()) {
+            return;
+        }
+
+        movimientos.clear();
+        int maxId = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_MOVIMIENTOS))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                linea = linea.trim();
+                if (linea.isEmpty() || linea.startsWith("#")) continue;
+
+                MovimientoInventario m = MovimientoInventario.leerTexto(linea);
+                if (m != null) {
+                    movimientos.add(m);
+                    if (m.getId() > maxId) maxId = m.getId();
+                }
+            }
+            proximoIdMovimiento = maxId + 1;
+        } catch (IOException e) {
+            System.out.println("Error al cargar movimientos: " + e.getMessage());
+        }
+    }
+
+    // Modificar el método actualizarStock para registrar movimiento
+    public void actualizarStock(int id, double cantidad, boolean sumar, String usuario, String observacion) {
+        Insumo ins = buscarId(id);
+        if (ins == null) {
+            System.out.println(" Insumo con ID " + id + " no encontrado.");
+            return;
+        }
+
+        double stockAnterior = ins.getStockActual();
+        String tipoMovimiento;
+
+        if (sumar) {
+            ins.setStockActual(stockAnterior + cantidad);
+            tipoMovimiento = "ENTRADA";
+        } else {
+            if (stockAnterior >= cantidad) {
+                ins.setStockActual(stockAnterior - cantidad);
+                tipoMovimiento = "SALIDA";
+            } else {
+                System.out.println(" Stock insuficiente para " + ins.getNombre());
+                return;
+            }
+        }
+
+        // Registrar el movimiento
+        registrarMovimiento(id, ins.getNombre(), tipoMovimiento, cantidad, 
+                           ins.getStockActual(), usuario, observacion);
+    }
+    
+
 }
