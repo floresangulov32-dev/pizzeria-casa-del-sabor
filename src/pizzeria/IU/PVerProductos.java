@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package pizzeria.IU;
-
+import javax.swing.JOptionPane;
 
 import pizzeria.model.Menu;
 import pizzeria.model.Inventario;
@@ -87,11 +87,13 @@ public class PVerProductos extends javax.swing.JPanel {
         btnEliminarP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnEliminarP.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarP.setText("Eliminar Producto");
+        btnEliminarP.addActionListener(this::btnEliminarPActionPerformed);
 
         btnAgregarI.setBackground(new java.awt.Color(168, 27, 29));
         btnAgregarI.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnAgregarI.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarI.setText("Agregar Ingrediente ");
+        btnAgregarI.addActionListener(this::btnAgregarIActionPerformed);
 
         jScrollPane1.setBackground(new java.awt.Color(217, 217, 217));
 
@@ -213,6 +215,44 @@ public class PVerProductos extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnAgregarPActionPerformed
 
+    private void btnEliminarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPActionPerformed
+        int fila = jTable1.getSelectedRow();
+
+    if (fila == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Seleccione un producto de la tabla.");
+        return;
+    }
+
+    int id = (int) jTable1.getValueAt(fila, 0);
+    String nombre = jTable1.getValueAt(fila, 1).toString();
+
+    int opcion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Desea eliminar el producto \"" + nombre + "\"?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION);
+
+    if (opcion == JOptionPane.YES_OPTION) {
+
+        if (menu.eliminarProducto(id)) {
+
+            if (archivoMenu != null) {
+                archivoMenu.guardarProductos(menu.getProductos());
+            }
+
+            cargarTablaProductos();
+
+            JOptionPane.showMessageDialog(this,
+                    "Producto eliminado correctamente.");
+        }
+    }
+    }//GEN-LAST:event_btnEliminarPActionPerformed
+
+    private void btnAgregarIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarIActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarIActionPerformed
+
     private void cargarPanel(JPanel panel) {
     interfaz.removeAll();
     interfaz.setLayout(new BorderLayout());
@@ -234,8 +274,14 @@ public class PVerProductos extends javax.swing.JPanel {
             String.format("%.2f", p.getPrecio()),
             p.getDescripcion(), "xd"
             });
-    }
-}
+        }
+        jTable1.setModel(modelo);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(300);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(200);
+    }   
     
     private void configurarPlaceholder() {
         idBuscar.setText("Ingrese un ID:");

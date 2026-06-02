@@ -4,6 +4,7 @@
  */
 package pizzeria.IU;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.BoxLayout;
@@ -277,14 +278,13 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
 
         
         ArrayList<Integer> ingredientes = new ArrayList<>();
-        if ("Pizza".equals(tipo)) {
             for (int i = 0; i < checkboxesInsumos.size(); i++) {
                 if (checkboxesInsumos.get(i).isSelected()) {
                     Insumo ins = inventario.getInsumos().get(i);
                     ingredientes.add(ins.getId());
                 }
             }
-        }
+        
 
         
         if (menu == null) {
@@ -315,6 +315,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         if (onProductoAgregado != null) {
             onProductoAgregado.run();
         }
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -327,10 +328,19 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
             limpiarFormulario();
             // Si hay callback de cancelación se puede añadir aquí
         }
+        cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void cargarPanel(JPanel panel) {
+    interfaz.removeAll();
+    interfaz.setLayout(new BorderLayout());
+    interfaz.add(panel, BorderLayout.CENTER);
+    interfaz.revalidate();
+    interfaz.repaint();
+    }
     
-private void cargarInsumos() {
+    private void cargarInsumos() {
         panelInsumos.removeAll();
         checkboxesInsumos.clear();
         panelInsumos.setLayout(new BoxLayout(panelInsumos, BoxLayout.Y_AXIS));
@@ -349,7 +359,7 @@ private void cargarInsumos() {
         panelInsumos.repaint();
     }
 
-private void limpiarFormulario() {
+    private void limpiarFormulario() {
         txtNombre.setText("");
         txtPrecio.setText("");
         txtDescrip.setText("");

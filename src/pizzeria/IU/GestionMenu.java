@@ -21,7 +21,7 @@ public class GestionMenu extends javax.swing.JFrame {
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
     private Menu menu;
-    private ArchivoMenu archivoMenu;
+    private ArchivoMenu archivoMenu = new ArchivoMenu();
     private Inventario inventario = new Inventario();
 
     /**
