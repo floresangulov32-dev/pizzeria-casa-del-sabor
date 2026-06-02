@@ -1163,7 +1163,7 @@ public class GestorVenta {
         }
     }
 
-    // Reconstruye una venta desde una línea de texto del archivo
+    /*// Reconstruye una venta desde una línea de texto del archivo
     private Venta parsearVenta(String linea) {
         try {
             String[] partes = linea.split("\\|", 9);
@@ -1233,6 +1233,77 @@ public class GestorVenta {
                             prod = new Producto(idProd, TipoProducto.PRODUCTO, nombre, "", precio);
                         }
 
+                        v.getItems().add(new DetalleVenta(prod, cant));
+                    }
+                }
+            }
+
+            return v;
+        } catch (Exception e) {
+            System.out.println(" [ERROR] parsearVenta: " + e.getMessage() + " → " + linea);
+            return null;
+        }
+    }*/
+    
+    private Venta parsearVenta(String linea) {
+        try {
+            String[] partes = linea.split("\\|", 9);
+
+            if (partes.length < 8) {
+                return null;
+            }
+
+            int id = Integer.parseInt(partes[0].trim());
+            LocalDateTime fecha = LocalDateTime.parse(partes[1].trim(), Venta.FORMATO_FECHA);
+            int idCajero = Integer.parseInt(partes[2].trim());
+            MetodoPago metodo = MetodoPago.valueOf(partes[3].trim());
+            double total = Double.parseDouble(partes[4].trim().replace(",", "."));
+            double cambio = Double.parseDouble(partes[5].trim().replace(",", "."));
+            EstadoPedido estado = EstadoPedido.valueOf(partes[6].trim());
+
+            Venta v = new Venta(id, idCajero);
+            v.setFecha(fecha);
+            v.setMetodoPago(metodo);
+            v.setTotal(total);
+            v.setCambio(cambio);
+            v.setEstado(estado);
+
+            String itemsRaw = "";
+
+            if (partes.length == 8) {
+                itemsRaw = partes[7].trim();
+                v.setNombreCliente("");
+            } else {
+                v.setNombreCliente(partes[7].trim());
+                itemsRaw = partes[8].trim();
+            }
+
+            if (!itemsRaw.isEmpty()) {
+                String[] itemsPartes = itemsRaw.split(";");
+
+                for (String itemTxt : itemsPartes) {
+                    String[] d = itemTxt.split("~");
+                    if (d.length < 4) {
+                        continue;
+                    }
+
+                    // Detectar si es un combo
+                    if ("COMBO".equals(d[0].trim())) {
+                        if (d.length < 5) continue;
+                        int nroCombo = Integer.parseInt(d[1].trim());
+                        String descripcion = d[2].trim();
+                        double precioUnit = Double.parseDouble(d[3].trim().replace(",", "."));
+                        int cant = Integer.parseInt(d[4].trim());
+                        v.getCombos().add(new DetalleCombo(nroCombo, descripcion, precioUnit, cant));
+                    } else {
+                        int idProd = Integer.parseInt(d[0].trim());
+                        String nombre = d[1].trim();
+                        double precio = Double.parseDouble(d[2].trim().replace(",", "."));
+                        int cant = Integer.parseInt(d[3].trim());
+
+                        // IMPORTANTE: Crear producto directamente sin usar menu
+                        // Esto evita el NullPointerException cuando menu es null
+                        Producto prod = new Producto(idProd, TipoProducto.PRODUCTO, nombre, "", precio);
                         v.getItems().add(new DetalleVenta(prod, cant));
                     }
                 }

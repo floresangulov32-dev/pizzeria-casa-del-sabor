@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -25,27 +26,19 @@ import javax.swing.table.DefaultTableModel;
 
 import pizzeria.controller.GestorVenta;
 import pizzeria.model.Venta;
-import pizzeria.model.MetodoPago;
-import pizzeria.model.DetalleVenta;
 
 public class ReporteVentasDiariasGUI extends JPanel {
     
     private GestorVenta gestorVenta;
     private JTable tablaVentas;
     private DefaultTableModel modeloTabla;
-    //private JTextField txtFecha;
-    //private JButton btnGenerar, btnHoy, btnCerrar;
-    //private JLabel lblTotalVentas, lblMontoTotal;
     
     private DateTimeFormatter formatterFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private DateTimeFormatter formatterInput = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
     public ReporteVentasDiariasGUI() {
-        // Nota: GestorVenta necesita varios parámetros
-        // Como no tenemos una instancia directa, la creamos con valores por defecto
-        // Esto debería ajustarse según tu arquitectura
-        gestorVenta = new GestorVenta(null, null, null, null, null);
-        gestorVenta.cargarArchivo();
+        // Usar el ContextoVentasGUI para obtener el GestorVenta funcional
+        gestorVenta = ContextoVentasGUI.getInstancia().getGestorVenta();
         
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -55,7 +48,6 @@ public class ReporteVentasDiariasGUI extends JPanel {
         add(crearPanelCentral(), BorderLayout.CENTER);
         add(crearPanelInferior(), BorderLayout.SOUTH);
         
-        // Cargar reporte del día actual por defecto
         LocalDate hoy = LocalDate.now();
         txtFecha.setText(hoy.toString());
         generarReporte(hoy);
@@ -74,10 +66,10 @@ public class ReporteVentasDiariasGUI extends JPanel {
         panelFiltro.setOpaque(false);
         
         JLabel lblFecha = new JLabel("Fecha (YYYY-MM-DD):");
-        lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         
         txtFecha = new JTextField(10);
-        txtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        txtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         
         btnGenerar = new JButton("Generar Reporte");
         btnGenerar.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -142,7 +134,6 @@ public class ReporteVentasDiariasGUI extends JPanel {
         tablaVentas.getTableHeader().setBackground(new Color(240, 240, 240));
         tablaVentas.getTableHeader().setReorderingAllowed(false);
         
-        // Anchos de columnas
         tablaVentas.getColumnModel().getColumn(0).setPreferredWidth(40);
         tablaVentas.getColumnModel().getColumn(1).setPreferredWidth(120);
         tablaVentas.getColumnModel().getColumn(2).setPreferredWidth(150);
@@ -156,7 +147,6 @@ public class ReporteVentasDiariasGUI extends JPanel {
         
         panelTabla.add(scrollPane, BorderLayout.CENTER);
         
-        // Panel de resumen
         JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 8));
         panelResumen.setOpaque(false);
         panelResumen.setBorder(new EmptyBorder(8, 0, 0, 0));
@@ -225,7 +215,7 @@ public class ReporteVentasDiariasGUI extends JPanel {
         List<Venta> ventas = gestorVenta.getListaVenta().stream()
             .filter(v -> !v.getFecha().isBefore(inicioDia))
             .filter(v -> !v.getFecha().isAfter(finDia))
-            .collect(java.util.stream.Collectors.toList());
+            .collect(Collectors.toList());
         
         modeloTabla.setRowCount(0);
         
@@ -268,7 +258,7 @@ public class ReporteVentasDiariasGUI extends JPanel {
             parent.repaint();
         }
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
