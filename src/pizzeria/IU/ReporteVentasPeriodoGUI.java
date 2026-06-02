@@ -3,6 +3,7 @@ package pizzeria.IU;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -36,11 +38,14 @@ public class ReporteVentasPeriodoGUI extends JPanel {
     
     private DateTimeFormatter formatterFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private DateTimeFormatter formatterInput = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private DateTimeFormatter formatterFechaCorta = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
     public ReporteVentasPeriodoGUI() {
-        gestorVenta = new GestorVenta(null, null, null, null, null);
-        gestorVenta.cargarArchivo();
+        // Obtener el GestorVenta desde el Contexto
+        gestorVenta = ContextoVentasGUI.getInstancia().getGestorVenta();
+        
+        // Verificar que se cargaron ventas
+        System.out.println("=== REPORTE VENTAS PERÍODO ===");
+        System.out.println("Ventas cargadas en gestor: " + gestorVenta.getListaVenta().size());
         
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -50,10 +55,12 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         add(crearPanelCentral(), BorderLayout.CENTER);
         add(crearPanelInferior(), BorderLayout.SOUTH);
         
-        // Establecer fechas por defecto (últimos 7 días)
+        // Fechas por defecto: últimos 7 días
         LocalDate hoy = LocalDate.now();
         txtFechaInicio.setText(hoy.minusDays(6).toString());
         txtFechaFin.setText(hoy.toString());
+        
+        // Generar reporte inicial
         generarReporte();
     }
     
@@ -66,16 +73,16 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitulo.setForeground(new Color(168, 27, 29));
         
-        JPanel panelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         panelFiltro.setOpaque(false);
         
-        JLabel lblFechaInicio = new JLabel("Fecha Inicio (YYYY-MM-DD):");
+        JLabel lblFechaInicio = new JLabel("Inicio (YYYY-MM-DD):");
         lblFechaInicio.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         
         txtFechaInicio = new JTextField(10);
         txtFechaInicio.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         
-        JLabel lblFechaFin = new JLabel("Fecha Fin (YYYY-MM-DD):");
+        JLabel lblFechaFin = new JLabel("Fin (YYYY-MM-DD):");
         lblFechaFin.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         
         txtFechaFin = new JTextField(10);
@@ -85,7 +92,7 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         btnGenerar.setFont(new Font("Segoe UI", Font.BOLD, 11));
         btnGenerar.setBackground(new Color(52, 152, 219));
         btnGenerar.setForeground(Color.WHITE);
-        btnGenerar.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        btnGenerar.setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
         btnGenerar.setFocusPainted(false);
         btnGenerar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnGenerar.addActionListener(e -> generarReporte());
@@ -94,19 +101,29 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         btnUltimaSemana.setFont(new Font("Segoe UI", Font.BOLD, 11));
         btnUltimaSemana.setBackground(new Color(46, 204, 113));
         btnUltimaSemana.setForeground(Color.WHITE);
-        btnUltimaSemana.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        btnUltimaSemana.setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
         btnUltimaSemana.setFocusPainted(false);
         btnUltimaSemana.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUltimaSemana.addActionListener(e -> cargarUltimaSemana());
+        btnUltimaSemana.addActionListener(e -> {
+            LocalDate hoy = LocalDate.now();
+            txtFechaInicio.setText(hoy.minusDays(6).toString());
+            txtFechaFin.setText(hoy.toString());
+            generarReporte();
+        });
         
         btnUltimoMes = new JButton("Último Mes");
         btnUltimoMes.setFont(new Font("Segoe UI", Font.BOLD, 11));
         btnUltimoMes.setBackground(new Color(46, 204, 113));
         btnUltimoMes.setForeground(Color.WHITE);
-        btnUltimoMes.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        btnUltimoMes.setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
         btnUltimoMes.setFocusPainted(false);
         btnUltimoMes.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUltimoMes.addActionListener(e -> cargarUltimoMes());
+        btnUltimoMes.addActionListener(e -> {
+            LocalDate hoy = LocalDate.now();
+            txtFechaInicio.setText(hoy.minusDays(29).toString());
+            txtFechaFin.setText(hoy.toString());
+            generarReporte();
+        });
         
         panelFiltro.add(lblFechaInicio);
         panelFiltro.add(txtFechaInicio);
@@ -130,7 +147,7 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         panelTabla.setOpaque(false);
         panelTabla.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "Ventas del Período",
+            "Lista de Ventas",
             TitledBorder.LEFT,
             TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -152,9 +169,8 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         tablaVentas.getTableHeader().setBackground(new Color(240, 240, 240));
         tablaVentas.getTableHeader().setReorderingAllowed(false);
         
-        // Anchos de columnas
         tablaVentas.getColumnModel().getColumn(0).setPreferredWidth(40);
-        tablaVentas.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tablaVentas.getColumnModel().getColumn(1).setPreferredWidth(130);
         tablaVentas.getColumnModel().getColumn(2).setPreferredWidth(150);
         tablaVentas.getColumnModel().getColumn(3).setPreferredWidth(80);
         tablaVentas.getColumnModel().getColumn(4).setPreferredWidth(100);
@@ -167,7 +183,7 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         panelTabla.add(scrollPane, BorderLayout.CENTER);
         
         // Panel de resumen
-        JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 8));
+        JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
         panelResumen.setOpaque(false);
         panelResumen.setBorder(new EmptyBorder(8, 0, 0, 0));
         
@@ -212,20 +228,6 @@ public class ReporteVentasPeriodoGUI extends JPanel {
         return panel;
     }
     
-    private void cargarUltimaSemana() {
-        LocalDate hoy = LocalDate.now();
-        txtFechaInicio.setText(hoy.minusDays(6).toString());
-        txtFechaFin.setText(hoy.toString());
-        generarReporte();
-    }
-    
-    private void cargarUltimoMes() {
-        LocalDate hoy = LocalDate.now();
-        txtFechaInicio.setText(hoy.minusDays(29).toString());
-        txtFechaFin.setText(hoy.toString());
-        generarReporte();
-    }
-    
     private void generarReporte() {
         try {
             String inicioStr = txtFechaInicio.getText().trim();
@@ -253,11 +255,15 @@ public class ReporteVentasPeriodoGUI extends JPanel {
             LocalDateTime desde = inicio.atStartOfDay();
             LocalDateTime hasta = fin.plusDays(1).atStartOfDay().minusNanos(1);
             
+            // Filtrar ventas por fecha
             List<Venta> ventas = gestorVenta.getListaVenta().stream()
+                .filter(v -> v != null)
+                .filter(v -> v.getFecha() != null)
                 .filter(v -> !v.getFecha().isBefore(desde))
                 .filter(v -> !v.getFecha().isAfter(hasta))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
             
+            // Limpiar tabla
             modeloTabla.setRowCount(0);
             
             double montoTotal = 0;
@@ -268,11 +274,14 @@ public class ReporteVentasPeriodoGUI extends JPanel {
                     ? "Sin nombre" 
                     : v.getNombreCliente();
                 
+                String fechaStr = v.getFecha().format(formatterFecha);
+                String totalStr = String.format("%.2f", v.getTotal());
+                
                 modeloTabla.addRow(new Object[]{
                     v.getId(),
-                    v.getFecha().format(formatterFecha),
+                    fechaStr,
                     cliente,
-                    String.format("%.2f", v.getTotal()),
+                    totalStr,
                     v.getMetodoPago().getNombre(),
                     v.getEstado().getNombre()
                 });
@@ -288,16 +297,23 @@ public class ReporteVentasPeriodoGUI extends JPanel {
             
             if (ventas.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                    "No hay ventas registradas en este período.",
+                    "No hay ventas registradas en el período seleccionado.\n\n" +
+                    "Total de ventas en el sistema: " + gestorVenta.getListaVenta().size(),
                     "Información",
                     JOptionPane.INFORMATION_MESSAGE);
             }
             
         } catch (DateTimeParseException e) {
             JOptionPane.showMessageDialog(this,
-                "Formato de fecha inválido. Use YYYY-MM-DD",
+                "Formato de fecha inválido.\nUse YYYY-MM-DD",
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al generar reporte: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
     
