@@ -15,31 +15,19 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JFrame;
-import java.awt.Component;
-import java.awt.Container;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import java.time.temporal.WeekFields;
-import java.awt.Container;
-
-
 
 import pizzeria.controller.GestorFinanzas;
 import pizzeria.model.MovimientoCaja;
 import pizzeria.model.TipoMovimiento;
 
-import java.time.temporal.WeekFields;
-
-
-public class ReporteSemanalGUI extends JPanel {
+public class ReporteSemanalParaReportesGUI extends JPanel {
     
     private GestorFinanzas gestorFinanzas;
     private JTextArea txtReporte;
@@ -54,7 +42,7 @@ public class ReporteSemanalGUI extends JPanel {
     private DateTimeFormatter formatterInput = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private DateTimeFormatter formatterFechaCorta = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
-    public ReporteSemanalGUI() {
+    public ReporteSemanalParaReportesGUI() {
         gestorFinanzas = new GestorFinanzas();
         gestorFinanzas.cargarArchivos();
         
@@ -209,61 +197,25 @@ public class ReporteSemanalGUI extends JPanel {
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(10, 0, 0, 0));
         
-        btnCerrar = new JButton("Cerrar");
+        btnCerrar = new JButton("Volver a Reportes");
         btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnCerrar.setBackground(new Color(168, 27, 29));
         btnCerrar.setForeground(Color.WHITE);
         btnCerrar.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
         btnCerrar.setFocusPainted(false);
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCerrar.addActionListener(e -> volverAlOrigen());
+        btnCerrar.addActionListener(e -> volverAReportes());
         
         panel.add(btnCerrar);
         
         return panel;
     }
     
-    private void volverAlOrigen() {
+    private void volverAReportes() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
-            parent.removeAll();                        
-            
-            Container parentContainer = parent.getParent();
-            boolean esDesdeReportes = false;
-            
-            // Buscar si venimos de ReportesGUI
-            if (parentContainer instanceof JFrame) {
-                Component[] components = ((JFrame) parentContainer).getContentPane().getComponents();
-                for (Component comp : components) {
-                    if (comp instanceof JPanel) {
-                        JPanel panel = (JPanel) comp;
-                        if (panel.getComponentCount() > 0 && 
-                            panel.getComponent(0) instanceof ReportesGUI) {
-                            esDesdeReportes = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            // También podemos verificar si el panel actual tiene un ReportesGUI en algún lugar
-            if (!esDesdeReportes) {
-                // Verificar si el componente que llamó fue desde Reportes
-                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-                for (StackTraceElement element : stackTrace) {
-                    if (element.getClassName().contains("ReportesGUI")) {
-                        esDesdeReportes = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (esDesdeReportes) {
-                parent.add(new ReportesGUI(), BorderLayout.CENTER);
-            } else {
-                parent.add(new GestionFinanzasGUI(), BorderLayout.CENTER);
-            }
-            
+            parent.removeAll();
+            parent.add(new ReportesGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
@@ -396,6 +348,16 @@ public class ReporteSemanalGUI extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PanelInferior = new javax.swing.JPanel();
+        btnCerrar = new javax.swing.JButton();
+        PanelCentral = new javax.swing.JPanel();
+        scrollPane1 = new java.awt.ScrollPane();
+        textArea1 = new java.awt.TextArea();
+        PanelResumen = new javax.swing.JPanel();
+        lblTotalIngresos = new javax.swing.JLabel();
+        lblTotalEgresos = new javax.swing.JLabel();
+        lblBalance = new javax.swing.JLabel();
+        lblPromedioDiario = new javax.swing.JLabel();
         PanelSuperior = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         PanelFiltro = new javax.swing.JPanel();
@@ -407,93 +369,24 @@ public class ReporteSemanalGUI extends JPanel {
         btnSemanaActual = new javax.swing.JButton();
         btnSemanaAnterior = new javax.swing.JButton();
         btnSemanaSiguiente = new javax.swing.JButton();
-        PanelCentral = new javax.swing.JPanel();
-        scrollPane1 = new java.awt.ScrollPane();
-        textArea1 = new java.awt.TextArea();
-        PanelResumen = new javax.swing.JPanel();
-        lblTotalIngresos = new javax.swing.JLabel();
-        lblTotalEgresos = new javax.swing.JLabel();
-        lblBalance = new javax.swing.JLabel();
-        lblPromedioDiario = new javax.swing.JLabel();
-        PanelInferior = new javax.swing.JPanel();
-        btnCerrar = new javax.swing.JButton();
 
-        lblTitulo.setText("jLabel1");
+        btnCerrar.setText("jButton1");
 
-        lblSemana.setText("jLabel1");
-
-        cmbSemana.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        lblAnio.setText("jLabel1");
-
-        txtAnio.setText("jTextField1");
-
-        btnGenerar.setText("jButton1");
-
-        btnSemanaActual.setText("jButton1");
-
-        btnSemanaAnterior.setText("jButton1");
-
-        btnSemanaSiguiente.setText("jButton1");
-
-        javax.swing.GroupLayout PanelFiltroLayout = new javax.swing.GroupLayout(PanelFiltro);
-        PanelFiltro.setLayout(PanelFiltroLayout);
-        PanelFiltroLayout.setHorizontalGroup(
-            PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelFiltroLayout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(lblSemana)
-                .addGap(29, 29, 29)
-                .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblAnio)
-                .addGap(27, 27, 27)
-                .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(btnGenerar)
-                .addGap(32, 32, 32)
-                .addComponent(btnSemanaActual)
-                .addGap(18, 18, 18)
-                .addComponent(btnSemanaAnterior)
-                .addGap(29, 29, 29)
-                .addComponent(btnSemanaSiguiente)
-                .addContainerGap(79, Short.MAX_VALUE))
+        javax.swing.GroupLayout PanelInferiorLayout = new javax.swing.GroupLayout(PanelInferior);
+        PanelInferior.setLayout(PanelInferiorLayout);
+        PanelInferiorLayout.setHorizontalGroup(
+            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelInferiorLayout.createSequentialGroup()
+                .addGap(411, 411, 411)
+                .addComponent(btnCerrar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        PanelFiltroLayout.setVerticalGroup(
-            PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelFiltroLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblAnio)
-                        .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGenerar)
-                        .addComponent(btnSemanaActual)
-                        .addComponent(btnSemanaAnterior)
-                        .addComponent(btnSemanaSiguiente))
-                    .addComponent(lblSemana))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout PanelSuperiorLayout = new javax.swing.GroupLayout(PanelSuperior);
-        PanelSuperior.setLayout(PanelSuperiorLayout);
-        PanelSuperiorLayout.setHorizontalGroup(
-            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(PanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        PanelSuperiorLayout.setVerticalGroup(
-            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(PanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+        PanelInferiorLayout.setVerticalGroup(
+            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelInferiorLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(btnCerrar)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         scrollPane1.add(textArea1);
@@ -554,23 +447,82 @@ public class ReporteSemanalGUI extends JPanel {
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
-        btnCerrar.setText("jButton1");
+        lblTitulo.setText("jLabel1");
 
-        javax.swing.GroupLayout PanelInferiorLayout = new javax.swing.GroupLayout(PanelInferior);
-        PanelInferior.setLayout(PanelInferiorLayout);
-        PanelInferiorLayout.setHorizontalGroup(
-            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelInferiorLayout.createSequentialGroup()
-                .addGap(411, 411, 411)
-                .addComponent(btnCerrar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        lblSemana.setText("jLabel1");
+
+        cmbSemana.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        lblAnio.setText("jLabel1");
+
+        txtAnio.setText("jTextField1");
+
+        btnGenerar.setText("jButton1");
+
+        btnSemanaActual.setText("jButton1");
+
+        btnSemanaAnterior.setText("jButton1");
+
+        btnSemanaSiguiente.setText("jButton1");
+
+        javax.swing.GroupLayout PanelFiltroLayout = new javax.swing.GroupLayout(PanelFiltro);
+        PanelFiltro.setLayout(PanelFiltroLayout);
+        PanelFiltroLayout.setHorizontalGroup(
+            PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFiltroLayout.createSequentialGroup()
+                .addGap(63, 63, 63)
+                .addComponent(lblSemana)
+                .addGap(29, 29, 29)
+                .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblAnio)
+                .addGap(27, 27, 27)
+                .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(btnGenerar)
+                .addGap(32, 32, 32)
+                .addComponent(btnSemanaActual)
+                .addGap(18, 18, 18)
+                .addComponent(btnSemanaAnterior)
+                .addGap(29, 29, 29)
+                .addComponent(btnSemanaSiguiente)
+                .addContainerGap(75, Short.MAX_VALUE))
         );
-        PanelInferiorLayout.setVerticalGroup(
-            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelInferiorLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(btnCerrar)
-                .addContainerGap(26, Short.MAX_VALUE))
+        PanelFiltroLayout.setVerticalGroup(
+            PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFiltroLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblAnio)
+                        .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnGenerar)
+                        .addComponent(btnSemanaActual)
+                        .addComponent(btnSemanaAnterior)
+                        .addComponent(btnSemanaSiguiente))
+                    .addComponent(lblSemana))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout PanelSuperiorLayout = new javax.swing.GroupLayout(PanelSuperior);
+        PanelSuperior.setLayout(PanelSuperiorLayout);
+        PanelSuperiorLayout.setHorizontalGroup(
+            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelSuperiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addComponent(PanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        PanelSuperiorLayout.setVerticalGroup(
+            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelSuperiorLayout.createSequentialGroup()
+                .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addComponent(PanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -594,7 +546,7 @@ public class ReporteSemanalGUI extends JPanel {
                 .addComponent(PanelCentral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(PanelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

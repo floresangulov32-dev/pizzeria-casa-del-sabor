@@ -12,49 +12,36 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JFrame;
-import java.awt.Component;
-import java.awt.Container;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import java.time.temporal.WeekFields;
-import java.awt.Container;
-
-
 
 import pizzeria.controller.GestorFinanzas;
 import pizzeria.model.MovimientoCaja;
 import pizzeria.model.TipoMovimiento;
 
-import java.time.temporal.WeekFields;
-
-
-public class ReporteSemanalGUI extends JPanel {
+public class ReporteRangosParaReportesGUI extends JPanel {
     
     private GestorFinanzas gestorFinanzas;
     private JTextArea txtReporte;
-    private JTextField txtFecha;
-    //private JButton btnGenerar, btnSemanaAnterior, btnSemanaSiguiente, btnCerrar;
+    //private JTextField txtFechaInicio, txtFechaFin;
     //private JLabel lblTotalIngresos, lblTotalEgresos, lblBalance, lblPromedioDiario;
-    private JLabel lblSemanaInfo;
-    
-    private LocalDate fechaInicioSemana;
+    private JButton btnGenerar;
     
     private DateTimeFormatter formatterFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private DateTimeFormatter formatterInput = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private DateTimeFormatter formatterFechaCorta = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
-    public ReporteSemanalGUI() {
+    public ReporteRangosParaReportesGUI() {
         gestorFinanzas = new GestorFinanzas();
         gestorFinanzas.cargarArchivos();
         
@@ -66,9 +53,18 @@ public class ReporteSemanalGUI extends JPanel {
         add(crearPanelCentral(), BorderLayout.CENTER);
         add(crearPanelInferior(), BorderLayout.SOUTH);
         
-        fechaInicioSemana = LocalDate.now();
-        txtFecha.setText(fechaInicioSemana.toString());
-        generarReporteSemanal();
+        // Establecer semana actual por defecto
+        cargarSemanaActual();
+    }
+    
+    private void cargarSemanaActual() {
+        LocalDate hoy = LocalDate.now();
+        LocalDate inicioSemana = hoy.minusDays(hoy.getDayOfWeek().getValue() - 1);
+        LocalDate finSemana = inicioSemana.plusDays(6);
+        
+        txtFechaInicio.setText(inicioSemana.toString());
+        txtFechaFin.setText(finSemana.toString());
+        generarReporte(inicioSemana, finSemana);
     }
     
     private JPanel crearPanelSuperior() {
@@ -76,18 +72,26 @@ public class ReporteSemanalGUI extends JPanel {
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(0, 0, 10, 0));
         
-        JLabel lblTitulo = new JLabel("REPORTE SEMANAL");
+        // Titulo
+        JLabel lblTitulo = new JLabel("REPORTE ENTRE RANGOS");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lblTitulo.setForeground(new Color(168, 27, 29));
         
+        // Panel de filtro
         JPanel panelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelFiltro.setOpaque(false);
         
-        JLabel lblFecha = new JLabel("Fecha de inicio (YYYY-MM-DD):");
-        lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JLabel lblFechaInicio = new JLabel("Fecha Inicio (YYYY-MM-DD):");
+        lblFechaInicio.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         
-        txtFecha = new JTextField(10);
-        txtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        txtFechaInicio = new JTextField(10);
+        txtFechaInicio.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        
+        JLabel lblFechaFin = new JLabel("Fecha Fin (YYYY-MM-DD):");
+        lblFechaFin.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        
+        txtFechaFin = new JTextField(10);
+        txtFechaFin.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         
         btnGenerar = new JButton("Generar Reporte");
         btnGenerar.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -96,39 +100,23 @@ public class ReporteSemanalGUI extends JPanel {
         btnGenerar.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
         btnGenerar.setFocusPainted(false);
         btnGenerar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnGenerar.addActionListener(e -> generarDesdeInput());
+        btnGenerar.addActionListener(e -> generarReporteDesdeInput());
         
-        btnSemanaAnterior = new JButton("◄ Semana Anterior");
-        btnSemanaAnterior.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnSemanaAnterior.setBackground(new Color(46, 204, 113));
-        btnSemanaAnterior.setForeground(Color.WHITE);
-        btnSemanaAnterior.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
-        btnSemanaAnterior.setFocusPainted(false);
-        btnSemanaAnterior.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSemanaAnterior.addActionListener(e -> {
-            fechaInicioSemana = fechaInicioSemana.minusWeeks(1);
-            txtFecha.setText(fechaInicioSemana.toString());
-            generarReporteSemanal();
-        });
+        btnSemanaActual = new JButton("Fecha Actual");
+        btnSemanaActual.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnSemanaActual.setBackground(new Color(46, 204, 113));
+        btnSemanaActual.setForeground(Color.WHITE);
+        btnSemanaActual.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        btnSemanaActual.setFocusPainted(false);
+        btnSemanaActual.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSemanaActual.addActionListener(e -> cargarSemanaActual());
         
-        btnSemanaSiguiente = new JButton("Semana Siguiente ►");
-        btnSemanaSiguiente.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnSemanaSiguiente.setBackground(new Color(46, 204, 113));
-        btnSemanaSiguiente.setForeground(Color.WHITE);
-        btnSemanaSiguiente.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
-        btnSemanaSiguiente.setFocusPainted(false);
-        btnSemanaSiguiente.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSemanaSiguiente.addActionListener(e -> {
-            fechaInicioSemana = fechaInicioSemana.plusWeeks(1);
-            txtFecha.setText(fechaInicioSemana.toString());
-            generarReporteSemanal();
-        });
-        
-        panelFiltro.add(lblFecha);
-        panelFiltro.add(txtFecha);
+        panelFiltro.add(lblFechaInicio);
+        panelFiltro.add(txtFechaInicio);
+        panelFiltro.add(lblFechaFin);
+        panelFiltro.add(txtFechaFin);
         panelFiltro.add(btnGenerar);
-        panelFiltro.add(btnSemanaAnterior);
-        panelFiltro.add(btnSemanaSiguiente);
+        panelFiltro.add(btnSemanaActual);
         
         panel.add(lblTitulo, BorderLayout.WEST);
         panel.add(panelFiltro, BorderLayout.CENTER);
@@ -140,8 +128,17 @@ public class ReporteSemanalGUI extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         
+        // Panel del reporte
         JPanel panelReporte = new JPanel(new BorderLayout());
         panelReporte.setOpaque(false);
+        panelReporte.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            "Reporte Entre Rangos",
+            TitledBorder.LEFT,
+            TitledBorder.TOP,
+            new Font("Segoe UI", Font.BOLD, 12),
+            new Color(80, 80, 80)
+        ));
         
         txtReporte = new JTextArea();
         txtReporte.setEditable(false);
@@ -156,23 +153,7 @@ public class ReporteSemanalGUI extends JPanel {
         
         panelReporte.add(scrollPane, BorderLayout.CENTER);
         
-        TitledBorder border = BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "Semana",
-            TitledBorder.LEFT,
-            TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 12),
-            new Color(80, 80, 80)
-        );
-        panelReporte.setBorder(border);
-        
-        JPanel panelInfo = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelInfo.setOpaque(false);
-        lblSemanaInfo = new JLabel();
-        lblSemanaInfo.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblSemanaInfo.setForeground(new Color(168, 27, 29));
-        panelInfo.add(lblSemanaInfo);
-        
+        // Panel de resumen
         JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelResumen.setOpaque(false);
         panelResumen.setBorder(new EmptyBorder(10, 0, 0, 0));
@@ -197,7 +178,6 @@ public class ReporteSemanalGUI extends JPanel {
         panelResumen.add(lblBalance);
         panelResumen.add(lblPromedioDiario);
         
-        panel.add(panelInfo, BorderLayout.NORTH);
         panel.add(panelReporte, BorderLayout.CENTER);
         panel.add(panelResumen, BorderLayout.SOUTH);
         
@@ -209,97 +189,64 @@ public class ReporteSemanalGUI extends JPanel {
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(10, 0, 0, 0));
         
-        btnCerrar = new JButton("Cerrar");
+        btnCerrar = new JButton("Volver a Reportes");
         btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnCerrar.setBackground(new Color(168, 27, 29));
         btnCerrar.setForeground(Color.WHITE);
         btnCerrar.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
         btnCerrar.setFocusPainted(false);
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCerrar.addActionListener(e -> volverAlOrigen());
+        btnCerrar.addActionListener(e -> volverAReportes());
         
         panel.add(btnCerrar);
         
         return panel;
     }
     
-    private void volverAlOrigen() {
+    private void volverAReportes() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
-            parent.removeAll();                        
-            
-            Container parentContainer = parent.getParent();
-            boolean esDesdeReportes = false;
-            
-            // Buscar si venimos de ReportesGUI
-            if (parentContainer instanceof JFrame) {
-                Component[] components = ((JFrame) parentContainer).getContentPane().getComponents();
-                for (Component comp : components) {
-                    if (comp instanceof JPanel) {
-                        JPanel panel = (JPanel) comp;
-                        if (panel.getComponentCount() > 0 && 
-                            panel.getComponent(0) instanceof ReportesGUI) {
-                            esDesdeReportes = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            // También podemos verificar si el panel actual tiene un ReportesGUI en algún lugar
-            if (!esDesdeReportes) {
-                // Verificar si el componente que llamó fue desde Reportes
-                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-                for (StackTraceElement element : stackTrace) {
-                    if (element.getClassName().contains("ReportesGUI")) {
-                        esDesdeReportes = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (esDesdeReportes) {
-                parent.add(new ReportesGUI(), BorderLayout.CENTER);
-            } else {
-                parent.add(new GestionFinanzasGUI(), BorderLayout.CENTER);
-            }
-            
+            parent.removeAll();
+            parent.add(new ReportesGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
     }
     
-    private void generarDesdeInput() {
+    private void generarReporteDesdeInput() {
         try {
-            String fechaStr = txtFecha.getText().trim();
-            if (fechaStr.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Por favor ingrese una fecha.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
+            String inicioStr = txtFechaInicio.getText().trim();
+            String finStr = txtFechaFin.getText().trim();
+            LocalDate inicio = LocalDate.parse(inicioStr, formatterInput);
+            LocalDate fin = LocalDate.parse(finStr, formatterInput);
+            
+            if (fin.isBefore(inicio)) {
+                JOptionPane.showMessageDialog(this,
+                    "La fecha fin no puede ser anterior a la fecha inicio.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            LocalDate fechaIngresada = LocalDate.parse(fechaStr, formatterInput);
-            fechaInicioSemana = fechaIngresada;
-            txtFecha.setText(fechaIngresada.format(formatterInput));
-            generarReporteSemanal();
+            
+            generarReporte(inicio, fin);
         } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha inválido.\nUse: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                "Formato de fecha inválido. Use YYYY-MM-DD",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    private void generarReporteSemanal() {
-        LocalDate inicioSemana = fechaInicioSemana;
-        LocalDate finSemana = inicioSemana.plusDays(6);
-        
-        lblSemanaInfo.setText(String.format("Semana del %s al %s", 
-            inicioSemana.format(formatterFechaCorta), finSemana.format(formatterFechaCorta)));
-        
-        LocalDateTime desde = inicioSemana.atStartOfDay();
-        LocalDateTime hasta = finSemana.plusDays(1).atStartOfDay().minusNanos(1);
+    private void generarReporte(LocalDate inicio, LocalDate fin) {
+        LocalDateTime desde = inicio.atStartOfDay();
+        LocalDateTime hasta = fin.plusDays(1).atStartOfDay().minusNanos(1);
         
         double totalIngresos = gestorFinanzas.sumaIngresos(desde, hasta);
         double totalEgresos = gestorFinanzas.sumaEgresos(desde, hasta);
         double balance = totalIngresos - totalEgresos;
         double promedioDiario = balance / 7;
         
+        // Actualizar resumen
         lblTotalIngresos.setText(String.format("Total Ingresos: Bs. %.2f", totalIngresos));
         lblTotalEgresos.setText(String.format("Total Egresos: Bs. %.2f", totalEgresos));
         
@@ -313,53 +260,57 @@ public class ReporteSemanalGUI extends JPanel {
         
         lblPromedioDiario.setText(String.format("Promedio Diario: Bs. %.2f", promedioDiario));
         
+        // Obtener movimientos del período
         List<MovimientoCaja> movimientos = gestorFinanzas.getMovimientosPeriodo(desde, hasta);
         
+        // Agrupar movimientos por día
+        Map<LocalDate, List<MovimientoCaja>> movimientosPorDia = movimientos.stream()
+            .collect(Collectors.groupingBy(m -> m.getFecha().toLocalDate()));
+        
+        // Construir el reporte
         StringBuilder reporte = new StringBuilder();
         reporte.append("=".repeat(80)).append("\n");
-        reporte.append(String.format("REPORTE SEMANAL - Semana del %s al %s\n", 
-            inicioSemana.format(formatterFechaCorta), finSemana.format(formatterFechaCorta)));
+        reporte.append(String.format("REPORTE ENTRE RANGOS - Del %s al %s\n", 
+            inicio.format(formatterFechaCorta), fin.format(formatterFechaCorta)));
         reporte.append("=".repeat(80)).append("\n\n");
         
-        reporte.append("RESUMEN DE LA SEMANA\n");
+        reporte.append("RESUMEN DEL PERÍODO\n");
         reporte.append("-".repeat(80)).append("\n");
         reporte.append(String.format("Ingresos totales:    Bs. %12.2f\n", totalIngresos));
         reporte.append(String.format("Egresos totales:     Bs. %12.2f\n", totalEgresos));
-        reporte.append(String.format("Balance de la semana: Bs. %12.2f\n", balance));
+        reporte.append(String.format("Balance del período: Bs. %12.2f\n", balance));
         reporte.append(String.format("Promedio diario:     Bs. %12.2f\n", promedioDiario));
         reporte.append("\n");
         
         reporte.append("DETALLE POR DÍA\n");
         reporte.append("-".repeat(80)).append("\n");
         
-        LocalDate fechaActual = inicioSemana;
-        int diaNumero = 1;
-        while (!fechaActual.isAfter(finSemana)) {
-            final LocalDate dia = fechaActual;
-            double ingresosDia = movimientos.stream()
+        LocalDate fechaActual = inicio;
+        while (!fechaActual.isAfter(fin)) {
+            List<MovimientoCaja> movsDia = movimientosPorDia.getOrDefault(fechaActual, new ArrayList<>());
+            
+            double ingresosDia = movsDia.stream()
                 .filter(m -> m.getTipo() == TipoMovimiento.INGRESO)
-                .filter(m -> m.getFecha().toLocalDate().equals(dia))
                 .mapToDouble(MovimientoCaja::getMonto)
                 .sum();
             
-            double egresosDia = movimientos.stream()
+            double egresosDia = movsDia.stream()
                 .filter(m -> m.getTipo() == TipoMovimiento.EGRESO)
-                .filter(m -> m.getFecha().toLocalDate().equals(dia))
                 .mapToDouble(MovimientoCaja::getMonto)
                 .sum();
             
             double balanceDia = ingresosDia - egresosDia;
+            
             String balanceStr = balanceDia >= 0 ? 
                 String.format("Bs. %10.2f", balanceDia) : 
                 String.format("Bs. %10.2f (NEGATIVO)", balanceDia);
             
-            reporte.append(String.format("DÍA %d (%s):\n", diaNumero, fechaActual.format(formatterFechaCorta)));
+            reporte.append(String.format("%s:\n", fechaActual.format(formatterFechaCorta)));
             reporte.append(String.format("  Ingresos: Bs. %10.2f | Egresos: Bs. %10.2f | Balance: %s\n", 
                 ingresosDia, egresosDia, balanceStr));
             reporte.append("\n");
             
             fechaActual = fechaActual.plusDays(1);
-            diaNumero++;
         }
         
         reporte.append("DETALLE DE MOVIMIENTOS\n");
@@ -368,9 +319,11 @@ public class ReporteSemanalGUI extends JPanel {
         reporte.append("-".repeat(80)).append("\n");
         
         if (movimientos.isEmpty()) {
-            reporte.append("No hay movimientos registrados en esta semana.\n");
+            reporte.append("No hay movimientos registrados en este período.\n");
         } else {
+            // Ordenar por fecha
             movimientos.sort((a, b) -> a.getFecha().compareTo(b.getFecha()));
+            
             for (MovimientoCaja m : movimientos) {
                 String tipo = m.getTipo() == TipoMovimiento.INGRESO ? "INGRESO" : "EGRESO";
                 String montoStr = String.format("%.2f", m.getMonto());
@@ -387,6 +340,7 @@ public class ReporteSemanalGUI extends JPanel {
         txtReporte.setCaretPosition(0);
     }
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -396,107 +350,127 @@ public class ReporteSemanalGUI extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        PanelSuperior = new javax.swing.JPanel();
+        PanelSuperior2 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         PanelFiltro = new javax.swing.JPanel();
-        lblSemana = new javax.swing.JLabel();
-        cmbSemana = new javax.swing.JComboBox<>();
-        lblAnio = new javax.swing.JLabel();
-        txtAnio = new javax.swing.JTextField();
-        btnGenerar = new javax.swing.JButton();
+        lblFechaInicio = new javax.swing.JLabel();
+        txtFechaInicio = new javax.swing.JTextField();
+        lblFechaFin = new javax.swing.JLabel();
+        txtFechaFin = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         btnSemanaActual = new javax.swing.JButton();
-        btnSemanaAnterior = new javax.swing.JButton();
-        btnSemanaSiguiente = new javax.swing.JButton();
+        PanelInferior = new javax.swing.JPanel();
+        btnCerrar = new javax.swing.JButton();
         PanelCentral = new javax.swing.JPanel();
-        scrollPane1 = new java.awt.ScrollPane();
-        textArea1 = new java.awt.TextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         PanelResumen = new javax.swing.JPanel();
         lblTotalIngresos = new javax.swing.JLabel();
         lblTotalEgresos = new javax.swing.JLabel();
         lblBalance = new javax.swing.JLabel();
         lblPromedioDiario = new javax.swing.JLabel();
-        PanelInferior = new javax.swing.JPanel();
-        btnCerrar = new javax.swing.JButton();
 
         lblTitulo.setText("jLabel1");
 
-        lblSemana.setText("jLabel1");
+        lblFechaInicio.setText("jLabel1");
 
-        cmbSemana.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        txtFechaInicio.setText("jTextField1");
 
-        lblAnio.setText("jLabel1");
+        lblFechaFin.setText("jLabel1");
 
-        txtAnio.setText("jTextField1");
+        txtFechaFin.setText("jTextField1");
 
-        btnGenerar.setText("jButton1");
+        jButton1.setText("jButton1");
 
-        btnSemanaActual.setText("jButton1");
-
-        btnSemanaAnterior.setText("jButton1");
-
-        btnSemanaSiguiente.setText("jButton1");
+        btnSemanaActual.setText("jButton2");
 
         javax.swing.GroupLayout PanelFiltroLayout = new javax.swing.GroupLayout(PanelFiltro);
         PanelFiltro.setLayout(PanelFiltroLayout);
         PanelFiltroLayout.setHorizontalGroup(
             PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelFiltroLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(lblFechaInicio)
+                .addGap(62, 62, 62)
+                .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(130, 130, 130)
+                .addComponent(lblFechaFin)
+                .addGap(98, 98, 98)
+                .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
-                .addComponent(lblSemana)
-                .addGap(29, 29, 29)
-                .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblAnio)
-                .addGap(27, 27, 27)
-                .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(btnGenerar)
-                .addGap(32, 32, 32)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(btnSemanaActual)
-                .addGap(18, 18, 18)
-                .addComponent(btnSemanaAnterior)
-                .addGap(29, 29, 29)
-                .addComponent(btnSemanaSiguiente)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
         PanelFiltroLayout.setVerticalGroup(
             PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelFiltroLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cmbSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblAnio)
-                        .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGenerar)
-                        .addComponent(btnSemanaActual)
-                        .addComponent(btnSemanaAnterior)
-                        .addComponent(btnSemanaSiguiente))
-                    .addComponent(lblSemana))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(39, 39, 39)
+                .addGroup(PanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFechaInicio)
+                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFechaFin)
+                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(btnSemanaActual))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout PanelSuperiorLayout = new javax.swing.GroupLayout(PanelSuperior);
-        PanelSuperior.setLayout(PanelSuperiorLayout);
-        PanelSuperiorLayout.setHorizontalGroup(
-            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
+        javax.swing.GroupLayout PanelSuperior2Layout = new javax.swing.GroupLayout(PanelSuperior2);
+        PanelSuperior2.setLayout(PanelSuperior2Layout);
+        PanelSuperior2Layout.setHorizontalGroup(
+            PanelSuperior2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelSuperior2Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(PanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(PanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
+        );
+        PanelSuperior2Layout.setVerticalGroup(
+            PanelSuperior2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelSuperior2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PanelSuperior2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelSuperior2Layout.createSequentialGroup()
+                        .addComponent(lblTitulo)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(PanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        PanelSuperiorLayout.setVerticalGroup(
-            PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(PanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+
+        btnCerrar.setText("jButton1");
+
+        javax.swing.GroupLayout PanelInferiorLayout = new javax.swing.GroupLayout(PanelInferior);
+        PanelInferior.setLayout(PanelInferiorLayout);
+        PanelInferiorLayout.setHorizontalGroup(
+            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelInferiorLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrar)
+                .addGap(119, 119, 119))
+        );
+        PanelInferiorLayout.setVerticalGroup(
+            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelInferiorLayout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(btnCerrar)
+                .addGap(18, 18, 18))
         );
 
-        scrollPane1.add(textArea1);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         lblTotalIngresos.setText("jLabel1");
 
@@ -511,26 +485,26 @@ public class ReporteSemanalGUI extends JPanel {
         PanelResumenLayout.setHorizontalGroup(
             PanelResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelResumenLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(86, 86, 86)
                 .addComponent(lblTotalIngresos)
-                .addGap(83, 83, 83)
+                .addGap(142, 142, 142)
                 .addComponent(lblTotalEgresos)
-                .addGap(143, 143, 143)
+                .addGap(234, 234, 234)
                 .addComponent(lblBalance)
-                .addGap(229, 229, 229)
+                .addGap(139, 139, 139)
                 .addComponent(lblPromedioDiario)
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         PanelResumenLayout.setVerticalGroup(
             PanelResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelResumenLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addContainerGap(42, Short.MAX_VALUE)
                 .addGroup(PanelResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotalIngresos)
                     .addComponent(lblTotalEgresos)
                     .addComponent(lblBalance)
                     .addComponent(lblPromedioDiario))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
         );
 
         javax.swing.GroupLayout PanelCentralLayout = new javax.swing.GroupLayout(PanelCentral);
@@ -538,63 +512,46 @@ public class ReporteSemanalGUI extends JPanel {
         PanelCentralLayout.setHorizontalGroup(
             PanelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelCentralLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PanelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(scrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PanelResumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 929, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCentralLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(PanelResumen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         PanelCentralLayout.setVerticalGroup(
             PanelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelCentralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelResumen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
-        );
-
-        btnCerrar.setText("jButton1");
-
-        javax.swing.GroupLayout PanelInferiorLayout = new javax.swing.GroupLayout(PanelInferior);
-        PanelInferior.setLayout(PanelInferiorLayout);
-        PanelInferiorLayout.setHorizontalGroup(
-            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelInferiorLayout.createSequentialGroup()
-                .addGap(411, 411, 411)
-                .addComponent(btnCerrar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        PanelInferiorLayout.setVerticalGroup(
-            PanelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelInferiorLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(btnCerrar)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelSuperior2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PanelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(PanelCentral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PanelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(PanelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PanelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(PanelSuperior2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(PanelCentral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -604,22 +561,20 @@ public class ReporteSemanalGUI extends JPanel {
     private javax.swing.JPanel PanelFiltro;
     private javax.swing.JPanel PanelInferior;
     private javax.swing.JPanel PanelResumen;
-    private javax.swing.JPanel PanelSuperior;
+    private javax.swing.JPanel PanelSuperior2;
     private javax.swing.JButton btnCerrar;
-    private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnSemanaActual;
-    private javax.swing.JButton btnSemanaAnterior;
-    private javax.swing.JButton btnSemanaSiguiente;
-    private javax.swing.JComboBox<String> cmbSemana;
-    private javax.swing.JLabel lblAnio;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblBalance;
+    private javax.swing.JLabel lblFechaFin;
+    private javax.swing.JLabel lblFechaInicio;
     private javax.swing.JLabel lblPromedioDiario;
-    private javax.swing.JLabel lblSemana;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblTotalEgresos;
     private javax.swing.JLabel lblTotalIngresos;
-    private java.awt.ScrollPane scrollPane1;
-    private java.awt.TextArea textArea1;
-    private javax.swing.JTextField txtAnio;
+    private javax.swing.JTextField txtFechaFin;
+    private javax.swing.JTextField txtFechaInicio;
     // End of variables declaration//GEN-END:variables
 }

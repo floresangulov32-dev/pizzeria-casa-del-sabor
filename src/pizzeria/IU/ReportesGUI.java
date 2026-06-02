@@ -17,27 +17,11 @@ import javax.swing.border.TitledBorder;
 
 import pizzeria.controller.GestorFinanzas;
 import pizzeria.controller.GestorUsuarios;
-import pizzeria.controller.GestorVenta;
-import pizzeria.controller.GestorReserva;
-import pizzeria.model.Menu;
-import pizzeria.model.Inventario;
 
 public class ReportesGUI extends JPanel {
     
     private GestorFinanzas gestorFinanzas;
     private GestorUsuarios gestorUsuarios;
-    private GestorVenta gestorVenta;
-    private GestorReserva gestorReserva;
-    private Menu menu;
-    private Inventario inventario;
-    
-    /*private JButton btnVentasDiarias, btnVentasPeriodo, btnTopProductos;
-    private JButton btnReservasDiario, btnReservasPeriodo;
-    private JButton btnReporteSemanal, btnReporteMensual, btnReportePeriodo;
-    private JButton btnReporteFinanzas, btnHistorialMovimientos;
-    private JButton btnStockActual, btnProductosBajoStock, btnMovimientosInventario;
-    private JButton btnListaUsuarios, btnUsuariosPorRol;
-    private JButton btnCerrar;*/
     
     public ReportesGUI() {
         gestorFinanzas = new GestorFinanzas();
@@ -46,50 +30,39 @@ public class ReportesGUI extends JPanel {
         gestorUsuarios = new GestorUsuarios();
         gestorUsuarios.cargarDesdeArchivo();
         
-        // Inicializar otros gestores según sea necesario
-        // gestorVenta = new GestorVenta(...);
-        // gestorReserva = new GestorReserva(...);
-        // menu = new Menu(...);
-        // inventario = new Inventario(...);
-        
-        initUI();
-    }
-    
-    private void initUI() {
         setLayout(new BorderLayout());
         setOpaque(false);
-        setBorder(new EmptyBorder(15, 15, 15, 15));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
         
         add(crearPanelSuperior(), BorderLayout.NORTH);
         add(crearPanelCentral(), BorderLayout.CENTER);
-        add(crearPanelInferior(), BorderLayout.SOUTH);
     }
     
     private JPanel crearPanelSuperior() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        panel.setBorder(new EmptyBorder(0, 0, 15, 0));
+        panel.setBorder(new EmptyBorder(0, 0, 10, 0));
         
         JLabel lblTitulo = new JLabel("REPORTES DEL SISTEMA");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitulo.setForeground(new Color(168, 27, 29));
         
-        JPanel panelDescripcion = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelDescripcion.setOpaque(false);
-        
         JLabel lblDescripcion = new JLabel("Seleccione el tipo de reporte que desea generar");
-        lblDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lblDescripcion.setForeground(new Color(80, 80, 80));
-        panelDescripcion.add(lblDescripcion);
+        lblDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        lblDescripcion.setForeground(new Color(100, 100, 100));
+        
+        JPanel panelDesc = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelDesc.setOpaque(false);
+        panelDesc.add(lblDescripcion);
         
         panel.add(lblTitulo, BorderLayout.NORTH);
-        panel.add(panelDescripcion, BorderLayout.CENTER);
+        panel.add(panelDesc, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelCentral() {
-        JPanel panel = new JPanel(new GridLayout(2, 3, 20, 20));
+        JPanel panel = new JPanel(new GridLayout(2, 3, 8, 8));
         panel.setOpaque(false);
         
         panel.add(crearPanelVentas());
@@ -103,182 +76,196 @@ public class ReportesGUI extends JPanel {
     }
     
     private JPanel crearPanelVentas() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "📊 REPORTES DE VENTAS",
+            "VENTAS",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(52, 152, 219)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnVentasDiarias = crearBotonReporte("Ventas Diarias", new Color(52, 152, 219));
+        JPanel panelBotones = new JPanel(new GridLayout(3, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnVentasDiarias = crearBoton("Ventas Diarias", new Color(52, 152, 219));
         btnVentasDiarias.addActionListener(e -> reporteVentasDiarias());
+        panelBotones.add(btnVentasDiarias);
         
-        btnVentasPeriodo = crearBotonReporte("Ventas por Período", new Color(52, 152, 219));
+        JButton btnVentasPeriodo = crearBoton("Ventas por Período", new Color(52, 152, 219));
         btnVentasPeriodo.addActionListener(e -> reporteVentasPeriodo());
+        panelBotones.add(btnVentasPeriodo);
         
-        btnTopProductos = crearBotonReporte("Top Productos más vendidos", new Color(52, 152, 219));
+        JButton btnTopProductos = crearBoton("Top Productos", new Color(52, 152, 219));
         btnTopProductos.addActionListener(e -> reporteTopProductos());
+        panelBotones.add(btnTopProductos);
         
-        panel.add(btnVentasDiarias);
-        panel.add(btnVentasPeriodo);
-        panel.add(btnTopProductos);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelReservas() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "📅 REPORTES DE RESERVAS",
+            "RESERVAS",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(241, 196, 15)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnReservasDiario = crearBotonReporte("Reservas Diario", new Color(241, 196, 15));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnReservasDiario = crearBoton("Reservas Diario", new Color(241, 196, 15));
         btnReservasDiario.addActionListener(e -> reporteReservasDiario());
+        panelBotones.add(btnReservasDiario);
         
-        btnReservasPeriodo = crearBotonReporte("Reservas por Período", new Color(241, 196, 15));
+        JButton btnReservasPeriodo = crearBoton("Reservas por Período", new Color(241, 196, 15));
         btnReservasPeriodo.addActionListener(e -> reporteReservasPeriodo());
+        panelBotones.add(btnReservasPeriodo);
         
-        panel.add(btnReservasDiario);
-        panel.add(btnReservasPeriodo);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelGenerales() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "📈 REPORTES GENERALES",
+            "GENERALES",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(46, 204, 113)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnReporteSemanal = crearBotonReporte("Reporte General Semanal", new Color(46, 204, 113));
+        JPanel panelBotones = new JPanel(new GridLayout(3, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnReporteSemanal = crearBoton("Reporte Semanal", new Color(46, 204, 113));
         btnReporteSemanal.addActionListener(e -> reporteGeneralSemanal());
+        panelBotones.add(btnReporteSemanal);
         
-        btnReporteMensual = crearBotonReporte("Reporte General Mensual", new Color(46, 204, 113));
+        JButton btnReporteMensual = crearBoton("Reporte Mensual", new Color(46, 204, 113));
         btnReporteMensual.addActionListener(e -> reporteGeneralMensual());
+        panelBotones.add(btnReporteMensual);
         
-        btnReportePeriodo = crearBotonReporte("Reporte por Período", new Color(46, 204, 113));
+        JButton btnReportePeriodo = crearBoton("Reporte por Período", new Color(46, 204, 113));
         btnReportePeriodo.addActionListener(e -> reporteGeneralPeriodo());
+        panelBotones.add(btnReportePeriodo);
         
-        panel.add(btnReporteSemanal);
-        panel.add(btnReporteMensual);
-        panel.add(btnReportePeriodo);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelFinanzas() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "💰 REPORTES FINANCIEROS",
+            "FINANZAS",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(155, 89, 182)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnReporteFinanzas = crearBotonReporte("Reporte Financiero", new Color(155, 89, 182));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnReporteFinanzas = crearBoton("Reporte Financiero", new Color(155, 89, 182));
         btnReporteFinanzas.addActionListener(e -> reporteFinanciero());
+        panelBotones.add(btnReporteFinanzas);
         
-        btnHistorialMovimientos = crearBotonReporte("Historial de Movimientos", new Color(155, 89, 182));
+        JButton btnHistorialMovimientos = crearBoton("Historial Movimientos", new Color(155, 89, 182));
         btnHistorialMovimientos.addActionListener(e -> historialMovimientos());
+        panelBotones.add(btnHistorialMovimientos);
         
-        panel.add(btnReporteFinanzas);
-        panel.add(btnHistorialMovimientos);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelInventario() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "📦 REPORTES DE INVENTARIO",
+            "INVENTARIO",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(230, 126, 34)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnStockActual = crearBotonReporte("Stock Actual", new Color(230, 126, 34));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnStockActual = crearBoton("Stock Actual", new Color(230, 126, 34));
         btnStockActual.addActionListener(e -> reporteStockActual());
+        panelBotones.add(btnStockActual);
         
-        btnProductosBajoStock = crearBotonReporte("Productos con Stock Bajo", new Color(230, 126, 34));
-        btnProductosBajoStock.addActionListener(e -> reporteProductosBajoStock());
+        JButton btnStockBajo = crearBoton("Stock Bajo", new Color(230, 126, 34));
+        btnStockBajo.addActionListener(e -> reporteProductosBajoStock());
+        panelBotones.add(btnStockBajo);
         
-        btnMovimientosInventario = crearBotonReporte("Movimientos de Inventario", new Color(230, 126, 34));
-        btnMovimientosInventario.addActionListener(e -> reporteMovimientosInventario());
-        
-        panel.add(btnStockActual);
-        panel.add(btnProductosBajoStock);
-        panel.add(btnMovimientosInventario);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
     private JPanel crearPanelUsuarios() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "👥 REPORTES DE USUARIOS",
+            "USUARIOS",
             TitledBorder.LEFT,
             TitledBorder.TOP,
-            new Font("Segoe UI", Font.BOLD, 13),
+            new Font("Segoe UI", Font.BOLD, 12),
             new Color(52, 73, 94)
         ));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         
-        btnListaUsuarios = crearBotonReporte("Lista de Usuarios", new Color(52, 73, 94));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 5, 5));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(new EmptyBorder(8, 8, 8, 8));
+        
+        JButton btnListaUsuarios = crearBoton("Lista de Usuarios", new Color(52, 73, 94));
         btnListaUsuarios.addActionListener(e -> reporteListaUsuarios());
+        panelBotones.add(btnListaUsuarios);
         
-        btnUsuariosPorRol = crearBotonReporte("Usuarios por Rol", new Color(52, 73, 94));
+        JButton btnUsuariosPorRol = crearBoton("Usuarios por Rol", new Color(52, 73, 94));
         btnUsuariosPorRol.addActionListener(e -> reporteUsuariosPorRol());
+        panelBotones.add(btnUsuariosPorRol);
         
-        panel.add(btnListaUsuarios);
-        panel.add(btnUsuariosPorRol);
+        panel.add(panelBotones, BorderLayout.CENTER);
         
         return panel;
     }
     
-    private JButton crearBotonReporte(String texto, Color color) {
+    private JButton crearBoton(String texto, Color color) {
         JButton boton = new JButton(texto);
-        boton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        boton.setFont(new Font("Segoe UI", Font.BOLD, 11));
         boton.setBackground(color);
         boton.setForeground(Color.WHITE);
-        boton.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+        boton.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
         boton.setFocusPainted(false);
         boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        boton.setPreferredSize(new Dimension(180, 35));
+        boton.setPreferredSize(new Dimension(160, 35));
         
         boton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -292,67 +279,60 @@ public class ReportesGUI extends JPanel {
         return boton;
     }
     
-    private JPanel crearPanelInferior() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panel.setOpaque(false);
-        panel.setBorder(new EmptyBorder(15, 0, 0, 0));
-        
-        btnCerrar = new JButton("Cerrar");
-        btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnCerrar.setBackground(new Color(168, 27, 29));
-        btnCerrar.setForeground(Color.WHITE);
-        btnCerrar.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
-        btnCerrar.setFocusPainted(false);
-        btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCerrar.addActionListener(e -> cerrar());
-        
-        panel.add(btnCerrar);
-        
-        return panel;
-    }
-    
     // ==================== MÉTODOS DE REPORTES ====================
     
     private void reporteVentasDiarias() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Ventas Diarias en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteVentasDiariasGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteVentasPeriodo() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Ventas por Período en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteVentasPeriodoGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteTopProductos() {
         JOptionPane.showMessageDialog(this,
-            "Módulo de Top Productos más vendidos en desarrollo.\nPróximamente disponible.",
+            "Módulo en desarrollo.\nPróximamente disponible.",
             "Información",
             JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void reporteReservasDiario() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Reservas Diario en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteReservasDiarioGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteReservasPeriodo() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Reservas por Período en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteReservasPeriodoGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteGeneralSemanal() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new ReporteSemanalGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteSemanalParaReportesGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
@@ -362,7 +342,7 @@ public class ReportesGUI extends JPanel {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new ReporteMensualGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteMensualParaReportesGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
@@ -372,7 +352,7 @@ public class ReportesGUI extends JPanel {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new ReporteRangosGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteRangosParaReportesGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
@@ -382,7 +362,7 @@ public class ReportesGUI extends JPanel {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new GestionFinanzasGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteFinancieroGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
@@ -392,59 +372,54 @@ public class ReportesGUI extends JPanel {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new HistorialMovimientosGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteHistorialMovimientosGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
     }
     
     private void reporteStockActual() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Stock Actual en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteStockActualGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteProductosBajoStock() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Productos con Stock Bajo en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    private void reporteMovimientosInventario() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Movimientos de Inventario en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteStockBajoGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteListaUsuarios() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new GestionUsuariosGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteListaUsuariosGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
     }
     
     private void reporteUsuariosPorRol() {
-        JOptionPane.showMessageDialog(this,
-            "Módulo de Reporte de Usuarios por Rol en desarrollo.\nPróximamente disponible.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    private void cerrar() {
         JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
-            parent.add(new GestionFinanzasGUI(), BorderLayout.CENTER);
+            parent.add(new ReporteUsuariosPorRolGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
         }
     }
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -457,7 +432,6 @@ public class ReportesGUI extends JPanel {
 
         PanelSuperior = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
-        PanelDescripcion = new javax.swing.JPanel();
         lblDescripcion = new javax.swing.JLabel();
         PanelCentral = new javax.swing.JPanel();
         PanelVentas = new javax.swing.JPanel();
@@ -488,23 +462,6 @@ public class ReportesGUI extends JPanel {
 
         lblDescripcion.setText("jLabel1");
 
-        javax.swing.GroupLayout PanelDescripcionLayout = new javax.swing.GroupLayout(PanelDescripcion);
-        PanelDescripcion.setLayout(PanelDescripcionLayout);
-        PanelDescripcionLayout.setHorizontalGroup(
-            PanelDescripcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelDescripcionLayout.createSequentialGroup()
-                .addGap(363, 363, 363)
-                .addComponent(lblDescripcion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        PanelDescripcionLayout.setVerticalGroup(
-            PanelDescripcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelDescripcionLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addComponent(lblDescripcion)
-                .addGap(15, 15, 15))
-        );
-
         javax.swing.GroupLayout PanelSuperiorLayout = new javax.swing.GroupLayout(PanelSuperior);
         PanelSuperior.setLayout(PanelSuperiorLayout);
         PanelSuperiorLayout.setHorizontalGroup(
@@ -512,21 +469,18 @@ public class ReportesGUI extends JPanel {
             .addGroup(PanelSuperiorLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(PanelDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(396, 396, 396)
+                .addComponent(lblDescripcion)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelSuperiorLayout.setVerticalGroup(
             PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(lblTitulo))
-                    .addGroup(PanelSuperiorLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(PanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addGroup(PanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitulo)
+                    .addComponent(lblDescripcion))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         btnVentasDiarias.setText("jButton1");
@@ -774,7 +728,6 @@ public class ReportesGUI extends JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCentral;
-    private javax.swing.JPanel PanelDescripcion;
     private javax.swing.JPanel PanelFinanzas;
     private javax.swing.JPanel PanelGenerales;
     private javax.swing.JPanel PanelInventario;
