@@ -645,13 +645,13 @@ public class GestionFinanzasGUI extends JPanel {
     }
     
     private void reporteSemanal() {
-        /*JPanel parent = (JPanel) getParent();
+        JPanel parent = (JPanel) getParent();
         if (parent != null) {
             parent.removeAll();
             parent.add(new ReporteSemanalGUI(), BorderLayout.CENTER);
             parent.revalidate();
             parent.repaint();
-        }*/
+        }
     }
     
     private void reporteMensual() {
