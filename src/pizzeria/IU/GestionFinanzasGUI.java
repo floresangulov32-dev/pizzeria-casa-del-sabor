@@ -8,9 +8,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,6 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import pizzeria.controller.GestorFinanzas;
 import pizzeria.model.MovimientoCaja;
@@ -97,7 +99,7 @@ public class GestionFinanzasGUI extends JPanel {
         
         // Tarjeta Saldo Disponible
         gbc.gridx = 4; gbc.gridy = 0;
-        panel.add(crearTarjeta("✅ SALDO DISPONIBLE", "Bs. 0.00", new Color(155, 89, 182)), gbc);
+        panel.add(crearTarjeta(" SALDO DISPONIBLE", "Bs. 0.00", new Color(155, 89, 182)), gbc);
         
         return panel;
     }
@@ -200,7 +202,7 @@ public class GestionFinanzasGUI extends JPanel {
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            "📋 DEUDAS Y COMPROMISOS",
+            " DEUDAS Y COMPROMISOS",
             TitledBorder.LEFT,
             TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 14),
@@ -212,10 +214,10 @@ public class GestionFinanzasGUI extends JPanel {
             BorderFactory.createEmptyBorder(10, 15, 15, 15)
         ));
         
-        btnRegistrarDeuda = crearBotonAccion("➕ Registrar compromiso/Deuda", new Color(241, 196, 15));
-        btnVerDeudasPendientes = crearBotonAccion("📌 Ver deudas pendientes", new Color(230, 126, 34));
-        btnPagarDeuda = crearBotonAccion("💰 Pagar deuda", new Color(46, 204, 113));
-        btnVerTodasDeudas = crearBotonAccion("📄 Ver todas las deudas", new Color(155, 89, 182));
+        btnRegistrarDeuda = crearBotonAccion(" Registrar compromiso/Deuda", new Color(241, 196, 15));
+        btnVerDeudasPendientes = crearBotonAccion(" Ver deudas pendientes", new Color(230, 126, 34));
+        btnPagarDeuda = crearBotonAccion(" Pagar deuda", new Color(46, 204, 113));
+        btnVerTodasDeudas = crearBotonAccion(" Ver todas las deudas", new Color(155, 89, 182));
         
         panel.add(javax.swing.Box.createRigidArea(new Dimension(0, 10)));
         panel.add(btnRegistrarDeuda);
@@ -248,10 +250,10 @@ public class GestionFinanzasGUI extends JPanel {
             BorderFactory.createEmptyBorder(10, 15, 15, 15)
         ));
         
-        btnReporteDiario = crearBotonAccion("📅 Reporte diario", new Color(46, 204, 113));
-        btnReporteSemanal = crearBotonAccion("📆 Reporte semanal", new Color(46, 204, 113));
-        btnReporteMensual = crearBotonAccion("📊 Reporte mensual", new Color(46, 204, 113));
-        btnReporteRangos = crearBotonAccion("🔍 Reporte entre rangos", new Color(46, 204, 113));
+        btnReporteDiario = crearBotonAccion(" Reporte diario", new Color(46, 204, 113));
+        btnReporteSemanal = crearBotonAccion(" Reporte semanal", new Color(46, 204, 113));
+        btnReporteMensual = crearBotonAccion(" Reporte mensual", new Color(46, 204, 113));
+        btnReporteRangos = crearBotonAccion(" Reporte entre rangos", new Color(46, 204, 113));
         
         panel.add(javax.swing.Box.createRigidArea(new Dimension(0, 10)));
         panel.add(btnReporteDiario);
@@ -363,37 +365,37 @@ public class GestionFinanzasGUI extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        javax.swing.JTextField txtMonto = new javax.swing.JTextField(15);
-        javax.swing.JTextField txtDescripcion = new javax.swing.JTextField(15);
-        
+
+        JTextField txtMonto = new JTextField(15);
+        JTextField txtDescripcion = new JTextField(15);
+
         String[] categorias = {"CompraInsumo", "Salario", "Otro"};
-        javax.swing.JComboBox<String> cbCategoria = new javax.swing.JComboBox<>(categorias);
-        
+        JComboBox<String> cbCategoria = new JComboBox<>(categorias);
+
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Monto (Bs.):"), gbc);
         gbc.gridx = 1;
         panel.add(txtMonto, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Categoría:"), gbc);
         gbc.gridx = 1;
         panel.add(cbCategoria, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Descripción:"), gbc);
         gbc.gridx = 1;
         panel.add(txtDescripcion, gbc);
-        
+
         int result = JOptionPane.showConfirmDialog(this, panel, "Registrar Egreso",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+
         if (result == JOptionPane.OK_OPTION) {
             try {
                 double monto = Double.parseDouble(txtMonto.getText().trim());
                 String categoria = (String) cbCategoria.getSelectedItem();
                 String descripcion = txtDescripcion.getText().trim();
-                
+
                 if (monto <= 0) {
                     JOptionPane.showMessageDialog(this, "El monto debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -402,11 +404,47 @@ public class GestionFinanzasGUI extends JPanel {
                     JOptionPane.showMessageDialog(this, "Ingrese una descripción.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
-                gestorFinanzas.registrarEgreso(monto, categoria, descripcion);
-                gestorFinanzas.guardarArchivos();
-                JOptionPane.showMessageDialog(this, "Egreso registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                actualizarResumen();
+
+                // Obtener saldo actual
+                double saldoActual = gestorFinanzas.calcularSaldo();
+
+                // Verificar si el egreso supera el saldo
+                if (monto > saldoActual) {
+                    int advertencia = JOptionPane.showConfirmDialog(this,
+                        "ADVERTENCIA: El monto del egreso (Bs. " + String.format("%.2f", monto) + 
+                        ") supera el saldo actual (Bs. " + String.format("%.2f", saldoActual) + ").\n\n" +
+                        "Si continúa, el saldo quedará negativo.\n\n¿Desea continuar de todas formas?",
+                        "Saldo Insuficiente",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+                    if (advertencia != JOptionPane.YES_OPTION) {
+                        return;
+                    }
+                }
+
+                // Ventana de confirmación con los datos
+                String mensajeConfirmacion = 
+                    "═══════════ CONFIRMAR EGRESO ═══════════\n\n" +
+                    "Monto: Bs. " + String.format("%.2f", monto) + "\n" +
+                    "Categoría: " + categoria + "\n" +
+                    "Descripción: " + descripcion + "\n\n" +
+                    "Saldo actual: Bs. " + String.format("%.2f", saldoActual) + "\n" +
+                    "Saldo después: Bs. " + String.format("%.2f", saldoActual - monto) + "\n\n" +
+                    "¿Confirmar el registro del egreso?";
+
+                int confirmar = JOptionPane.showConfirmDialog(this,
+                    mensajeConfirmacion,
+                    "Confirmar Egreso",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    gestorFinanzas.registrarEgreso(monto, categoria, descripcion);
+                    gestorFinanzas.guardarArchivos();
+                    JOptionPane.showMessageDialog(this, "Egreso registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    actualizarResumen();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Monto inválido.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -419,55 +457,148 @@ public class GestionFinanzasGUI extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        javax.swing.JTextField txtMonto = new javax.swing.JTextField(15);
-        javax.swing.JTextField txtDescripcion = new javax.swing.JTextField(15);
-        javax.swing.JTextField txtProveedor = new javax.swing.JTextField(15);
-        
+
+        JTextField txtMonto = new JTextField(15);
+        JTextField txtDescripcion = new JTextField(15);
+        JTextField txtProveedor = new JTextField(15);
+
+        // Campo para fecha de vencimiento
+        JTextField txtFechaVencimiento = new JTextField(15);
+        txtFechaVencimiento.setToolTipText("Formato: YYYY-MM-DD (ejemplo: 2026-05-30)");
+
         String[] tipos = {"CompraInsumo", "Salario", "Otro"};
-        javax.swing.JComboBox<String> cbTipo = new javax.swing.JComboBox<>(tipos);
-        
+        JComboBox<String> cbTipo = new JComboBox<>(tipos);
+
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Tipo:"), gbc);
         gbc.gridx = 1;
         panel.add(cbTipo, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Descripción:"), gbc);
         gbc.gridx = 1;
         panel.add(txtDescripcion, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Monto (Bs.):"), gbc);
         gbc.gridx = 1;
         panel.add(txtMonto, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 3;
         panel.add(new JLabel("Proveedor/Empleado:"), gbc);
         gbc.gridx = 1;
         panel.add(txtProveedor, gbc);
-        
+
+        gbc.gridx = 0; gbc.gridy = 4;
+        panel.add(new JLabel("Fecha Vencimiento (YYYY-MM-DD):"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtFechaVencimiento, gbc);
+
         int result = JOptionPane.showConfirmDialog(this, panel, "Registrar Deuda",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+
         if (result == JOptionPane.OK_OPTION) {
             try {
                 double monto = Double.parseDouble(txtMonto.getText().trim());
                 String tipo = (String) cbTipo.getSelectedItem();
                 String descripcion = txtDescripcion.getText().trim();
                 String proveedor = txtProveedor.getText().trim();
-                
+                String fechaStr = txtFechaVencimiento.getText().trim();
+
                 if (monto <= 0) {
                     JOptionPane.showMessageDialog(this, "El monto debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
-                gestorFinanzas.registrarDeuda(tipo, descripcion, monto, proveedor, LocalDateTime.now().plusDays(30));
-                gestorFinanzas.guardarArchivos();
-                JOptionPane.showMessageDialog(this, "Deuda registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                actualizarResumen();
+                if (descripcion.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Ingrese una descripción.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (proveedor.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Ingrese el proveedor/empleado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                LocalDateTime fechaVencimiento;
+                LocalDate fechaActual = LocalDate.now();
+
+                if (fechaStr.isEmpty()) {
+                    fechaVencimiento = fechaActual.plusDays(30).atStartOfDay();
+                } else {
+                    LocalDate fechaIngresada = LocalDate.parse(fechaStr);
+
+                    // VALIDACIÓN: La fecha no puede ser inferior a la actual
+                    if (fechaIngresada.isBefore(fechaActual)) {
+                        JOptionPane.showMessageDialog(this, 
+                            "ERROR: La fecha de vencimiento (" + fechaIngresada + ") es anterior a la fecha actual (" + fechaActual + ").\n" +
+                            "Ingrese una fecha válida (futura).",
+                            "Fecha Inválida",
+                            JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    fechaVencimiento = fechaIngresada.atStartOfDay();
+                }
+
+                // Obtener saldo actual
+                double saldoActual = gestorFinanzas.calcularSaldo();
+                double deudaPendienteTotal = gestorFinanzas.totalDeudaPendiente();
+                double saldoDisponible = saldoActual - deudaPendienteTotal;
+
+                // Verificar si la nueva deuda afectará significativamente el saldo
+                if (monto > saldoDisponible && saldoDisponible > 0) {
+                    int advertencia = JOptionPane.showConfirmDialog(this,
+                        "ADVERTENCIA: La nueva deuda (Bs. " + String.format("%.2f", monto) + 
+                        ") supera el saldo disponible (Bs. " + String.format("%.2f", saldoDisponible) + ").\n\n" +
+                        "Saldo actual: Bs. " + String.format("%.2f", saldoActual) + "\n" +
+                        "Deudas pendientes: Bs. " + String.format("%.2f", deudaPendienteTotal) + "\n\n" +
+                        "¿Desea registrar la deuda de todas formas?",
+                        "Advertencia de Endeudamiento",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+                    if (advertencia != JOptionPane.YES_OPTION) {
+                        return;
+                    }
+                }
+
+                // Calcular días hasta vencimiento para mostrar en confirmación
+                long diasHastaVencimiento = java.time.temporal.ChronoUnit.DAYS.between(fechaActual, fechaVencimiento.toLocalDate());
+                String mensajeDias = (diasHastaVencimiento <= 7) ? 
+                    " ATENCIÓN: Faltan " + diasHastaVencimiento + " días para el vencimiento ⚠️\n\n" : 
+                    "Faltan " + diasHastaVencimiento + " días para el vencimiento.\n\n";
+
+                // Ventana de confirmación con los datos
+                String mensajeConfirmacion = 
+                    "═══════════ CONFIRMAR DEUDA ═══════════\n\n" +
+                    "Tipo: " + tipo + "\n" +
+                    "Descripción: " + descripcion + "\n" +
+                    "Monto: Bs. " + String.format("%.2f", monto) + "\n" +
+                    "Proveedor/Empleado: " + proveedor + "\n" +
+                    "Fecha Vencimiento: " + fechaVencimiento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                    mensajeDias +
+                    "═══════════ SITUACIÓN FINANCIERA ═══════════\n\n" +
+                    "Saldo actual en caja: Bs. " + String.format("%.2f", saldoActual) + "\n" +
+                    "Deudas pendientes actuales: Bs. " + String.format("%.2f", deudaPendienteTotal) + "\n" +
+                    "Nueva deuda: Bs. " + String.format("%.2f", monto) + "\n" +
+                    "Total deudas después: Bs. " + String.format("%.2f", deudaPendienteTotal + monto) + "\n\n" +
+                    "¿Confirmar el registro de la deuda?";
+
+                int confirmar = JOptionPane.showConfirmDialog(this,
+                    mensajeConfirmacion,
+                    "Confirmar Deuda",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    gestorFinanzas.registrarDeuda(tipo, descripcion, monto, proveedor, fechaVencimiento);
+                    gestorFinanzas.guardarArchivos();
+                    JOptionPane.showMessageDialog(this, "Deuda registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    actualizarResumen();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Monto inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Fecha inválida. Use el formato YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -484,42 +615,13 @@ public class GestionFinanzasGUI extends JPanel {
         }
     }
 
-    private void pagarDeuda() {
-        if (gestorFinanzas.getDeudasPendientes().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No hay deudas pendientes.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== DEUDAS PENDIENTES ===\n\n");
-        for (Deuda d : gestorFinanzas.getDeudasPendientes()) {
-            sb.append(String.format("ID: %d | %s | Bs. %.2f | %s\n",
-                d.getId(), d.getTipo(), d.getMontoTotal(), d.getDescripcion()));
-        }
-        
-        String idStr = JOptionPane.showInputDialog(this, sb.toString() + "\nIngrese el ID de la deuda a pagar:");
-        if (idStr != null && !idStr.trim().isEmpty()) {
-            try {
-                int id = Integer.parseInt(idStr.trim());
-                Deuda deuda = gestorFinanzas.buscarDeudaPorId(id);
-                if (deuda == null) {
-                    JOptionPane.showMessageDialog(this, "No se encontró la deuda.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                int confirm = JOptionPane.showConfirmDialog(this,
-                    String.format("¿Pagar deuda #%d por Bs. %.2f?", id, deuda.getMontoTotal()),
-                    "Confirmar Pago", JOptionPane.YES_NO_OPTION);
-                
-                if (confirm == JOptionPane.YES_OPTION) {
-                    gestorFinanzas.pagarDeuda(id);
-                    gestorFinanzas.guardarArchivos();
-                    JOptionPane.showMessageDialog(this, "Deuda pagada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                    actualizarResumen();
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "ID inválido.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+    private void pagarDeuda() { 
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new PagarDeudaGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
         }
     }
     
@@ -533,41 +635,42 @@ public class GestionFinanzasGUI extends JPanel {
         }
     }    
     private void reporteDiario() {
-        gestorFinanzas.reporteDiario(LocalDate.now());
-        JOptionPane.showMessageDialog(this, "Reporte diario generado. Revise la consola para más detalles.", 
-                "Reporte Diario", JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteDiarioGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteSemanal() {
-        LocalDate inicio = LocalDate.now().minusDays(6);
-        LocalDate fin = LocalDate.now();
-        gestorFinanzas.reportePeriodo(inicio, fin, "SEMANAL");
-        JOptionPane.showMessageDialog(this, "Reporte semanal generado (" + inicio + " al " + fin + ")", 
-                "Reporte Semanal", JOptionPane.INFORMATION_MESSAGE);
+        /*JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteSemanalGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }*/
     }
     
     private void reporteMensual() {
-        LocalDate inicio = LocalDate.now().withDayOfMonth(1);
-        LocalDate fin = LocalDate.now();
-        gestorFinanzas.reportePeriodo(inicio, fin, "MENSUAL");
-        JOptionPane.showMessageDialog(this, "Reporte mensual generado (" + inicio + " al " + fin + ")", 
-                "Reporte Mensual", JOptionPane.INFORMATION_MESSAGE);
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteMensualGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
+        }
     }
     
     private void reporteRangos() {
-        String inicioStr = JOptionPane.showInputDialog(this, "Fecha inicio (YYYY-MM-DD):");
-        String finStr = JOptionPane.showInputDialog(this, "Fecha fin (YYYY-MM-DD):");
-        
-        if (inicioStr != null && finStr != null && !inicioStr.trim().isEmpty() && !finStr.trim().isEmpty()) {
-            try {
-                LocalDate inicio = LocalDate.parse(inicioStr.trim());
-                LocalDate fin = LocalDate.parse(finStr.trim());
-                gestorFinanzas.reportePeriodo(inicio, fin, "PERSONALIZADO");
-                JOptionPane.showMessageDialog(this, "Reporte generado del " + inicio + " al " + fin, 
-                        "Reporte Personalizado", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Use YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        JPanel parent = (JPanel) getParent();
+        if (parent != null) {
+            parent.removeAll();
+            parent.add(new ReporteRangosGUI(), BorderLayout.CENTER);
+            parent.revalidate();
+            parent.repaint();
         }
     }
     
