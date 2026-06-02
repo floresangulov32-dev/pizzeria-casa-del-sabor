@@ -11,6 +11,7 @@ import pizzeria.model.Inventario;
 import pizzeria.model.Insumo;
 import pizzeria.model.Menu;
 import pizzeria.model.Producto;
+import pizzeria.model.TipoProducto;
 import pizzeria.util.ArchivoMenu;
 
 /**
@@ -19,9 +20,6 @@ import pizzeria.util.ArchivoMenu;
  */
 public class MenuAgregarProducto extends javax.swing.JPanel {
 
-    /**
-     * Creates new form MenuAgregarProducto
-     */
     private ArrayList<JCheckBox> checkboxesInsumos = new ArrayList<>();
     private Inventario inventario;
     private Menu menu;
@@ -37,6 +35,17 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         initComponents();
         this.inventario = inventario;
         cargarInsumos();
+    }
+    
+     public MenuAgregarProducto(Menu menu, Inventario inventario,
+                               ArchivoMenu archivoMenu, Runnable onProductoAgregado) {
+        this.menu = menu;
+        this.inventario = inventario;
+        this.archivoMenu = archivoMenu;
+        this.onProductoAgregado = onProductoAgregado;
+        initComponents();
+        cargarInsumos();
+        
     }
 
     /**
@@ -102,7 +111,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         jLabel5.setText("Tipo de Producto:");
 
         tipoP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        tipoP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pizza", "Refresco" }));
+        tipoP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Producto", "Refresco" }));
         tipoP.addActionListener(this::tipoPActionPerformed);
 
         btnGuardar.setBackground(new java.awt.Color(168, 27, 29));
@@ -232,10 +241,88 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
+        // 1. Validar nombre
+        String nombre = txtNombre.getText().trim();
+        if (nombre.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Ingrese el nombre del producto.",
+                "Campo vacío", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. Validar precio
+        String precioTxt = txtPrecio.getText().trim();
+        double precio;
+        try {
+            precio = Double.parseDouble(precioTxt);
+            if (precio < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Ingrese un precio válido (número positivo).",
+                "Precio inválido", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 3. Descripción (opcional, pero no debe ser nula)
+        String descripcion = txtDescrip.getText().trim();
+
+        // 4. Tipo de producto
+        TipoProducto tipo = TipoProducto.fromString((String) tipoP.getSelectedItem());
+
+       
+
+        
+        ArrayList<Integer> ingredientes = new ArrayList<>();
+        if ("Pizza".equals(tipo)) {
+            for (int i = 0; i < checkboxesInsumos.size(); i++) {
+                if (checkboxesInsumos.get(i).isSelected()) {
+                    Insumo ins = inventario.getInsumos().get(i);
+                    ingredientes.add(ins.getId());
+                }
+            }
+        }
+
+        
+        if (menu == null) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "No se puede guardar: el menú no está disponible.",
+                "Error interno", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        menu.agregarProducto(nombre, descripcion, precio, tipo);
+        Producto recienAgregado = menu.getProductos().get(menu.getProductos().size() - 1);
+        for (int idIng : ingredientes) {
+            recienAgregado.agregarIngrediente(idIng);
+        }
+        // 8. Persistir en disco
+        if (archivoMenu != null) {
+            archivoMenu.guardarProductos(menu.getProductos());
+        }
+
+        // 9. Confirmar al usuario y limpiar el formulario
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Producto \"" + nombre + "\" agregado correctamente.",
+            "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        limpiarFormulario();
+
+        // 10. Notificar al panel padre si se proporcionó callback
+        if (onProductoAgregado != null) {
+            onProductoAgregado.run();
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-              
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this,
+            "¿Descartar los datos ingresados?",
+            "Cancelar", javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE);
+
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            limpiarFormulario();
+            // Si hay callback de cancelación se puede añadir aquí
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     
@@ -266,7 +353,7 @@ private void limpiarFormulario() {
         for (JCheckBox chk : checkboxesInsumos) {
             chk.setSelected(false);
         }
-        //actualizarVisibilidadInsumos();
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
