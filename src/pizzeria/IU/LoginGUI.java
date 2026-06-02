@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import pizzeria.controller.GestorUsuarios;
 import pizzeria.model.Usuario;
+import pizzeria.IU.InterfazCliente;
 
 /**
  *
@@ -282,23 +283,30 @@ public class LoginGUI extends javax.swing.JFrame {
             // Verificar el rol y abrir la interfaz correspondiente
             switch (user.getRol().name()) {
                 case "GERENTE":
-                    abrirInterfazGerente(user);
-                    break;
-                case "CAJERO":
-                    mostrarMensajeEnDesarrollo("Módulo de Cajero");
-                    volverPantallaInicial();
-                    break;
-                case "COCINA":
-                    mostrarMensajeEnDesarrollo("Módulo de Cocina");
-                    volverPantallaInicial();
+                    try {
+                        InterfazGerenteP1 gerenteFrame = new InterfazGerenteP1(user.getRol().name(), user.getNombre());
+                        gerenteFrame.setVisible(true);
+                    } catch (Exception e) {
+                        System.out.println("Error al abrir InterfazGerenteP1: " + e.getMessage());
+                        mostrarMensajeEnDesarrollo("Módulo de Gerente");
+                        new PantallaInicial().setVisible(true);
+                    }
                     break;
                 case "CLIENTE":
-                    mostrarMensajeEnDesarrollo("Módulo de Cliente");
-                    volverPantallaInicial();
+                    try {
+                        InterfazCliente clienteFrame = new InterfazCliente(user.getRol().name(), user.getNombre());
+                        clienteFrame.setVisible(true);
+                    } catch (Exception e) {
+                        System.out.println("Error al abrir InterfazCliente: " + e.getMessage());
+                        mostrarMensajeEnDesarrollo("Módulo de Cliente");
+                        new PantallaInicial().setVisible(true);
+                    }
                     break;
+                case "CAJERO":
+                case "COCINA":
                 default:
                     mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
-                    volverPantallaInicial();
+                    new PantallaInicial().setVisible(true);
                     break;
             }
         } else {
@@ -309,6 +317,13 @@ public class LoginGUI extends javax.swing.JFrame {
             txtPassword.setText("");
             txtUsuario.requestFocus();
         }
+    }
+
+    private void mostrarMensajeEnDesarrollo(String modulo) {
+        JOptionPane.showMessageDialog(null,
+            modulo + " en desarrollo.\nSerá implementado próximamente.",
+            "Información",
+            JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void abrirInterfazGerente(Usuario user) {
@@ -322,12 +337,6 @@ public class LoginGUI extends javax.swing.JFrame {
         }
     }
     
-    private void mostrarMensajeEnDesarrollo(String modulo) {
-        JOptionPane.showMessageDialog(null,
-            modulo + " en desarrollo.\nSerá implementado próximamente.",
-            "Información",
-            JOptionPane.INFORMATION_MESSAGE);
-    }
     
     private void volverPantallaInicial() {
         this.dispose();
