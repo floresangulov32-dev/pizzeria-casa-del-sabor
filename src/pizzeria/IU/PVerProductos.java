@@ -250,7 +250,35 @@ public class PVerProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEliminarPActionPerformed
 
     private void btnAgregarIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarIActionPerformed
-        // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Seleccione un producto de la tabla.");
+            return;
+        }
+
+        int idProducto = (int) jTable1.getValueAt(fila, 0);
+
+        Producto producto = menu.buscarProducto(idProducto);
+
+        if (producto == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                 this,
+                "No se encontró el producto.");
+        return;
+        }
+
+         PAgregarIngrediente panel = new PAgregarIngrediente(
+            interfaz,
+            menu,
+            inventario,
+            archivoMenu,
+            producto
+        );
+
+        cargarPanel(panel);
     }//GEN-LAST:event_btnAgregarIActionPerformed
 
     private void cargarPanel(JPanel panel) {

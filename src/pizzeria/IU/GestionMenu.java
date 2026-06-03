@@ -47,6 +47,11 @@ public class GestionMenu extends javax.swing.JFrame {
         ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
         menu = new Menu(productos, combos);
         inventario.cargarArchivo();
+        
+        NroP.setText(productos.size() + "");
+        NroC.setText(combos.size() + "");
+        
+        
     }
     
     
@@ -72,6 +77,9 @@ public class GestionMenu extends javax.swing.JFrame {
         ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
         menu = new Menu(productos, combos);
         inventario.cargarArchivo();
+        
+        NroP.setText(productos.size() + "");
+        NroC.setText(combos.size() + "");
     
     
 }

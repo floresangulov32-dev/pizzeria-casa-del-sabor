@@ -128,7 +128,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         btnCancelar.setBackground(new java.awt.Color(106, 68, 68));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setText("Volver");
         btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));

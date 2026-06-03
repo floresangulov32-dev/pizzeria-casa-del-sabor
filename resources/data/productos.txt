@@ -22,3 +22,4 @@ PRODUCTOS
 21,refresco,Coca Cola,Bebida gaseosa 1L,20.0,35
 22,refresco,Fanta,Bebida gaseosa sabor naranja 1L,20.0,36
 23,refresco,Sprite,Bebida gaseosa lima-limón 1L,20.0,34
+24,producto,Pizza Prueba,oiuytre,80.0,1;2;3;4
