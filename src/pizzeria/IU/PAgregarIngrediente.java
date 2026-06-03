@@ -34,16 +34,17 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
     
      public PAgregarIngrediente(JPanel interfaz, Menu menu, Inventario inventario,
                                ArchivoMenu archivoMenu, Producto producto) {
-        this.interfaz = interfaz;
-        this.menu = menu;
-        this.inventario = inventario;
-        this.archivoMenu = archivoMenu;
-        this.producto = producto;
-                
-        initComponents();
-        cargarIngredientes();
-        
-        lblProducto.setText(producto.getNombre());
+    
+
+    this.interfaz = interfaz;
+    this.menu = menu;
+    this.inventario = inventario;
+    this.archivoMenu = archivoMenu;
+    this.producto = producto;
+
+    initComponents();
+    cargarIngredientes();
+    lblProducto.setText(producto.getNombre());
      }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,10 +81,9 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
         tblIngredientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        tblIngredientes.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tblIngredientes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblIngredientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
                 {null, null},
                 {null, null},
                 {null, null},
@@ -106,7 +106,8 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
             }
         });
         tblIngredientes.setMinimumSize(new java.awt.Dimension(50, 360));
-        tblIngredientes.setRowHeight(50);
+        tblIngredientes.setPreferredSize(new java.awt.Dimension(150, 200));
+        tblIngredientes.setRowHeight(40);
         jScrollPane1.setViewportView(tblIngredientes);
 
         btnVolver.setBackground(new java.awt.Color(106, 68, 68));
@@ -159,16 +160,16 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
                 .addGap(28, 28, 28)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(90, 90, 90)
                         .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
                         .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(111, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -214,12 +215,12 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
             ins.getId(),
             ins.getNombre(),
             });
+        
+        }
         tblIngredientes.setModel(modelo);
         
-        tblIngredientes.setRowHeight(50);
         tblIngredientes.getColumnModel().getColumn(0).setPreferredWidth(50);
         tblIngredientes.getColumnModel().getColumn(1).setPreferredWidth(190);
-        }
     }
     
     private void cargarPanel(JPanel panel) {
