@@ -270,7 +270,7 @@ public class ContextoVentasGUI {
         return cambioCobro;
     }
     
-    public void setUltimaVentaRegistrata(pizzeria.model.Venta venta) {
+    public void setUltimaVentaRegistrada(pizzeria.model.Venta venta) {
         this.ultimaVentaRegistrada = venta;
     }
 

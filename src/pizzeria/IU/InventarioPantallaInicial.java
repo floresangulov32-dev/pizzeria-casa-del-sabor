@@ -5,6 +5,9 @@
 package pizzeria.IU;
 import pizzeria.model.Inventario;
 import pizzeria.model.Insumo;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.JLabel;
 /**
  *
  * @author BENJAMIN
@@ -22,6 +25,9 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         initComponents();
         inventario.cargarArchivo();
         configurarTabla();
+        jLabel3.setPreferredSize(new java.awt.Dimension(90, 90));
+        cargarImagen(jLabel3, "resources/imagenes/logoCasaDelSabor.jpeg");
+        mostrarUsuario();
     }
     public InventarioPantallaInicial(String rol, String nombre) {
     initComponents();
@@ -30,6 +36,9 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     Rol.setText(rol + ": " + nombre);
     inventario.cargarArchivo();
     configurarTabla();
+    jLabel3.setPreferredSize(new java.awt.Dimension(90, 90));
+    cargarImagen(jLabel3, "resources/imagenes/logoCasaDelSabor.jpeg");
+    mostrarUsuario();
     }
     
     /**
@@ -286,6 +295,11 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         return inventario;
     }
     
+    private void mostrarUsuario() {
+    
+        Rol.setText(rolUsuario + ": " + nombreUsuario);
+    }
+    
     private void configurarTabla(){
     javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
     new String[]{"ID", "Nombre", "Unidad", "Stock", "Stock Minimo", "Precio de Compra", "Cantidad por Pizza"}, 0
@@ -320,6 +334,26 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         jScrollPane1.setVisible(true);
         revalidate();
         repaint();
+    }
+    
+    private void cargarImagen(JLabel label, String ruta){
+     label.setText("");
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
+            label.getPreferredSize().width,
+            label.getPreferredSize().height,
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
     /**
      * @param args the command line arguments
