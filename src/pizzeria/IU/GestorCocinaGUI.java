@@ -3,295 +3,664 @@ package pizzeria.IU;
 import pizzeria.controller.GestorCocina;
 import pizzeria.model.PedidoCocina;
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
+import java.util.List;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class GestorCocinaGUI extends javax.swing.JFrame {
 
-    // Colores del equipo
+    // ── Colores del equipo ─────────────────────────────────
     private static final Color VINO        = new Color(168, 27, 29);
     private static final Color NEGRO       = new Color(0, 0, 0);
-    private static final Color GRIS_CARBON = new Color(74, 74, 74);
     private static final Color BLANCO      = new Color(255, 255, 255);
     private static final Color GRIS_CLARO  = new Color(217, 217, 217);
+    private static final Color GRIS_CARBON = new Color(74, 74, 74);
+    private static final Color VERDE       = new Color(46, 125, 50);
 
-    // Referencia al gestor
+    private static final java.util.logging.Logger logger =
+        java.util.logging.Logger.getLogger(GestorCocinaGUI.class.getName());
+
+    // ── Datos ──────────────────────────────────────────────
     private GestorCocina gestorCocina;
+    private String rolUsuario   = "Cocina";
+    private String nombreUsuario = "";
+    private javax.swing.JButton btnActivo = null;
 
-    // Paneles
-    private JPanel pnlEncabezado;
-    private JPanel pnlContenido;
-    private JPanel pnlPiePag;
-    private JPanel pnlPendientes;
-    private JPanel pnlEnPreparacion;
-    private JPanel pnlListos;
+    // ── Estructura plantilla (igual que Erick) ─────────────
+    private javax.swing.JPanel Fondo;
+    private javax.swing.JPanel Encabezado;
+    private javax.swing.JPanel BarraNav;
+    private javax.swing.JPanel Interfaz;
+    private javax.swing.JPanel PiePag;
+    private javax.swing.JLabel Rol;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblLogo;
 
-    // Listas
-    private DefaultListModel<String> modeloPendientes;
-    private DefaultListModel<String> modeloEnPrep;
-    private DefaultListModel<String> modeloListos;
-    private JList<String> listaPendientes;
-    private JList<String> listaEnPrep;
-    private JList<String> listaListos;
+    // ── Botones barra nav ──────────────────────────────────
+    private javax.swing.JButton btnPedidos;
+    private javax.swing.JButton btnCerrar;
 
-    // Botones
-    private JButton btnTomarPedido;
-    private JButton btnMarcarListo;
-    private JButton btnMarcarEntregado;
-    private JButton btnActualizar;
-    private JButton btnCerrar;
+    // ── Tabla de pedidos ───────────────────────────────────
+    private JTable tablaPedidos;
+    private DefaultTableModel modeloTabla;
 
-    // Label rol
-    private JLabel lblRol;
+    // ── Panel resumen ──────────────────────────────────────
+    private JLabel lblTotal, lblPendientes, lblEnPrep, lblListos;
+    private JLabel lblDetNombre, lblDetTipo, lblDetTotal;
 
-    public GestorCocinaGUI(GestorCocina gestorCocina) {
-        this.gestorCocina = gestorCocina;
-        initComponentes();
-        actualizarListas();
-    }
+    // ── Botones acción ─────────────────────────────────────
+    private JButton btnTomar, btnMarcarListo, btnMarcarEntregado, btnActualizar;
 
+    // ── Constructores ──────────────────────────────────────
     public GestorCocinaGUI() {
         this.gestorCocina = null;
-        initComponentes();
+        initComponents();
+        actualizarTabla();
     }
 
-    private void initComponentes() {
+    public GestorCocinaGUI(GestorCocina gestor, String rol, String nombre) {
+        this.gestorCocina  = gestor;
+        this.rolUsuario    = rol;
+        this.nombreUsuario = nombre;
+        initComponents();
+        Rol.setText(rol + ": " + nombre);
+        actualizarTabla();
+    }
+
+    public GestorCocinaGUI(GestorCocina gestor) {
+        this.gestorCocina = gestor;
+        initComponents();
+        actualizarTabla();
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  INIT — estructura igual a PlantillaGerente
+    // ══════════════════════════════════════════════════════
+    private void initComponents() {
         setTitle("Gestor de Cocina - La Casa del Sabor");
         setSize(1280, 720);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        construirEncabezado();
-        construirContenido();
-        construirPiePagina();
-    }
+        // FONDO
+        Fondo = new javax.swing.JPanel();
+        Fondo.setBackground(BLANCO);
+        Fondo.setPreferredSize(new java.awt.Dimension(1280, 720));
 
-    private void construirEncabezado() {
-        pnlEncabezado = new JPanel(new BorderLayout());
-        pnlEncabezado.setBackground(VINO);
-        pnlEncabezado.setPreferredSize(new Dimension(1280, 100));
-        pnlEncabezado.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
+        // ENCABEZADO (igual a plantilla Erick)
+        Encabezado = new javax.swing.JPanel();
+        Encabezado.setBackground(VINO);
+        Encabezado.setBorder(javax.swing.BorderFactory.createLineBorder(GRIS_CLARO));
+        Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
 
-        JLabel lblTitulo = new JLabel("LA CASA DEL SABOR");
-        lblTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+        lblLogo = new javax.swing.JLabel("Logo");
+        lblLogo.setPreferredSize(new java.awt.Dimension(94, 81));
+        cargarImagen(lblLogo, "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+
+        lblTitulo = new javax.swing.JLabel("LA CASA DEL SABOR");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 0, 35));
         lblTitulo.setForeground(BLANCO);
 
-        JLabel lblSub = new JLabel("PIZZERÍA");
-        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 24));
-        lblSub.setForeground(GRIS_CLARO);
+        jLabel4 = new javax.swing.JLabel("PIZZERIA");
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24));
+        jLabel4.setForeground(GRIS_CLARO);
 
-        JPanel pnlTexto = new JPanel(new GridLayout(2, 1));
-        pnlTexto.setBackground(VINO);
-        pnlTexto.add(lblTitulo);
-        pnlTexto.add(lblSub);
+        Rol = new javax.swing.JLabel("Rol: Cocina");
+        Rol.setFont(new java.awt.Font("Segoe UI", 0, 16));
+        Rol.setForeground(BLANCO);
 
-        lblRol = new JLabel("Rol: Cocina  ");
-        lblRol.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lblRol.setForeground(BLANCO);
+        // Layout encabezado igual a plantilla
+        javax.swing.GroupLayout encLayout = new javax.swing.GroupLayout(Encabezado);
+        Encabezado.setLayout(encLayout);
+        encLayout.setHorizontalGroup(
+            encLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(encLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33)
+                .addGroup(encLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        encLayout.setVerticalGroup(
+            encLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(encLayout.createSequentialGroup()
+                .addGap(21)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(encLayout.createSequentialGroup()
+                .addGroup(encLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(encLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, encLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        pnlEncabezado.add(pnlTexto, BorderLayout.CENTER);
-        pnlEncabezado.add(lblRol, BorderLayout.EAST);
-        pnlEncabezado.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        // BARRA NAV (igual estructura, solo 2 botones para cocina)
+        BarraNav = new javax.swing.JPanel();
+        BarraNav.setBackground(NEGRO);
+        BarraNav.setBorder(javax.swing.BorderFactory.createLineBorder(GRIS_CLARO));
+        BarraNav.setPreferredSize(new java.awt.Dimension(280, 560));
 
-        add(pnlEncabezado, BorderLayout.NORTH);
+        btnPedidos = crearBotonNav("Pedidos de Cocina");
+        btnCerrar  = crearBotonNav("Cerrar Sesión");
+
+        btnPedidos.addActionListener(e -> activarBoton(btnPedidos));
+        btnCerrar.addActionListener(e -> accionCerrarSesion());
+
+        javax.swing.GroupLayout navLayout = new javax.swing.GroupLayout(BarraNav);
+        BarraNav.setLayout(navLayout);
+        navLayout.setHorizontalGroup(
+            navLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(navLayout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(navLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPedidos, javax.swing.GroupLayout.Alignment.TRAILING,
+                        javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCerrar, javax.swing.GroupLayout.Alignment.TRAILING,
+                        javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        navLayout.setVerticalGroup(
+            navLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(navLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnPedidos,
+                    javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCerrar,
+                    javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(400, Short.MAX_VALUE))
+        );
+
+        configurarHover();
+        activarBoton(btnPedidos);
+
+        // INTERFAZ — panel blanco central (aquí va el contenido de cocina)
+        Interfaz = new javax.swing.JPanel(new BorderLayout(0, 0));
+        Interfaz.setBackground(BLANCO);
+        Interfaz.setBorder(javax.swing.BorderFactory.createLineBorder(GRIS_CLARO));
+        construirContenidoCocina();
+
+        // PIE DE PÁGINA (igual a plantilla Erick)
+        PiePag = new javax.swing.JPanel();
+        PiePag.setBackground(NEGRO);
+        PiePag.setBorder(javax.swing.BorderFactory.createLineBorder(GRIS_CLARO));
+        PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+
+        jLabel2 = new javax.swing.JLabel("  Powered by StarTech");
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16));
+        jLabel2.setForeground(BLANCO);
+
+        javax.swing.GroupLayout pieLayout = new javax.swing.GroupLayout(PiePag);
+        PiePag.setLayout(pieLayout);
+        pieLayout.setHorizontalGroup(
+            pieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pieLayout.createSequentialGroup()
+                .addGap(12)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pieLayout.setVerticalGroup(
+            pieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pieLayout.createSequentialGroup()
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        // FONDO LAYOUT (igual a plantilla Erick)
+        javax.swing.GroupLayout fondoLayout = new javax.swing.GroupLayout(Fondo);
+        Fondo.setLayout(fondoLayout);
+        fondoLayout.setHorizontalGroup(
+            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(fondoLayout.createSequentialGroup()
+                .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        fondoLayout.setVerticalGroup(
+            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fondoLayout.createSequentialGroup()
+                .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(Fondo, javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(Fondo, javax.swing.GroupLayout.PREFERRED_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
     }
 
-    private void construirContenido() {
-        pnlContenido = new JPanel(new GridLayout(1, 3, 10, 0));
-        pnlContenido.setBackground(BLANCO);
-        pnlContenido.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    // ══════════════════════════════════════════════════════
+    //  CONTENIDO COCINA — va dentro del panel Interfaz
+    // ══════════════════════════════════════════════════════
+    private void construirContenidoCocina() {
 
-        // Columna 1: Pendientes
-        modeloPendientes = new DefaultListModel<>();
-        listaPendientes = new JList<>(modeloPendientes);
-        estilizarLista(listaPendientes);
-        btnTomarPedido = crearBoton("▶ Tomar Siguiente Pedido", VINO);
-        btnTomarPedido.addActionListener(e -> tomarPedido());
-        pnlPendientes = construirColumna(
-            "📋 PENDIENTES", listaPendientes, btnTomarPedido, new Color(255, 243, 243));
-        pnlContenido.add(pnlPendientes);
+        // ── Tabla ──────────────────────────────────────────
+        String[] columnas = {"#", "Cliente", "Items", "Estado", "Tipo", "Total"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            public boolean isCellEditable(int r, int c) { return false; }
+        };
+        tablaPedidos = new JTable(modeloTabla);
+        tablaPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tablaPedidos.setRowHeight(30);
+        tablaPedidos.setSelectionBackground(VINO);
+        tablaPedidos.setSelectionForeground(BLANCO);
+        tablaPedidos.setGridColor(GRIS_CLARO);
+        tablaPedidos.setBackground(BLANCO);
+        tablaPedidos.setForeground(NEGRO);
+        tablaPedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Columna 2: En Preparación
-        modeloEnPrep = new DefaultListModel<>();
-        listaEnPrep = new JList<>(modeloEnPrep);
-        estilizarLista(listaEnPrep);
-        btnMarcarListo = crearBoton("✔ Marcar como Listo", GRIS_CARBON);
-        btnMarcarListo.addActionListener(e -> marcarListo());
-        pnlEnPreparacion = construirColumna(
-            "🔥 EN PREPARACIÓN", listaEnPrep, btnMarcarListo, new Color(255, 251, 230));
-        pnlContenido.add(pnlEnPreparacion);
+        JTableHeader header = tablaPedidos.getTableHeader();
+        header.setBackground(GRIS_CARBON);
+        header.setForeground(BLANCO);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        header.setReorderingAllowed(false);
 
-        // Columna 3: Listos
-        modeloListos = new DefaultListModel<>();
-        listaListos = new JList<>(modeloListos);
-        estilizarLista(listaListos);
-        btnMarcarEntregado = crearBoton("✅ Marcar como Entregado", new Color(34, 139, 34));
-        btnMarcarEntregado.addActionListener(e -> marcarEntregado());
-        pnlListos = construirColumna(
-            "✅ LISTOS", listaListos, btnMarcarEntregado, new Color(230, 255, 234));
-        pnlContenido.add(pnlListos);
+        // anchos de columna
+        int[] anchos = {40, 120, 250, 100, 80, 80};
+        for (int i = 0; i < anchos.length; i++)
+            tablaPedidos.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
 
-        add(pnlContenido, BorderLayout.CENTER);
+        // listener para mostrar detalle al seleccionar
+        tablaPedidos.getSelectionModel().addListSelectionListener(e -> mostrarDetalle());
+
+        JScrollPane scroll = new JScrollPane(tablaPedidos);
+        scroll.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
+
+        // ── Panel derecho resumen ──────────────────────────
+        JPanel pnlResumen = new JPanel();
+        pnlResumen.setLayout(new BoxLayout(pnlResumen, BoxLayout.Y_AXIS));
+        pnlResumen.setBackground(new Color(245, 245, 245));
+        pnlResumen.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
+        pnlResumen.setPreferredSize(new Dimension(190, 0));
+
+        JLabel lblTitRes = new JLabel("RESUMEN");
+        lblTitRes.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblTitRes.setForeground(GRIS_CARBON);
+        lblTitRes.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblTitRes.setBorder(BorderFactory.createEmptyBorder(10, 10, 6, 10));
+
+        lblTotal      = labelResumen("Total: 0",       NEGRO);
+        lblPendientes = labelResumen("Pendientes: 0",  VINO);
+        lblEnPrep     = labelResumen("En prep.: 0",    new Color(133, 100, 4));
+        lblListos     = labelResumen("Listos: 0",      VERDE);
+
+        JSeparator sep = new JSeparator();
+        sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        sep.setForeground(GRIS_CLARO);
+
+        JLabel lblDetTit = new JLabel("Pedido seleccionado:");
+        lblDetTit.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        lblDetTit.setForeground(VINO);
+        lblDetTit.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblDetTit.setBorder(BorderFactory.createEmptyBorder(8, 10, 4, 10));
+
+        lblDetNombre = labelDetalle("Cliente: —");
+        lblDetTipo   = labelDetalle("Tipo: —");
+        lblDetTotal  = labelDetalle("Total: —");
+
+        btnActualizar = new JButton("Actualizar");
+        btnActualizar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnActualizar.setBackground(GRIS_CARBON);
+        btnActualizar.setForeground(BLANCO);
+        btnActualizar.setFocusPainted(false);
+        btnActualizar.setBorderPainted(false);
+        btnActualizar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        btnActualizar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnActualizar.addActionListener(e -> actualizarTabla());
+
+        pnlResumen.add(lblTitRes);
+        pnlResumen.add(lblTotal);
+        pnlResumen.add(lblPendientes);
+        pnlResumen.add(lblEnPrep);
+        pnlResumen.add(lblListos);
+        pnlResumen.add(Box.createVerticalStrut(8));
+        pnlResumen.add(sep);
+        pnlResumen.add(lblDetTit);
+        pnlResumen.add(lblDetNombre);
+        pnlResumen.add(lblDetTipo);
+        pnlResumen.add(lblDetTotal);
+        pnlResumen.add(Box.createVerticalGlue());
+        pnlResumen.add(btnActualizar);
+
+        // ── Panel central (tabla + resumen) ────────────────
+        JPanel pnlCentro = new JPanel(new BorderLayout(5, 0));
+        pnlCentro.setBackground(BLANCO);
+        pnlCentro.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
+        pnlCentro.add(scroll,     BorderLayout.CENTER);
+        pnlCentro.add(pnlResumen, BorderLayout.EAST);
+
+        // ── Barra de botones inferior ──────────────────────
+        JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        pnlBotones.setBackground(NEGRO);
+        pnlBotones.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
+
+        btnTomar          = crearBotonAccion("Tomar pedido",       VINO);
+        btnMarcarListo    = crearBotonAccion("Marcar listo",       GRIS_CARBON);
+        btnMarcarEntregado= crearBotonAccion("Marcar entregado",   VERDE);
+
+        btnTomar.addActionListener(e -> accionTomarPedido());
+        btnMarcarListo.addActionListener(e -> accionMarcarListo());
+        btnMarcarEntregado.addActionListener(e -> accionMarcarEntregado());
+
+        pnlBotones.add(btnTomar);
+        pnlBotones.add(btnMarcarListo);
+        pnlBotones.add(btnMarcarEntregado);
+
+        // ── Ensamblar en Interfaz ──────────────────────────
+        Interfaz.add(pnlCentro,   BorderLayout.CENTER);
+        Interfaz.add(pnlBotones,  BorderLayout.SOUTH);
     }
 
-    private JPanel construirColumna(String titulo, JList<String> lista,
-                                     JButton boton, Color colorFondo) {
-        JPanel panel = new JPanel(new BorderLayout(0, 8));
-        panel.setBackground(colorFondo);
-        panel.setBorder(BorderFactory.createLineBorder(GRIS_CLARO, 1));
-
-        JLabel lbl = new JLabel(titulo, SwingConstants.CENTER);
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lbl.setForeground(NEGRO);
-        lbl.setOpaque(true);
-        lbl.setBackground(GRIS_CLARO);
-        lbl.setPreferredSize(new Dimension(0, 40));
-
-        JScrollPane scroll = new JScrollPane(lista);
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-
-        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        pnlBoton.setBackground(colorFondo);
-        pnlBoton.add(boton);
-
-        panel.add(lbl, BorderLayout.NORTH);
-        panel.add(scroll, BorderLayout.CENTER);
-        panel.add(pnlBoton, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-    private void construirPiePagina() {
-        pnlPiePag = new JPanel(new BorderLayout());
-        pnlPiePag.setBackground(NEGRO);
-        pnlPiePag.setPreferredSize(new Dimension(1280, 47));
-        pnlPiePag.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
-
-        JLabel lblPower = new JLabel("  Powered by StarTech");
-        lblPower.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lblPower.setForeground(BLANCO);
-
-        btnActualizar = crearBoton("🔄 Actualizar", GRIS_CARBON);
-        btnActualizar.setPreferredSize(new Dimension(130, 35));
-        btnActualizar.addActionListener(e -> actualizarListas());
-
-        btnCerrar = crearBoton("Cerrar", NEGRO);
-        btnCerrar.setForeground(BLANCO);
-        btnCerrar.setBorder(BorderFactory.createLineBorder(GRIS_CLARO));
-        btnCerrar.setPreferredSize(new Dimension(100, 35));
-        btnCerrar.addActionListener(e -> dispose());
-
-        JPanel pnlBotonesPie = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-        pnlBotonesPie.setBackground(NEGRO);
-        pnlBotonesPie.add(btnActualizar);
-        pnlBotonesPie.add(btnCerrar);
-
-        pnlPiePag.add(lblPower, BorderLayout.WEST);
-        pnlPiePag.add(pnlBotonesPie, BorderLayout.EAST);
-
-        add(pnlPiePag, BorderLayout.SOUTH);
-    }
-
-    private void tomarPedido() {
-        if (gestorCocina == null) {
-            JOptionPane.showMessageDialog(this, "Sin conexión al gestor.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        PedidoCocina pedido = gestorCocina.tomarSiguientePedido();
-        if (pedido == null) {
-            JOptionPane.showMessageDialog(this, "No hay pedidos pendientes.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+    // ══════════════════════════════════════════════════════
+    //  ACCIONES
+    // ══════════════════════════════════════════════════════
+    private void accionTomarPedido() {
+        if (gestorCocina == null) { sinConexion(); return; }
+        PedidoCocina p = gestorCocina.tomarSiguientePedido();
+        if (p == null) {
+            JOptionPane.showMessageDialog(this,
+                "No hay pedidos pendientes.", "Aviso",
+                JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this,
-                "Pedido #" + pedido.getIdPedidoCocina() + " tomado.\nCliente: " + pedido.getNombreCliente(),
+                "Pedido #" + p.getIdPedidoCocina() +
+                " tomado.\nCliente: " + p.getNombreCliente(),
                 "Pedido tomado", JOptionPane.INFORMATION_MESSAGE);
         }
-        actualizarListas();
+        actualizarTabla();
     }
 
-    private void marcarListo() {
-        if (gestorCocina == null) return;
-        String seleccion = listaEnPrep.getSelectedValue();
-        if (seleccion == null) {
-            JOptionPane.showMessageDialog(this, "Selecciona un pedido de la lista.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    private void accionMarcarListo() {
+        if (gestorCocina == null) { sinConexion(); return; }
+        int fila = tablaPedidos.getSelectedRow();
+        if (fila < 0) { sinSeleccion(); return; }
+        int id = (int) modeloTabla.getValueAt(fila, 0);
+        String estado = (String) modeloTabla.getValueAt(fila, 3);
+        if (!estado.equals("EN PREP.")) {
+            JOptionPane.showMessageDialog(this,
+                "Solo puedes marcar como listo un pedido EN PREPARACION.",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int id = extraerIdDeCadena(seleccion);
-        boolean ok = gestorCocina.marcarComoListo(id);
-        if (ok) {
-            JOptionPane.showMessageDialog(this, "Pedido #" + id + " marcado como LISTO.", "Listo", JOptionPane.INFORMATION_MESSAGE);
+        int conf = JOptionPane.showConfirmDialog(this,
+            "Marcar pedido #" + id + " como LISTO?",
+            "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (conf == JOptionPane.YES_OPTION) {
+            gestorCocina.marcarComoListo(id);
+            actualizarTabla();
         }
-        actualizarListas();
     }
 
-    private void marcarEntregado() {
-        if (gestorCocina == null) return;
-        String seleccion = listaListos.getSelectedValue();
-        if (seleccion == null) {
-            JOptionPane.showMessageDialog(this, "Selecciona un pedido de la lista.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    private void accionMarcarEntregado() {
+        if (gestorCocina == null) { sinConexion(); return; }
+        int fila = tablaPedidos.getSelectedRow();
+        if (fila < 0) { sinSeleccion(); return; }
+        int id = (int) modeloTabla.getValueAt(fila, 0);
+        String estado = (String) modeloTabla.getValueAt(fila, 3);
+        if (!estado.equals("LISTO")) {
+            JOptionPane.showMessageDialog(this,
+                "Solo puedes entregar un pedido que este LISTO.",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int id = extraerIdDeCadena(seleccion);
-        boolean ok = gestorCocina.marcarComoEntregado(id);
-        if (ok) {
-            JOptionPane.showMessageDialog(this, "Pedido #" + id + " marcado como ENTREGADO.", "Entregado", JOptionPane.INFORMATION_MESSAGE);
+        int conf = JOptionPane.showConfirmDialog(this,
+            "Marcar pedido #" + id + " como ENTREGADO?\nSe descontara stock de insumos.",
+            "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (conf == JOptionPane.YES_OPTION) {
+            gestorCocina.marcarComoEntregado(id);
+            actualizarTabla();
         }
-        actualizarListas();
     }
 
-    public void actualizarListas() {
-        modeloPendientes.clear();
-        modeloEnPrep.clear();
-        modeloListos.clear();
+    private void accionCerrarSesion() {
+        int r = JOptionPane.showConfirmDialog(this,
+            "Desea cerrar sesion?", "Cerrar Sesion",
+            JOptionPane.YES_NO_OPTION);
+        if (r == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginGUI().setVisible(true);
+        }
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  ACTUALIZAR TABLA Y RESUMEN
+    // ══════════════════════════════════════════════════════
+    public void actualizarTabla() {
+        modeloTabla.setRowCount(0);
         if (gestorCocina == null) return;
-        for (PedidoCocina p : gestorCocina.getColaPendientes()) {
-            modeloPendientes.addElement(formatearPedido(p));
+
+        for (PedidoCocina p : gestorCocina.getColaPendientes())
+            modeloTabla.addRow(new Object[]{
+                p.getIdPedidoCocina(), p.getNombreCliente(),
+                resumenItems(p), "PENDIENTE",
+                p.getTipoOrigen(), String.format("Bs.%.2f", p.calcularTotal())
+            });
+
+        for (PedidoCocina p : gestorCocina.getEnPreparacion())
+            modeloTabla.addRow(new Object[]{
+                p.getIdPedidoCocina(), p.getNombreCliente(),
+                resumenItems(p), "EN PREP.",
+                p.getTipoOrigen(), String.format("Bs.%.2f", p.calcularTotal())
+            });
+
+        for (PedidoCocina p : gestorCocina.getListos())
+            modeloTabla.addRow(new Object[]{
+                p.getIdPedidoCocina(), p.getNombreCliente(),
+                resumenItems(p), "LISTO",
+                p.getTipoOrigen(), String.format("Bs.%.2f", p.calcularTotal())
+            });
+
+        int pend = gestorCocina.getColaPendientes().size();
+        int prep = gestorCocina.getEnPreparacion().size();
+        int list = gestorCocina.getListos().size();
+        lblTotal.setText     ("Total: "        + (pend + prep + list));
+        lblPendientes.setText("Pendientes: "   + pend);
+        lblEnPrep.setText    ("En prep.: "     + prep);
+        lblListos.setText    ("Listos: "       + list);
+
+        // colores por estado en la tabla
+        tablaPedidos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            public Component getTableCellRendererComponent(JTable t, Object v,
+                    boolean sel, boolean foc, int row, int col) {
+                super.getTableCellRendererComponent(t, v, sel, foc, row, col);
+                String est = (String) t.getValueAt(row, 3);
+                if (sel) {
+                    setBackground(VINO); setForeground(BLANCO);
+                } else {
+                    switch (est) {
+                        case "PENDIENTE":
+                            setBackground(new Color(255,243,243));
+                            setForeground(NEGRO); break;
+                        case "EN PREP.":
+                            setBackground(new Color(255,251,230));
+                            setForeground(NEGRO); break;
+                        case "LISTO":
+                            setBackground(new Color(230,255,234));
+                            setForeground(NEGRO); break;
+                        default:
+                            setBackground(BLANCO);
+                            setForeground(NEGRO);
+                    }
+                }
+                setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+                return this;
+            }
+        });
+    }
+
+    private void mostrarDetalle() {
+        int fila = tablaPedidos.getSelectedRow();
+        if (fila < 0) return;
+        lblDetNombre.setText("Cliente: " + modeloTabla.getValueAt(fila, 1));
+        lblDetTipo.setText  ("Tipo: "    + modeloTabla.getValueAt(fila, 4));
+        lblDetTotal.setText ("Total: "   + modeloTabla.getValueAt(fila, 5));
+    }
+
+    private String resumenItems(PedidoCocina p) {
+        if (p.getItems() == null || p.getItems().isEmpty()) return "(sin items)";
+        StringBuilder sb = new StringBuilder();
+        for (pizzeria.model.DetalleVenta d : p.getItems()) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(d.getCantidad()).append("x ").append(d.getProducto().getNombre());
         }
-        for (PedidoCocina p : gestorCocina.getEnPreparacion()) {
-            modeloEnPrep.addElement(formatearPedido(p));
-        }
-        for (PedidoCocina p : gestorCocina.getListos()) {
-            modeloListos.addElement(formatearPedido(p));
+        return sb.toString();
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  HELPERS VISUALES
+    // ══════════════════════════════════════════════════════
+    private JButton crearBotonNav(String texto) {
+        JButton b = new JButton(texto);
+        b.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        b.setBackground(NEGRO);
+        b.setForeground(BLANCO);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setOpaque(true);
+        b.setHorizontalAlignment(SwingConstants.LEFT);
+        return b;
+    }
+
+    private JButton crearBotonAccion(String texto, Color fondo) {
+        JButton b = new JButton(texto);
+        b.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        b.setBackground(fondo);
+        b.setForeground(BLANCO);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setOpaque(true);
+        b.setPreferredSize(new Dimension(180, 40));
+        return b;
+    }
+
+    private JLabel labelResumen(String texto, Color color) {
+        JLabel l = new JLabel(texto);
+        l.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        l.setForeground(color);
+        l.setAlignmentX(Component.LEFT_ALIGNMENT);
+        l.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        return l;
+    }
+
+    private JLabel labelDetalle(String texto) {
+        JLabel l = new JLabel(texto);
+        l.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        l.setForeground(GRIS_CARBON);
+        l.setAlignmentX(Component.LEFT_ALIGNMENT);
+        l.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
+        return l;
+    }
+
+    private void configurarHover() {
+        javax.swing.JButton[] botones = {btnPedidos, btnCerrar};
+        for (javax.swing.JButton b : botones) {
+            b.setContentAreaFilled(true);
+            b.setOpaque(true);
+            b.setBorderPainted(false);
+            b.setBackground(NEGRO);
+            b.setForeground(BLANCO);
+            b.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    if (b != btnActivo) b.setBackground(VINO);
+                }
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    if (b != btnActivo) b.setBackground(NEGRO);
+                }
+            });
         }
     }
 
-    private String formatearPedido(PedidoCocina p) {
-        return String.format("[#%d] %s | %s | Bs.%.2f",
-            p.getIdPedidoCocina(),
-            p.getNombreCliente(),
-            p.getTipoOrigen(),
-            p.calcularTotal());
+    private void activarBoton(javax.swing.JButton boton) {
+        if (btnActivo != null) {
+            btnActivo.setBackground(NEGRO);
+            btnActivo.setForeground(BLANCO);
+        }
+        boton.setBackground(VINO);
+        boton.setForeground(BLANCO);
+        btnActivo = boton;
     }
 
-    private int extraerIdDeCadena(String texto) {
+    private void cargarImagen(JLabel label, String ruta) {
         try {
-            return Integer.parseInt(texto.substring(2, texto.indexOf("]")));
-        } catch (Exception e) {
-            return -1;
+            label.setText("");
+            ImageIcon icono = new ImageIcon(getClass().getResource(ruta));
+            Image img = icono.getImage().getScaledInstance(
+                label.getPreferredSize().width,
+                label.getPreferredSize().height,
+                Image.SCALE_SMOOTH);
+            label.setIcon(new ImageIcon(img));
+        } catch (Exception ex) {
+            label.setText("Logo");
         }
     }
 
-    private void estilizarLista(JList<String> lista) {
-        lista.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lista.setBackground(BLANCO);
-        lista.setForeground(NEGRO);
-        lista.setSelectionBackground(VINO);
-        lista.setSelectionForeground(BLANCO);
-        lista.setFixedCellHeight(45);
+    private void sinConexion() {
+        JOptionPane.showMessageDialog(this,
+            "Sin conexion al gestor.", "Aviso",
+            JOptionPane.WARNING_MESSAGE);
     }
 
-    private JButton crearBoton(String texto, Color colorFondo) {
-        JButton btn = new JButton(texto);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btn.setBackground(colorFondo);
-        btn.setForeground(BLANCO);
-        btn.setFocusPainted(false);
-        btn.setPreferredSize(new Dimension(220, 40));
-        btn.setOpaque(true);
-        btn.setBorderPainted(false);
-        return btn;
+    private void sinSeleccion() {
+        JOptionPane.showMessageDialog(this,
+            "Selecciona un pedido de la tabla primero.", "Aviso",
+            JOptionPane.WARNING_MESSAGE);
     }
 
+    // ══════════════════════════════════════════════════════
+    //  MAIN — para probar sola
+    // ══════════════════════════════════════════════════════
     public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info :
+                    javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
         java.awt.EventQueue.invokeLater(() -> new GestorCocinaGUI().setVisible(true));
     }
 }
