@@ -110,8 +110,8 @@
                           <Component id="lblTitulo" min="-2" pref="394" max="-2" attributes="0"/>
                           <Component id="jLabel4" min="-2" pref="104" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="609" max="32767" attributes="0"/>
-                      <Component id="Rol" min="-2" pref="136" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="Rol" min="-2" pref="303" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

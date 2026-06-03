@@ -303,6 +303,15 @@ public class LoginGUI extends javax.swing.JFrame {
                     }
                     break;
                 case "CAJERO":
+                    try {
+                        VentasGUI cajeroFrame = new VentasGUI(user.getRol().name(), user.getNombre());
+                        cajeroFrame.setVisible(true);
+                    } catch (Exception e) {
+                        System.out.println("Error al abrir VentasGUI: " + e.getMessage());
+                        mostrarMensajeEnDesarrollo("Módulo de Cajero");
+                        new PantallaInicial().setVisible(true);
+                    }
+                    break;
                 case "COCINA":
                 default:
                     mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
@@ -406,7 +415,7 @@ public class LoginGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+            // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
