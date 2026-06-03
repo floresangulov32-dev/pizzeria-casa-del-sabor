@@ -322,9 +322,14 @@ public class LoginGUI extends javax.swing.JFrame {
                     break;
 
                 case "COCINA":
-                default:
-                    mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
-                    new PantallaInicial().setVisible(true);
+                    try {
+                        InterfazCocina cocinaFrame = new InterfazCocina(user.getRol().name(), user.getNombre());
+                        cocinaFrame.setVisible(true);
+                    } catch (Exception e) {
+                        System.out.println("Error al abrir InterfazCocina: " + e.getMessage());
+                        mostrarMensajeEnDesarrollo("Módulo de Cocina");
+                        new PantallaInicial().setVisible(true);
+                    }
                     break;
             }
         } else {
