@@ -85,6 +85,7 @@ public FrameVerMenu(String rol, String nombre) {
     this.nombreUsuario = nombre;
     archivoMenu = new ArchivoMenu();
     ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+    
     ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
     menu = new Menu(productos, combos);
     inventario.cargarArchivo();
