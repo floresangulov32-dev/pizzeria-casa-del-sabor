@@ -406,7 +406,6 @@ public class GestionMenu extends javax.swing.JFrame {
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
          cargarPanel(new PVerProductos(Interfaz, menu, archivoMenu, inventario));
-// TODO add your handling code here:
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCombosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCombosActionPerformed
@@ -428,7 +427,7 @@ public class GestionMenu extends javax.swing.JFrame {
          InterfazGerenteP1 ventana = new InterfazGerenteP1(rolUsuario, nombreUsuario);
         ventana.setVisible(true);
         this.dispose();
-// TODO add your handling code here:
+
     }//GEN-LAST:event_btnVolverActionPerformed
     
     private void mostrarUsuario() {
