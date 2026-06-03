@@ -6,6 +6,16 @@ package pizzeria.IU;
 
 import pizzeria.model.Insumo;
 import pizzeria.model.Inventario;
+import java.awt.Image;
+import java.io.File;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 /**
  *
  * @author BENJAMIN
@@ -14,13 +24,35 @@ public class BuscarInsumos extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuscarInsumos.class.getName());
     private final Inventario inventario = new Inventario();
+    private Image logoImagen;
+    private String rolUsuario;
+    private String nombreUsuario;
     /**
      * Creates new form BuscarInsumos
      */
     public BuscarInsumos() {
         initComponents();
         inventario.cargarArchivo();
+        cargarLogo();
+        configurarLogo();
+        configurarBotones();
+        configurarEncabezado();
         configurarTabla();
+        configurarEstiloTabla();
+    }
+    
+    public BuscarInsumos(String rol, String nombre) {
+        initComponents();
+        this.rolUsuario = rol;
+        this.nombreUsuario = nombre;
+        Rol1.setText(rol + ": " + nombre);
+        inventario.cargarArchivo();
+        cargarLogo();
+        configurarLogo();
+        configurarBotones();
+        configurarEncabezado();
+        configurarTabla();
+        configurarEstiloTabla();
     }
 
     /**
@@ -32,11 +64,6 @@ public class BuscarInsumos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Encabezado = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        Rol = new javax.swing.JLabel();
         BarraNav = new javax.swing.JPanel();
         btnFinanzas = new javax.swing.JButton();
         btnMenu = new javax.swing.JButton();
@@ -48,74 +75,41 @@ public class BuscarInsumos extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        Encabezado1 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        Rol1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Encabezado.setBackground(new java.awt.Color(255, 255, 255));
-        Encabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(168, 27, 29));
-        jLabel2.setText("LA CASA DEL SABOR");
-
-        jLabel3.setText("LOGO");
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(74, 74, 74));
-        jLabel4.setText("PIZZERIA");
-
-        Rol.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Rol.setText("Rol: Usuario");
-
-        javax.swing.GroupLayout EncabezadoLayout = new javax.swing.GroupLayout(Encabezado);
-        Encabezado.setLayout(EncabezadoLayout);
-        EncabezadoLayout.setHorizontalGroup(
-            EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EncabezadoLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 630, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        EncabezadoLayout.setVerticalGroup(
-            EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EncabezadoLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EncabezadoLayout.createSequentialGroup()
-                        .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        BarraNav.setBackground(new java.awt.Color(255, 255, 255));
+        BarraNav.setBackground(new java.awt.Color(0, 0, 0));
         BarraNav.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
+        btnFinanzas.setBackground(new java.awt.Color(0, 0, 0));
         btnFinanzas.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnFinanzas.setForeground(new java.awt.Color(255, 255, 255));
         btnFinanzas.setText("Modificar Insumo");
         btnFinanzas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnFinanzas.addActionListener(this::btnModificarInsumoActionPerformed);
 
+        btnMenu.setBackground(new java.awt.Color(0, 0, 0));
         btnMenu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnMenu.setForeground(new java.awt.Color(255, 255, 255));
         btnMenu.setText("Actualizar Stock");
         btnMenu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnMenu.addActionListener(this::btnActualizarStockActionPerformed);
 
+        btnInvetario.setBackground(new java.awt.Color(0, 0, 0));
         btnInvetario.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnInvetario.setForeground(new java.awt.Color(255, 255, 255));
         btnInvetario.setText("Eliminar Insumo");
         btnInvetario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnInvetario.addActionListener(this::btnEliminarInsumoActionPerformed);
 
+        btnCerrar.setBackground(new java.awt.Color(0, 0, 0));
         btnCerrar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btnCerrar.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrar.setText("Volver");
         btnCerrar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCerrar.addActionListener(this::btnVolverActionPerformed);
@@ -149,16 +143,18 @@ public class BuscarInsumos extends javax.swing.JFrame {
                 .addComponent(btnInvetario, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(72, 72, 72)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
-        PiePag.setBackground(new java.awt.Color(255, 255, 255));
+        PiePag.setBackground(new java.awt.Color(0, 0, 0));
         PiePag.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
+        PiePag.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(74, 74, 74));
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Powered by StarTech");
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Logo");
 
         javax.swing.GroupLayout PiePagLayout = new javax.swing.GroupLayout(PiePag);
@@ -194,22 +190,66 @@ public class BuscarInsumos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        Encabezado1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(168, 27, 29));
+        jLabel7.setText("LA CASA DEL SABOR");
+
+        jLabel8.setText("LOGO");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(74, 74, 74));
+        jLabel9.setText("PIZZERIA");
+
+        Rol1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        Rol1.setText("Rol: Usuario");
+
+        javax.swing.GroupLayout Encabezado1Layout = new javax.swing.GroupLayout(Encabezado1);
+        Encabezado1.setLayout(Encabezado1Layout);
+        Encabezado1Layout.setHorizontalGroup(
+            Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Encabezado1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Encabezado1Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 632, Short.MAX_VALUE)
+                        .addComponent(Rol1))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(58, 58, 58))
+        );
+        Encabezado1Layout.setVerticalGroup(
+            Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Encabezado1Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addGroup(Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Encabezado1Layout.createSequentialGroup()
+                        .addGroup(Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Rol1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel8)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Encabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(BarraNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addComponent(jScrollPane1))
             .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Encabezado1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Encabezado1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -251,6 +291,98 @@ public class BuscarInsumos extends javax.swing.JFrame {
     jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
 }
     
+    private void cargarLogo() {
+    try {
+        String rutaLogoPng = "resources/imagenes/LogoPizzeria.png";
+        String rutaLogoJpg = "resources/imagenes/LogoPizzeria.jpg";
+        File archivoLogoPng = new File(rutaLogoPng);
+        File archivoLogoJpg = new File(rutaLogoJpg);
+
+        if (archivoLogoPng.exists()) {
+            logoImagen = new ImageIcon(archivoLogoPng.getAbsolutePath()).getImage();
+        } else if (archivoLogoJpg.exists()) {
+            logoImagen = new ImageIcon(archivoLogoJpg.getAbsolutePath()).getImage();
+        }
+        } catch (Exception e) {
+            logoImagen = null;
+        }
+    }
+    
+    private void configurarLogo() {
+        if (logoImagen != null) {
+            Image logoEscalado = logoImagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+            jLabel8.setIcon(new ImageIcon(logoEscalado));
+            jLabel8.setText("");
+        }
+    }
+    
+    private void configurarBotones() {
+        javax.swing.JButton[] botones = {btnFinanzas, btnMenu, btnInvetario, btnCerrar};
+    
+        for (javax.swing.JButton b : botones) {
+            b.setBackground(new Color(0, 0, 0));
+            b.setForeground(Color.WHITE);
+            b.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+            b.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+            b.setFocusPainted(false);
+            b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+            b.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    b.setBackground(new Color(168, 27, 29));
+                    b.setForeground(Color.WHITE);
+                }
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    b.setBackground(new Color(0, 0, 0));
+                    b.setForeground(Color.WHITE);
+                }
+            });
+        }
+    }
+    
+    private void configurarEstiloTabla() {
+    // Encabezado de la tabla
+    jTable1.getTableHeader().setBackground(new Color(0, 0, 0));
+    jTable1.getTableHeader().setForeground(Color.BLACK);
+    jTable1.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+    jTable1.getTableHeader().setPreferredSize(new Dimension(0, 35));
+
+    // Filas alternas
+    jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable table, Object value, boolean isSelected,
+                boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (isSelected) {
+                    setBackground(new Color(168, 27, 29));
+                    setForeground(Color.WHITE);
+                } else if (row % 2 == 0) {
+                    setBackground(new Color(245, 245, 245));
+                    setForeground(Color.BLACK);
+                } else {
+                    setBackground(Color.WHITE);
+                    setForeground(Color.BLACK);
+                }
+                setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+                return this;
+            }
+        });
+
+    // Alto de filas
+        jTable1.setRowHeight(30);
+        jTable1.setShowGrid(false);
+        jTable1.setIntercellSpacing(new Dimension(0, 0));
+    }
+    
+    private void configurarEncabezado() {
+    // En InventarioPantallaInicial usa: Encabezado y jLabel3
+    // En BuscarInsumos usa: Encabezado1 y jLabel8
+     Encabezado1.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(217, 217, 217)));
+     BarraNav.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(217, 217, 217)));
+    }
     private void btnModificarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarInsumoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnModificarInsumoActionPerformed
@@ -264,7 +396,7 @@ public class BuscarInsumos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarInsumoActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        new InventarioPantallaInicial().setVisible(true);
+        new InventarioPantallaInicial(rolUsuario, nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
@@ -332,17 +464,22 @@ public class BuscarInsumos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BarraNav;
     private javax.swing.JPanel Encabezado;
+    private javax.swing.JPanel Encabezado1;
     private javax.swing.JPanel PiePag;
     private javax.swing.JLabel Rol;
+    private javax.swing.JLabel Rol1;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnFinanzas;
     private javax.swing.JButton btnInvetario;
     private javax.swing.JButton btnMenu;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

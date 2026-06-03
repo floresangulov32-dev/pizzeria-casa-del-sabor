@@ -303,6 +303,24 @@ public class LoginGUI extends javax.swing.JFrame {
                     }
                     break;
                 case "CAJERO":
+                    try {
+                        VentasGUI ventasFrame = new VentasGUI(
+                                user.getRol().name(),
+                                user.getNombre()
+                        );
+                        ventasFrame.setVisible(true);
+                    } catch (Exception e) {
+                        System.out.println("Error al abrir VentasGUI: " + e.getMessage());
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "No se pudo abrir el módulo de ventas.\n" + e.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        new PantallaInicial().setVisible(true);
+                    }
+                    break;
+
                 case "COCINA":
                 default:
                     mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
