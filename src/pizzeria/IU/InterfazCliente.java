@@ -325,14 +325,9 @@ public class InterfazCliente extends JFrame {
     }
     
     private void mostrarMenuCompleto() {
-        activarBoton(btnVerMenu);
-        JLabel lblMensaje = new JLabel("Menú Completo - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
+        FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario);
+        ventana.setVisible(true);
+        this.dispose();
     }
     
     private void mostrarCombos() {

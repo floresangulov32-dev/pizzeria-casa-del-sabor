@@ -6,6 +6,13 @@ package pizzeria.IU;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JLabel;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import pizzeria.model.Inventario;
+import pizzeria.model.Menu;
+import pizzeria.model.Producto;
+import pizzeria.model.Combo;
+import pizzeria.util.ArchivoMenu;
 
 public class GestionMenu extends javax.swing.JFrame {
     
@@ -13,6 +20,9 @@ public class GestionMenu extends javax.swing.JFrame {
     private String nombreUsuario;
     private String rolUsuario;
     private javax.swing.JButton btnActivo = null;
+    private Menu menu;
+    private ArchivoMenu archivoMenu = new ArchivoMenu();
+    private Inventario inventario = new Inventario();
 
     /**
      * Creates new form MenuGerente
@@ -26,12 +36,22 @@ public class GestionMenu extends javax.swing.JFrame {
         PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
         
         configurarHover();        
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+        cargarImagen(ImgPres, "resources/imagenes/logoCasaDelSabor.jpeg");
         
-        cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
-        cargarImagen(ImgPres,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+        
+        archivoMenu = new ArchivoMenu();
+        ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+        ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
+        menu = new Menu(productos, combos);
+        inventario.cargarArchivo();
+        
+        NroP.setText(productos.size() + "");
+        NroC.setText(combos.size() + "");
+        
+        
     }
+    
     
     public GestionMenu(String rol, String nombre) {
     initComponents();
@@ -45,11 +65,18 @@ public class GestionMenu extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     
-    cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
-    cargarImagen(ImgPres,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(ImgPres, "resources/imagenes/logoCasaDelSabor.jpeg");
     
+    
+        archivoMenu = new ArchivoMenu();
+        ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+        ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
+        menu = new Menu(productos, combos);
+        inventario.cargarArchivo();
+        
+        NroP.setText(productos.size() + "");
+        NroC.setText(combos.size() + "");
     
     
 }
@@ -135,8 +162,8 @@ public class GestionMenu extends javax.swing.JFrame {
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         EncabezadoLayout.setVerticalGroup(
@@ -373,18 +400,17 @@ public class GestionMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVerMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerMenuActionPerformed
-        // TODO add your handling code here:
+        FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario, menu, inventario, archivoMenu);
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnVerMenuActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        VerProductos ventana = new VerProductos();
-        ventana.setVisible(true);
-        this.dispose();
+         cargarPanel(new PVerProductos(Interfaz, menu, archivoMenu, inventario));
 // TODO add your handling code here:
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCombosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCombosActionPerformed
-       
+         cargarPanel(new PVerCombos(Interfaz, menu, archivoMenu, inventario));
     }//GEN-LAST:event_btnCombosActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -399,7 +425,7 @@ public class GestionMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        PlantillaGerente ventana = new PlantillaGerente(rolUsuario, nombreUsuario);
+         InterfazGerenteP1 ventana = new InterfazGerenteP1(rolUsuario, nombreUsuario);
         ventana.setVisible(true);
         this.dispose();
 // TODO add your handling code here:
@@ -454,19 +480,31 @@ public class GestionMenu extends javax.swing.JFrame {
     
     private void cargarImagen(JLabel label, String ruta){
      label.setText("");
-
-    ImageIcon icono = new ImageIcon(
-            getClass().getResource(ruta));
-
-    Image img = icono.getImage();
-
-    Image imgEscalada = img.getScaledInstance(
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
             label.getPreferredSize().width,
             label.getPreferredSize().height,
-            Image.SCALE_SMOOTH);
-
-    label.setIcon(new ImageIcon(imgEscalada));
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
     }
+    }
+ 
+    private void cargarPanel(javax.swing.JPanel panel) {
+        Interfaz.removeAll();                    // limpia el contenido anterior
+        Interfaz.setLayout(new java.awt.BorderLayout());
+        Interfaz.add(panel, java.awt.BorderLayout.CENTER);
+        Interfaz.revalidate();                   // refresca el layout
+        Interfaz.repaint();                      // redibuja
+}
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

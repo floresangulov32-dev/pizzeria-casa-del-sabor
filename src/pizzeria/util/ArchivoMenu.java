@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.io.File;
 
 public class ArchivoMenu{
-    private final String archivoProductos = "productos.txt";
-    private final String archivoCombos = "combos.txt";
+    private final String archivoProductos = "resources/data/productos.txt";
+    private final String archivoCombos = "resources/data/combos.txt";
     public ArrayList<Producto> cargarProductos(String archivo){
         ArrayList<Producto> productos = new ArrayList<>();
 

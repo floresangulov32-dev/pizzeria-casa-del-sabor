@@ -3,11 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package pizzeria.IU;
+
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.BoxLayout;
 import pizzeria.model.Inventario;
 import pizzeria.model.Insumo;
+import pizzeria.model.Menu;
+import pizzeria.model.Producto;
+import pizzeria.model.TipoProducto;
+import pizzeria.util.ArchivoMenu;
+import javax.swing.JPanel;
 
 /**
  *
@@ -15,20 +22,34 @@ import pizzeria.model.Insumo;
  */
 public class MenuAgregarProducto extends javax.swing.JPanel {
 
-    /**
-     * Creates new form MenuAgregarProducto
-     */
     private ArrayList<JCheckBox> checkboxesInsumos = new ArrayList<>();
     private Inventario inventario;
+    private Menu menu;
+    private ArchivoMenu archivoMenu;
+    private JPanel interfaz;
+    
+
     
     public MenuAgregarProducto() {
         initComponents();
     }
     
-    public MenuAgregarProducto(Inventario inventario) {
+    public MenuAgregarProducto(JPanel interfaz,Inventario inventario) {
         initComponents();
         this.inventario = inventario;
         cargarInsumos();
+    }
+    
+     public MenuAgregarProducto(JPanel interfaz, Menu menu, Inventario inventario,
+                               ArchivoMenu archivoMenu) {
+        this.interfaz = interfaz;
+        this.menu = menu;
+        this.inventario = inventario;
+        this.archivoMenu = archivoMenu;
+        
+        initComponents();
+        cargarInsumos();
+        
     }
 
     /**
@@ -94,7 +115,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         jLabel5.setText("Tipo de Producto:");
 
         tipoP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        tipoP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pizza", "Refresco" }));
+        tipoP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Producto", "Refresco" }));
         tipoP.addActionListener(this::tipoPActionPerformed);
 
         btnGuardar.setBackground(new java.awt.Color(168, 27, 29));
@@ -106,7 +127,7 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
         btnCancelar.setBackground(new java.awt.Color(106, 68, 68));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setText("Volver");
         btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
@@ -158,11 +179,6 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
                 .addGap(97, 97, 97)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(216, 216, 216)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -180,7 +196,12 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
                                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(36, 36, 36)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37))))
+                        .addGap(37, 37, 37))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(165, 165, 165)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(177, 177, 177))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
@@ -224,36 +245,126 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
+        // 1. Validar nombre
+        String nombre = txtNombre.getText().trim();
+        if (nombre.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Ingrese el nombre del producto.",
+                "Campo vacío", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. Validar precio
+        String precioTxt = txtPrecio.getText().trim();
+        double precio;
+        try {
+            precio = Double.parseDouble(precioTxt);
+            if (precio < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Ingrese un precio válido (número positivo).",
+                "Precio inválido", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 3. Descripción (opcional, pero no debe ser nula)
+        String descripcion = txtDescrip.getText().trim();
+
+        // 4. Tipo de producto
+        TipoProducto tipo = TipoProducto.fromString((String) tipoP.getSelectedItem());
+
+       
+
+        
+        ArrayList<Integer> ingredientes = new ArrayList<>();
+            for (int i = 0; i < checkboxesInsumos.size(); i++) {
+                if (checkboxesInsumos.get(i).isSelected()) {
+                    Insumo ins = inventario.getInsumos().get(i);
+                    ingredientes.add(ins.getId());
+                }
+            }
+        
+
+        
+        if (menu == null) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "No se puede guardar: el menú no está disponible.",
+                "Error interno", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        menu.agregarProducto(nombre, descripcion, precio, tipo);
+        Producto recienAgregado = menu.getProductos().get(menu.getProductos().size() - 1);
+        for (int idIng : ingredientes) {
+            recienAgregado.agregarIngrediente(idIng);
+        }
+        // 8. Persistir en disco
+        if (archivoMenu != null) {
+            archivoMenu.guardarProductos(menu.getProductos());
+        }
+
+        // 9. Confirmar al usuario y limpiar el formulario
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Producto \"" + nombre + "\" agregado correctamente.",
+            "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        limpiarFormulario();
+        cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
+        
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-              
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this,
+            "¿Descartar los datos ingresados?",
+            "Cancelar", javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE);
+
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            limpiarFormulario();
+            // Si hay callback de cancelación se puede añadir aquí
+        }
+        cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void cargarPanel(JPanel panel) {
+    interfaz.removeAll();
+    interfaz.setLayout(new BorderLayout());
+    interfaz.add(panel, BorderLayout.CENTER);
+    interfaz.revalidate();
+    interfaz.repaint();
+    }
     
     private void cargarInsumos() {
+        panelInsumos.removeAll();
+        checkboxesInsumos.clear();
+        panelInsumos.setLayout(new BoxLayout(panelInsumos, BoxLayout.Y_AXIS));
 
-    panelInsumos.removeAll();
-    checkboxesInsumos.clear();
+        if (inventario != null) {
+            for (Insumo ins : inventario.getInsumos()) {
+                JCheckBox chk = new JCheckBox(ins.getNombre());
+                chk.setBackground(java.awt.Color.WHITE);
+                chk.setFont(new java.awt.Font("Segoe UI", 0, 16));
+                checkboxesInsumos.add(chk);
+                panelInsumos.add(chk);
+            }
+        }
 
-    panelInsumos.setLayout(
-        new BoxLayout(panelInsumos, BoxLayout.Y_AXIS)
-    );
-
-    for (Insumo ins : inventario.getInsumos()) {
-
-        JCheckBox chk = new JCheckBox(ins.getNombre());
-
-        chk.setBackground(java.awt.Color.WHITE);
-        chk.setFont(new java.awt.Font("Segoe UI", 0, 16));
-
-        checkboxesInsumos.add(chk);
-        panelInsumos.add(chk);
+        panelInsumos.revalidate();
+        panelInsumos.repaint();
     }
 
-    panelInsumos.revalidate();
-    panelInsumos.repaint();
-}
+    private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        txtDescrip.setText("");
+        tipoP.setSelectedIndex(0);
+        for (JCheckBox chk : checkboxesInsumos) {
+            chk.setSelected(false);
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
