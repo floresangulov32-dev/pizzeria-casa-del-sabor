@@ -190,16 +190,16 @@ public class BuscarInsumos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        Encabezado1.setBackground(new java.awt.Color(255, 255, 255));
+        Encabezado1.setBackground(new java.awt.Color(168, 27, 29));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(168, 27, 29));
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("LA CASA DEL SABOR");
 
         jLabel8.setText("LOGO");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(74, 74, 74));
+        jLabel9.setForeground(new java.awt.Color(204, 204, 204));
         jLabel9.setText("PIZZERIA");
 
         Rol1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -343,13 +343,11 @@ public class BuscarInsumos extends javax.swing.JFrame {
     }
     
     private void configurarEstiloTabla() {
-    // Encabezado de la tabla
     jTable1.getTableHeader().setBackground(new Color(0, 0, 0));
     jTable1.getTableHeader().setForeground(Color.BLACK);
     jTable1.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
     jTable1.getTableHeader().setPreferredSize(new Dimension(0, 35));
 
-    // Filas alternas
     jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public java.awt.Component getTableCellRendererComponent(
@@ -371,28 +369,97 @@ public class BuscarInsumos extends javax.swing.JFrame {
             }
         });
 
-    // Alto de filas
         jTable1.setRowHeight(30);
         jTable1.setShowGrid(false);
         jTable1.setIntercellSpacing(new Dimension(0, 0));
     }
     
     private void configurarEncabezado() {
-    // En InventarioPantallaInicial usa: Encabezado y jLabel3
-    // En BuscarInsumos usa: Encabezado1 y jLabel8
      Encabezado1.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(217, 217, 217)));
      BarraNav.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(217, 217, 217)));
     }
     private void btnModificarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarInsumoActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if(filaSeleccionada == -1){
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un insumo de la tabla.");
+            return;
+        }
+        int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+        Insumo ins = inventario.buscarId(id);
+        if(ins!=null){
+            jScrollPane1.setVisible(false);
+            ModificarInsumo panel = new ModificarInsumo(this,ins);
+            panel.setBounds(jScrollPane1.getBounds());
+            getContentPane().add(panel);
+            panel.setVisible(true);
+            revalidate();
+            repaint();
+        }
     }//GEN-LAST:event_btnModificarInsumoActionPerformed
 
     private void btnActualizarStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarStockActionPerformed
-
+        int filaSeleccionada = jTable1.getSelectedRow();
+    if (filaSeleccionada == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un insumo de la tabla.");
+        return;
+    }
+    int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+    Insumo ins = inventario.buscarId(id);
+    if (ins != null) {
+        jScrollPane1.setVisible(false);
+        ActualizarStock panel = new ActualizarStock(this, ins, inventario);
+        panel.setBounds(jScrollPane1.getBounds());
+        getContentPane().add(panel);
+        panel.setVisible(true);
+        revalidate();
+        repaint();
+    }
     }//GEN-LAST:event_btnActualizarStockActionPerformed
 
     private void btnEliminarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInsumoActionPerformed
-        // TODO add your handling code here:
+         int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Seleccione un insumo de la tabla."
+            );
+            return;
+        }
+
+        int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+
+        Insumo ins = inventario.buscarId(id);
+
+        if (ins == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "No se encontró el insumo."
+            );
+            return;
+        }
+
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea eliminar el insumo \"" +
+            ins.getNombre() + "\"?",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+
+            inventario.eliminarInsumo(id);
+            inventario.guardarArchivo();
+
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Insumo eliminado correctamente."
+            );
+
+        configurarTabla();
+    }
     }//GEN-LAST:event_btnEliminarInsumoActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -434,6 +501,13 @@ public class BuscarInsumos extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(this, "Ingrese un ID numérico válido.");
     }
     }
+    
+    public void mostrarTabla(){
+        configurarTabla();
+        jScrollPane1.setVisible(true);
+        revalidate();
+        repaint();
+    }
         
     
     /**
@@ -463,18 +537,13 @@ public class BuscarInsumos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BarraNav;
-    private javax.swing.JPanel Encabezado;
     private javax.swing.JPanel Encabezado1;
     private javax.swing.JPanel PiePag;
-    private javax.swing.JLabel Rol;
     private javax.swing.JLabel Rol1;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnFinanzas;
     private javax.swing.JButton btnInvetario;
     private javax.swing.JButton btnMenu;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
