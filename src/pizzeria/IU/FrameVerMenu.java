@@ -336,6 +336,7 @@ private void cargarTablaCombos() {
         btnVolver.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnVolver.setForeground(new java.awt.Color(255, 255, 255));
         btnVolver.setText("Volver");
+        btnVolver.addActionListener(this::btnVolverActionPerformed);
 
         pnlPizzas.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -587,6 +588,25 @@ private void cargarTablaCombos() {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        this.dispose();
+    
+    if (rolUsuario == null || rolUsuario.isEmpty()) {
+        // Vino desde PantallaInicial
+        new PantallaInicial().setVisible(true);
+        
+    } else if (rolUsuario.equalsIgnoreCase("CLIENTE")) {
+        // Vino desde InterfazCliente
+        new InterfazCliente(rolUsuario, nombreUsuario).setVisible(true);
+        
+    } else if (rolUsuario.equalsIgnoreCase("GERENTE")){
+        // Vino desde GestionMenu (Gerente u otro rol)
+        new GestionMenu(rolUsuario, nombreUsuario).setVisible(true);
+    }else {
+        new VentasGUI(rolUsuario, nombreUsuario).setVisible(true);
+    }
+    }//GEN-LAST:event_btnVolverActionPerformed
     
     private void mostrarUsuario() {
     

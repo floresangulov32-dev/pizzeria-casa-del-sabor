@@ -327,6 +327,7 @@ public class InterfazCliente extends JFrame {
     private void mostrarMenuCompleto() {
         FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario);
         ventana.setVisible(true);
+        this.dispose();
     }
     
     private void mostrarCombos() {
