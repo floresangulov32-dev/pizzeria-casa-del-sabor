@@ -26,7 +26,6 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
     private Inventario inventario;
     private Menu menu;
     private ArchivoMenu archivoMenu;
-    private Runnable onProductoAgregado;
     private JPanel interfaz;
     
 
@@ -42,12 +41,12 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
     }
     
      public MenuAgregarProducto(JPanel interfaz, Menu menu, Inventario inventario,
-                               ArchivoMenu archivoMenu, Runnable onProductoAgregado) {
+                               ArchivoMenu archivoMenu) {
         this.interfaz = interfaz;
         this.menu = menu;
         this.inventario = inventario;
         this.archivoMenu = archivoMenu;
-        this.onProductoAgregado = onProductoAgregado;
+        
         initComponents();
         cargarInsumos();
         
@@ -310,11 +309,8 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
             "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
         limpiarFormulario();
-
-        // 10. Notificar al panel padre si se proporcionó callback
-        if (onProductoAgregado != null) {
-            onProductoAgregado.run();
-        }
+        cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
+        
         
     }//GEN-LAST:event_btnGuardarActionPerformed
 

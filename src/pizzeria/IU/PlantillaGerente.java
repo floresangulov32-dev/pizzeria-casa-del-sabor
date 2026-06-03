@@ -30,8 +30,8 @@ public class PlantillaGerente extends javax.swing.JFrame {
         configurarHover();        
         activarBoton(btnInicio);
         
-        cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    
     }
     
     public PlantillaGerente(String rol, String nombre) {
@@ -46,8 +46,8 @@ public class PlantillaGerente extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     activarBoton(btnInicio);
-    cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+   
     
     
     

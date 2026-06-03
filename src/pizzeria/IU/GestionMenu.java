@@ -409,7 +409,7 @@ public class GestionMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCombosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCombosActionPerformed
-       
+         cargarPanel(new PVerCombos(Interfaz, menu, archivoMenu, inventario));
     }//GEN-LAST:event_btnCombosActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed

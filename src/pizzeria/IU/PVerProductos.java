@@ -27,7 +27,7 @@ public class PVerProductos extends javax.swing.JPanel {
         initComponents();
     }
 
-     public PVerProductos(JPanel interfaz, Menu menu, ArchivoMenu archivoMenu, Inventario inventario) {
+    public PVerProductos(JPanel interfaz, Menu menu, ArchivoMenu archivoMenu, Inventario inventario) {
     initComponents(); 
     this.interfaz = interfaz;    
     this.menu          = menu;
@@ -210,7 +210,7 @@ public class PVerProductos extends javax.swing.JPanel {
 
     private void btnAgregarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPActionPerformed
         MenuAgregarProducto panel = new MenuAgregarProducto(interfaz,
-        menu, inventario, archivoMenu,    () -> cargarPanel(this));
+        menu, inventario, archivoMenu);
         cargarPanel(panel);
         
     }//GEN-LAST:event_btnAgregarPActionPerformed
