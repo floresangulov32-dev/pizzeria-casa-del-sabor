@@ -400,7 +400,8 @@ public class GestionMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVerMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerMenuActionPerformed
-        // TODO add your handling code here:
+        FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario, menu, inventario, archivoMenu);
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnVerMenuActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
