@@ -35,7 +35,13 @@ public class FrameVerMenu extends javax.swing.JFrame {
     PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
 
     cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
-
+    cargarImagen(pizza1, "resources/imagenes/Pizza1.jpg");
+    cargarImagen(pizza2, "resources/imagenes/Pizza2.jpg");
+    cargarImagen(pizza3, "resources/imagenes/Pizza3.jpg");
+    cargarImagen(lblrefresco, "resources/imagenes/Refrescos.jpg");
+    cargarImagen(lblCombo1, "resources/imagenes/Combo1.jpg");
+    cargarImagen(lblCombo2, "resources/imagenes/Combo2.jpg");
+    
     archivoMenu = new ArchivoMenu();
     ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
     ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
@@ -60,6 +66,38 @@ public FrameVerMenu(String rol, String nombre, Menu menu, Inventario inventario,
     mostrarUsuario();
 
     cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(pizza1, "resources/imagenes/Pizza1.jpg");
+    cargarImagen(pizza2, "resources/imagenes/Pizza2.jpg");
+    cargarImagen(pizza3, "resources/imagenes/Pizza3.jpg");
+    cargarImagen(lblrefresco, "resources/imagenes/Refrescos.jpg");
+    cargarImagen(lblCombo1, "resources/imagenes/Combo1.jpg");
+    cargarImagen(lblCombo2, "resources/imagenes/Combo2.jpg");
+    cargarTablas();
+}
+
+public FrameVerMenu(String rol, String nombre) {
+    initComponents();
+    setSize(1280, 720);
+    setLocationRelativeTo(null);
+    Encabezado.setPreferredSize(new java.awt.Dimension(1280, 100));
+    PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
+    this.rolUsuario   = rol;
+    this.nombreUsuario = nombre;
+    archivoMenu = new ArchivoMenu();
+    ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
+    ArrayList<Combo> combos = archivoMenu.cargarCombos("resources/data/combos.txt", productos);
+    menu = new Menu(productos, combos);
+    inventario.cargarArchivo();
+    
+    mostrarUsuario();
+
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(pizza1, "resources/imagenes/Pizza1.jpg");
+    cargarImagen(pizza2, "resources/imagenes/Pizza2.jpg");
+    cargarImagen(pizza3, "resources/imagenes/Pizza3.jpg");
+    cargarImagen(lblrefresco, "resources/imagenes/Refrescos.jpg");
+    cargarImagen(lblCombo1, "resources/imagenes/Combo1.jpg");
+    cargarImagen(lblCombo2, "resources/imagenes/Combo2.jpg");
     cargarTablas();
 }
     
@@ -160,18 +198,18 @@ private void cargarTablaCombos() {
         pnlPizzas = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        pizza1 = new javax.swing.JLabel();
+        pizza2 = new javax.swing.JLabel();
+        pizza3 = new javax.swing.JLabel();
         pnlRefrescos = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jLabel12 = new javax.swing.JLabel();
+        lblrefresco = new javax.swing.JLabel();
         pnlCombos = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        lblCombo1 = new javax.swing.JLabel();
+        lblCombo2 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -325,14 +363,14 @@ private void cargarTablaCombos() {
         jTable1.setRowHeight(30);
         jScrollPane4.setViewportView(jTable1);
 
-        jLabel8.setText("Pizza1");
-        jLabel8.setPreferredSize(new java.awt.Dimension(120, 114));
+        pizza1.setText("Pizza1");
+        pizza1.setPreferredSize(new java.awt.Dimension(120, 114));
 
-        jLabel9.setText("Pizza2");
-        jLabel9.setPreferredSize(new java.awt.Dimension(120, 114));
+        pizza2.setText("Pizza2");
+        pizza2.setPreferredSize(new java.awt.Dimension(120, 114));
 
-        jLabel10.setText("Pizza3");
-        jLabel10.setPreferredSize(new java.awt.Dimension(120, 114));
+        pizza3.setText("Pizza3");
+        pizza3.setPreferredSize(new java.awt.Dimension(120, 114));
 
         javax.swing.GroupLayout pnlPizzasLayout = new javax.swing.GroupLayout(pnlPizzas);
         pnlPizzas.setLayout(pnlPizzasLayout);
@@ -341,11 +379,15 @@ private void cargarTablaCombos() {
             .addGroup(pnlPizzasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addGroup(pnlPizzasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlPizzasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlPizzasLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(pnlPizzasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(pizza1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pizza3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnlPizzasLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pizza2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         pnlPizzasLayout.setVerticalGroup(
@@ -355,11 +397,11 @@ private void cargarTablaCombos() {
                 .addGroup(pnlPizzasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlPizzasLayout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pizza1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(pizza2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(pizza3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -381,8 +423,8 @@ private void cargarTablaCombos() {
         jTable2.setRowHeight(30);
         jScrollPane5.setViewportView(jTable2);
 
-        jLabel12.setText("Refrecos");
-        jLabel12.setPreferredSize(new java.awt.Dimension(122, 120));
+        lblrefresco.setText("Refrecos");
+        lblrefresco.setPreferredSize(new java.awt.Dimension(122, 120));
 
         javax.swing.GroupLayout pnlRefrescosLayout = new javax.swing.GroupLayout(pnlRefrescos);
         pnlRefrescos.setLayout(pnlRefrescosLayout);
@@ -392,7 +434,7 @@ private void cargarTablaCombos() {
                 .addContainerGap()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblrefresco, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
         pnlRefrescosLayout.setVerticalGroup(
@@ -404,7 +446,7 @@ private void cargarTablaCombos() {
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlRefrescosLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblrefresco, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -425,11 +467,11 @@ private void cargarTablaCombos() {
         jTable3.setRowHeight(30);
         jScrollPane6.setViewportView(jTable3);
 
-        jLabel13.setText("Combo1");
-        jLabel13.setPreferredSize(new java.awt.Dimension(96, 94));
+        lblCombo1.setText("Combo1");
+        lblCombo1.setPreferredSize(new java.awt.Dimension(96, 94));
 
-        jLabel14.setText("Combo2");
-        jLabel14.setPreferredSize(new java.awt.Dimension(96, 94));
+        lblCombo2.setText("Combo2");
+        lblCombo2.setPreferredSize(new java.awt.Dimension(96, 94));
 
         javax.swing.GroupLayout pnlCombosLayout = new javax.swing.GroupLayout(pnlCombos);
         pnlCombos.setLayout(pnlCombosLayout);
@@ -438,15 +480,11 @@ private void cargarTablaCombos() {
             .addGroup(pnlCombosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(pnlCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlCombosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19))
-                    .addGroup(pnlCombosLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(lblCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         pnlCombosLayout.setVerticalGroup(
             pnlCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,9 +493,9 @@ private void cargarTablaCombos() {
                 .addGroup(pnlCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlCombosLayout.createSequentialGroup()
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(57, 57, 57))
         );
 
@@ -610,18 +648,12 @@ private void cargarTablaCombos() {
     private javax.swing.JLabel Rol;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
@@ -629,8 +661,14 @@ private void cargarTablaCombos() {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JLabel lblCombo1;
+    private javax.swing.JLabel lblCombo2;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblrefresco;
+    private javax.swing.JLabel pizza1;
+    private javax.swing.JLabel pizza2;
+    private javax.swing.JLabel pizza3;
     private javax.swing.JPanel pnlCombos;
     private javax.swing.JPanel pnlPizzas;
     private javax.swing.JPanel pnlRefrescos;

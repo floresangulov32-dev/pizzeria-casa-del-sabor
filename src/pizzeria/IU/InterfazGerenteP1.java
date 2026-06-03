@@ -618,14 +618,9 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
         activarBoton(btnMenu);
+        GestionMenu ventana = new GestionMenu(rolUsuario, nombreUsuario);
+        ventana.setVisible(true);
         
-        JLabel lblMensaje = new JLabel("Gestión de Menú - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
