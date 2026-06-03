@@ -624,7 +624,7 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
-        new InventarioPantallaInicial().setVisible(true);
+        new InventarioPantallaInicial(rolUsuario, nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnInvetarioActionPerformed
 
