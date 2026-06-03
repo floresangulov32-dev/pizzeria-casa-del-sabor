@@ -105,6 +105,8 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblIngredientes.setMinimumSize(new java.awt.Dimension(50, 360));
+        tblIngredientes.setRowHeight(50);
         jScrollPane1.setViewportView(tblIngredientes);
 
         btnVolver.setBackground(new java.awt.Color(106, 68, 68));
@@ -213,6 +215,8 @@ public class PAgregarIngrediente extends javax.swing.JPanel {
             ins.getNombre(),
             });
         tblIngredientes.setModel(modelo);
+        
+        tblIngredientes.setRowHeight(50);
         tblIngredientes.getColumnModel().getColumn(0).setPreferredWidth(50);
         tblIngredientes.getColumnModel().getColumn(1).setPreferredWidth(190);
         }

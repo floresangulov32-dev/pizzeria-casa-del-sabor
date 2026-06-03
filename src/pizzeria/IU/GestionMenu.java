@@ -36,11 +36,9 @@ public class GestionMenu extends javax.swing.JFrame {
         PiePag.setPreferredSize(new java.awt.Dimension(1280, 47));
         
         configurarHover();        
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+        cargarImagen(ImgPres, "resources/imagenes/logoCasaDelSabor.jpeg");
         
-        cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
-        cargarImagen(ImgPres,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
         
         archivoMenu = new ArchivoMenu();
         ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
@@ -67,10 +65,9 @@ public class GestionMenu extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     
-    cargarImagen(lblLogo,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
-    cargarImagen(ImgPres,
-            "/pizzeria/IU/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    cargarImagen(ImgPres, "resources/imagenes/logoCasaDelSabor.jpeg");
+    
     
         archivoMenu = new ArchivoMenu();
         ArrayList<Producto> productos = archivoMenu.cargarProductos("resources/data/productos.txt");
@@ -482,18 +479,22 @@ public class GestionMenu extends javax.swing.JFrame {
     
     private void cargarImagen(JLabel label, String ruta){
      label.setText("");
-
-    ImageIcon icono = new ImageIcon(
-            getClass().getResource(ruta));
-
-    Image img = icono.getImage();
-
-    Image imgEscalada = img.getScaledInstance(
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
             label.getPreferredSize().width,
             label.getPreferredSize().height,
-            Image.SCALE_SMOOTH);
-
-    label.setIcon(new ImageIcon(imgEscalada));
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
  
     private void cargarPanel(javax.swing.JPanel panel) {

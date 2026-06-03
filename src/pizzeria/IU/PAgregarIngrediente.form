@@ -126,6 +126,10 @@
                 <Column editable="false" title="Nombre" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[50, 360]"/>
+            </Property>
+            <Property name="rowHeight" type="int" value="50"/>
           </Properties>
         </Component>
       </SubComponents>
