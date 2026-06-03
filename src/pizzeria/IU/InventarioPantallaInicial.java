@@ -13,6 +13,8 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InventarioPantallaInicial.class.getName());
     private final Inventario inventario = new Inventario();
+    private String rolUsuario;
+    private String nombreUsuario;
     /**
      * Creates new form Inventario
      */
@@ -20,6 +22,14 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
         initComponents();
         inventario.cargarArchivo();
         configurarTabla();
+    }
+    public InventarioPantallaInicial(String rol, String nombre) {
+    initComponents();
+    this.rolUsuario = rol;
+    this.nombreUsuario = nombre;
+    Rol.setText(rol + ": " + nombre);
+    inventario.cargarArchivo();
+    configurarTabla();
     }
     
     /**
@@ -248,7 +258,7 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarCambiosPerformed
 
     private void btnVolverPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverPerformed
-        new PlantillaGerente().setVisible(true);
+        new InterfazGerenteP1(rolUsuario, nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverPerformed
 
