@@ -303,15 +303,6 @@ public class LoginGUI extends javax.swing.JFrame {
                     }
                     break;
                 case "CAJERO":
-                    try {
-                        VentasGUI cajeroFrame = new VentasGUI(user.getRol().name(), user.getNombre());
-                        cajeroFrame.setVisible(true);
-                    } catch (Exception e) {
-                        System.out.println("Error al abrir VentasGUI: " + e.getMessage());
-                        mostrarMensajeEnDesarrollo("Módulo de Cajero");
-                        new PantallaInicial().setVisible(true);
-                    }
-                    break;
                 case "COCINA":
                 default:
                     mostrarMensajeEnDesarrollo("Módulo para " + user.getRol().name());
