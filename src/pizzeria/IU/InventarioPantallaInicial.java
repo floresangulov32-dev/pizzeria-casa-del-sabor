@@ -263,7 +263,13 @@ public class InventarioPantallaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarInsumoActionPerformed
 
     private void btnGuardarCambiosPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosPerformed
-        // TODO add your handling code here:
+        inventario.guardarArchivo();
+        javax.swing.JOptionPane.showMessageDialog(
+        this,
+        "Cambios guardados correctamente.",
+        "Guardar",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );        
     }//GEN-LAST:event_btnGuardarCambiosPerformed
 
     private void btnVolverPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverPerformed

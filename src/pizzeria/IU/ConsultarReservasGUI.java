@@ -4,6 +4,10 @@
  */
 package pizzeria.IU;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 public class ConsultarReservasGUI extends javax.swing.JFrame {
     
     private java.util.ArrayList<pizzeria.model.Venta> ventasMostradas = new java.util.ArrayList<>();
@@ -29,6 +33,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         activarBoton(btnUsuarios);
 
         cargarReservas();
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
 
         txtBuscarReservaId.addActionListener(e -> buscarReservaPorId());
 
@@ -58,6 +63,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         ////por si acaso para buscar con enter en constructor con argumentos
         ///
         txtBuscarReservaId.addActionListener(e -> buscarVentaPorId());
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
 
     }
 
@@ -132,6 +138,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
 
         lblLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLogo.setText("LOGO");
+        lblLogo.setPreferredSize(new java.awt.Dimension(75, 75));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -156,7 +163,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
                         .addGap(209, 209, 209)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
         EncabezadoLayout.setVerticalGroup(
@@ -229,7 +236,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
                 .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(674, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         PiePag.setBackground(new java.awt.Color(28, 28, 28));
@@ -254,11 +261,9 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         );
         PiePagLayout.setVerticalGroup(
             PiePagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PiePagLayout.createSequentialGroup()
-                .addGroup(PiePagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addComponent(jLabel2))
-                .addContainerGap())
+            .addGroup(PiePagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2))
         );
 
         Interfaz.setBackground(new java.awt.Color(255, 255, 255));
@@ -398,9 +403,9 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jButton6.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
@@ -456,7 +461,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
                     .addComponent(btnBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(462, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
@@ -477,11 +482,11 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
             .addGroup(FondoLayout.createSequentialGroup()
                 .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Interfaz, javax.swing.GroupLayout.PREFERRED_SIZE, 634, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(PiePag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -493,7 +498,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Fondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(Fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -501,19 +506,21 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
-        new VentasGUI().setVisible(true);
+        new VentasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
-        new ConsultarReservasGUI().setVisible(true);
+        new ConsultarReservasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
-        PantallaMenuPublico.mostrar(this);
+        FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario);
+        ventana.setVisible(true);
+        
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -529,7 +536,7 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        new VentasGUI().setVisible(true);
+        new VentasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -1045,6 +1052,26 @@ public class ConsultarReservasGUI extends javax.swing.JFrame {
         }
 
         return reserva.getEstado().toString();
+    }
+    
+    private void cargarImagen(JLabel label, String ruta){
+     label.setText("");
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
+            label.getPreferredSize().width,
+            label.getPreferredSize().height,
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
     
     public static void main(String args[]) {
