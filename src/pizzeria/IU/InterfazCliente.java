@@ -195,20 +195,7 @@ public class InterfazCliente extends JFrame {
         btnVerMenu.addActionListener(e -> mostrarMenuCompleto());
         BarraNav.add(btnVerMenu);
 
-        // Botón Ver Combos
-        btnVerCombos = new JButton("Ver Combos");
-        btnVerCombos.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnVerCombos.setForeground(new Color(60, 60, 60));
-        btnVerCombos.setBackground(Color.WHITE);
-        btnVerCombos.setHorizontalAlignment(SwingConstants.LEFT);
-        btnVerCombos.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
-        btnVerCombos.setFocusPainted(false);
-        btnVerCombos.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnVerCombos.setMaximumSize(new Dimension(280, 50));
-        btnVerCombos.setMinimumSize(new Dimension(280, 50));
-        btnVerCombos.setPreferredSize(new Dimension(280, 50));
-        btnVerCombos.addActionListener(e -> mostrarCombos());
-        BarraNav.add(btnVerCombos);
+        
 
         // Espacio flexible (empuja los botones hacia arriba)
         BarraNav.add(Box.createVerticalGlue());
@@ -330,16 +317,7 @@ public class InterfazCliente extends JFrame {
         this.dispose();
     }
     
-    private void mostrarCombos() {
-        activarBoton(btnVerCombos);
-        JLabel lblMensaje = new JLabel("Combos - Próximamente", SwingConstants.CENTER);
-        lblMensaje.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblMensaje.setForeground(new Color(168, 27, 29));
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.add(lblMensaje, BorderLayout.CENTER);
-        cargarPanel(panel);
-    }
+    
     
     private void cerrarSesion() {
         int confirm = JOptionPane.showConfirmDialog(this,
