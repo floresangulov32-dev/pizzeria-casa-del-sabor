@@ -47,7 +47,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     configurarHover();        
     activarBoton(btnInicio);
     cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
-    
+    cargarPedidoActual();
     
     
 }
