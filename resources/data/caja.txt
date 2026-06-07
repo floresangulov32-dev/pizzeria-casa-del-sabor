@@ -77,4 +77,4 @@
 75|INGRESO|9100,00|2026-06-01 17:46|Venta|Venta inmediata #38
 76|INGRESO|1130,00|2026-06-01 17:48|Venta|Venta inmediata #39
 77|EGRESO|57,00|2026-06-01 17:55|Salario|pp
-78|EGRESO|180,00|2026-06-01 18:09|CompraInsumo|Pago deuda #15 - Aceite de oliva
+78|EGRESO|180,00|2026-06-01 18:09|CompraInsumo|Pago deuda #15 - Aceite de oli

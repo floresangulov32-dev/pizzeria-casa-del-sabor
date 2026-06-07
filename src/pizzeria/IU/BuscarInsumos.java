@@ -14,6 +14,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 /**
@@ -39,6 +40,8 @@ public class BuscarInsumos extends javax.swing.JFrame {
         configurarEncabezado();
         configurarTabla();
         configurarEstiloTabla();
+        jLabel8.setPreferredSize(new java.awt.Dimension(90, 90));
+        cargarImagen(jLabel8, "resources/imagenes/logoCasaDelSabor.jpeg");
     }
     
     public BuscarInsumos(String rol, String nombre) {
@@ -53,6 +56,9 @@ public class BuscarInsumos extends javax.swing.JFrame {
         configurarEncabezado();
         configurarTabla();
         configurarEstiloTabla();
+        mostrarUsuario();
+        jLabel8.setPreferredSize(new java.awt.Dimension(90, 90));
+        cargarImagen(jLabel8, "resources/imagenes/logoCasaDelSabor.jpeg");
     }
 
     /**
@@ -197,6 +203,7 @@ public class BuscarInsumos extends javax.swing.JFrame {
         jLabel7.setText("LA CASA DEL SABOR");
 
         jLabel8.setText("LOGO");
+        jLabel8.setPreferredSize(new java.awt.Dimension(86, 74));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(204, 204, 204));
@@ -226,13 +233,15 @@ public class BuscarInsumos extends javax.swing.JFrame {
             .addGroup(Encabezado1Layout.createSequentialGroup()
                 .addContainerGap(15, Short.MAX_VALUE)
                 .addGroup(Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(Encabezado1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Encabezado1Layout.createSequentialGroup()
                         .addGroup(Encabezado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Rol1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel8)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Encabezado1Layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -340,6 +349,11 @@ public class BuscarInsumos extends javax.swing.JFrame {
                 }
             });
         }
+    }
+    
+    private void mostrarUsuario() {
+    
+        Rol1.setText(rolUsuario + ": " + nombreUsuario);
     }
     
     private void configurarEstiloTabla() {
@@ -507,6 +521,26 @@ public class BuscarInsumos extends javax.swing.JFrame {
         jScrollPane1.setVisible(true);
         revalidate();
         repaint();
+    }
+    
+    private void cargarImagen(JLabel label, String ruta){
+     label.setText("");
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
+            label.getPreferredSize().width,
+            label.getPreferredSize().height,
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
         
     

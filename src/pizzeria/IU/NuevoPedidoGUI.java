@@ -4,6 +4,10 @@
  */
 package pizzeria.IU;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 public class NuevoPedidoGUI extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NuevoPedidoGUI.class.getName());
@@ -24,7 +28,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
-        
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
         cargarPedidoActual();
     }
     
@@ -42,7 +46,8 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     activarBoton(btnInicio);
-    
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
+    cargarPedidoActual();
     
     
 }
@@ -116,6 +121,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
         lblLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLogo.setText("LOGO");
+        lblLogo.setPreferredSize(new java.awt.Dimension(75, 75));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -140,7 +146,7 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
                         .addGap(209, 209, 209)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
         EncabezadoLayout.setVerticalGroup(
@@ -497,19 +503,19 @@ public class NuevoPedidoGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
-        new VentasGUI().setVisible(true);
+        new VentasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
-        new ConsultarReservasGUI().setVisible(true);
+        new ConsultarReservasGUI(rolUsuario,nombreUsuario).setVisible(true);
 this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        // TODO add your handling code here:
-        PantallaMenuPublico.mostrar(this);
+        FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario);
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -525,30 +531,39 @@ this.dispose();
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new AgregarProductoGUI().setVisible(true);
+        new AgregarProductoGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        new AgregarComboGUI().setVisible(true);
+        new AgregarComboGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        new QuitarProductoGUI().setVisible(true);
+        new QuitarProductoGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        new RevisarPedidoGUI().setVisible(true);
+        new RevisarPedidoGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this,
+            "¿Descartar los datos ingresados?",
+            "Cancelar", javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE);
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            new VentasGUI(rolUsuario,nombreUsuario).setVisible(true);
+            this.dispose();
+        }
+        
+
     }//GEN-LAST:event_jButton5ActionPerformed
     
     private void mostrarUsuario() {
@@ -652,6 +667,26 @@ this.dispose();
         jLabelTotal.setText("Bs. " + String.format("%.2f", venta.getTotal()));
 
 
+    }
+    
+    private void cargarImagen(JLabel label, String ruta){
+     label.setText("");
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
+            label.getPreferredSize().width,
+            label.getPreferredSize().height,
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
     
     

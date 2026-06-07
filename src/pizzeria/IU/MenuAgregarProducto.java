@@ -322,9 +322,10 @@ public class MenuAgregarProducto extends javax.swing.JPanel {
 
         if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
             limpiarFormulario();
+            cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
             // Si hay callback de cancelación se puede añadir aquí
         }
-        cargarPanel(new PVerProductos(interfaz, menu, archivoMenu, inventario));
+        
         
     }//GEN-LAST:event_btnCancelarActionPerformed
 

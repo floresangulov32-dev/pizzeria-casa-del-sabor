@@ -213,7 +213,15 @@ public class ActualizarStock extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-            if (padreBuscar != null) {
+        inventario.guardarArchivo();
+        javax.swing.JOptionPane.showMessageDialog(
+        null,
+        "Cambios guardados correctamente.",
+        "Guardar",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );    
+        
+        if (padreBuscar != null) {
             padreBuscar.mostrarTabla();
             padreBuscar.getContentPane().remove(this);
             padreBuscar.revalidate();

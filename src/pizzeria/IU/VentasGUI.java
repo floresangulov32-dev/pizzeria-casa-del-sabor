@@ -4,6 +4,10 @@
  */
 package pizzeria.IU;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 public class VentasGUI extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentasGUI.class.getName());
@@ -24,6 +28,7 @@ public class VentasGUI extends javax.swing.JFrame {
         
         configurarHover();        
         activarBoton(btnInicio);
+        cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
     }
     
    
@@ -40,7 +45,7 @@ public class VentasGUI extends javax.swing.JFrame {
     mostrarUsuario();
     configurarHover();        
     activarBoton(btnInicio);
-    
+    cargarImagen(lblLogo, "resources/imagenes/logoCasaDelSabor.jpeg");
     
     
 }
@@ -115,6 +120,7 @@ public class VentasGUI extends javax.swing.JFrame {
 
         lblLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLogo.setText("LOGO");
+        lblLogo.setPreferredSize(new java.awt.Dimension(75, 75));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -504,14 +510,14 @@ public class VentasGUI extends javax.swing.JFrame {
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
-        new VentasGUI().setVisible(true);
+        new VentasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnInicioActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
         // TODO add your handling code here:
-        new ConsultarReservasGUI().setVisible(true);
-this.dispose();
+        new ConsultarReservasGUI(rolUsuario,nombreUsuario).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -534,13 +540,13 @@ this.dispose();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code 
         ContextoVentasGUI.getInstancia().getGestorVenta().crearVenta(1);
-        new NuevoPedidoGUI().setVisible(true);
+        new NuevoPedidoGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        new ConsultarVentasGUI().setVisible(true);
+        new ConsultarVentasGUI(rolUsuario,nombreUsuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
     
@@ -599,6 +605,26 @@ this.dispose();
         boton.setBackground(new java.awt.Color(168, 27, 29)); // #A81B1D
         boton.setForeground(new java.awt.Color(255, 255, 255)); // #FFFFFF
         btnActivo = boton;
+    }
+    
+    private void cargarImagen(JLabel label, String ruta){
+     label.setText("");
+    try {
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.err.println("Imagen no encontrada: " + ruta);
+            return;
+        }
+        ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+        Image imgEscalada = icono.getImage().getScaledInstance(
+            label.getPreferredSize().width,
+            label.getPreferredSize().height,
+            Image.SCALE_SMOOTH
+        );
+        label.setIcon(new ImageIcon(imgEscalada));
+    } catch (Exception e) {
+        System.err.println("Error cargando imagen: " + e.getMessage());
+    }
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
