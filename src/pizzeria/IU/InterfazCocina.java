@@ -28,22 +28,39 @@ public class InterfazCocina extends JFrame {
     private JButton btnActivo = null;
     private Image logoImagen;
     private Image fondoImagen;
-    
-    // Componentes
+        
     
     public InterfazCocina(String rol, String nombre) {
         this.rolUsuario = rol;
         this.nombreUsuario = nombre;
-        
+
         setTitle("La Casa del Sabor - Cocina");
         setSize(1280, 720);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        
+
         cargarImagenes();
         initUI();
+
+        // Aplicar colores inmediatamente
+        aplicarColoresPersonalizados();
+
+        // Forzar actualización después de que la ventana sea visible
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                aplicarColoresPersonalizados();
+            }
+        });
+
+        // También forzar después de un pequeño delay
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            aplicarColoresPersonalizados();
+            repaint();
+        });
     }
+    
     
     private void cargarImagenes() {
         try {
@@ -101,67 +118,163 @@ public class InterfazCocina extends JFrame {
         activarBoton(btnPedidosPendientes);
     }
     
+    
+    /**
+     * Aplica los colores personalizados a la interfaz
+     */
+    private void aplicarColoresPersonalizados() {
+        System.out.println("Aplicando colores personalizados...");
+
+        // CABECERA - Fondo rojo vino
+        Encabezado.setBackground(new Color(125, 0, 2));
+        Encabezado.setOpaque(true);
+
+        // Panel izquierdo del logo - Fondo blanco (para que se vea bien el logo)
+        panelIzquierdo.setBackground(Color.WHITE);
+        panelIzquierdo.setOpaque(true);
+
+        // Títulos - Texto blanco
+        lblTitulo.setForeground(Color.WHITE);
+        lblSubtitulo.setForeground(new Color(255, 200, 200));
+
+        // Rol y nombre - Texto blanco
+        lblRol.setForeground(new Color(255, 200, 200));
+        lblNombre.setForeground(Color.WHITE);
+        lblRol.setText("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "COCINA"));
+        lblNombre.setText(nombreUsuario != null ? nombreUsuario : "Cocina");
+
+        // BARRA DE NAVEGACIÓN - Fondo negro
+        BarraNav.setBackground(Color.BLACK);
+        BarraNav.setOpaque(true);
+
+        // BOTONES - Todos blancos con texto negro
+        if (btnPedidosPendientes != null) {
+            btnPedidosPendientes.setBackground(Color.WHITE);
+            btnPedidosPendientes.setForeground(Color.BLACK);
+            btnPedidosPendientes.setOpaque(true);
+            btnPedidosPendientes.setContentAreaFilled(true);
+            btnPedidosPendientes.setBorderPainted(false);
+        }
+
+        if (btnTomarPedido != null) {
+            btnTomarPedido.setBackground(Color.WHITE);
+            btnTomarPedido.setForeground(Color.BLACK);
+            btnTomarPedido.setOpaque(true);
+            btnTomarPedido.setContentAreaFilled(true);
+            btnTomarPedido.setBorderPainted(false);
+        }
+
+        if (btnEnPreparacion != null) {
+            btnEnPreparacion.setBackground(Color.WHITE);
+            btnEnPreparacion.setForeground(Color.BLACK);
+            btnEnPreparacion.setOpaque(true);
+            btnEnPreparacion.setContentAreaFilled(true);
+            btnEnPreparacion.setBorderPainted(false);
+        }
+
+        if (btnMarcarListo != null) {
+            btnMarcarListo.setBackground(Color.WHITE);
+            btnMarcarListo.setForeground(Color.BLACK);
+            btnMarcarListo.setOpaque(true);
+            btnMarcarListo.setContentAreaFilled(true);
+            btnMarcarListo.setBorderPainted(false);
+        }
+
+        if (btnPedidosListos != null) {
+            btnPedidosListos.setBackground(Color.WHITE);
+            btnPedidosListos.setForeground(Color.BLACK);
+            btnPedidosListos.setOpaque(true);
+            btnPedidosListos.setContentAreaFilled(true);
+            btnPedidosListos.setBorderPainted(false);
+        }
+
+        if (btnMarcarEntregado != null) {
+            btnMarcarEntregado.setBackground(Color.WHITE);
+            btnMarcarEntregado.setForeground(Color.BLACK);
+            btnMarcarEntregado.setOpaque(true);
+            btnMarcarEntregado.setContentAreaFilled(true);
+            btnMarcarEntregado.setBorderPainted(false);
+        }
+
+        // Botón Cerrar Sesión - Blanco con texto rojo
+        if (btnCerrarSesion != null) {
+            btnCerrarSesion.setBackground(Color.WHITE);
+            btnCerrarSesion.setForeground(new Color(168, 27, 29)); // Rojo
+            btnCerrarSesion.setOpaque(true);
+            btnCerrarSesion.setContentAreaFilled(true);
+            btnCerrarSesion.setBorderPainted(false);
+        }
+
+        // Forzar actualización visual
+        Encabezado.revalidate();
+        Encabezado.repaint();
+        BarraNav.revalidate();
+        BarraNav.repaint();
+
+        System.out.println("Colores aplicados - Encabezado: " + Encabezado.getBackground());
+        System.out.println("Colores aplicados - BarraNav: " + BarraNav.getBackground());
+        System.out.println("Colores aplicados - jPanel1: " + panelIzquierdo.getBackground());
+    }
+
     private void crearEncabezado() {
         Encabezado = new JPanel(new BorderLayout());
-        Encabezado.setBackground(Color.WHITE);
-        Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(217, 217, 217)));
+        Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(100, 0, 0)));
         Encabezado.setPreferredSize(new Dimension(1280, 100));
-        
-        // Panel izquierdo - Logo
-        JPanel panelIzquierdo = new JPanel();
-        panelIzquierdo.setOpaque(false);
+
+        // Panel izquierdo - Logo (con fondo blanco)
+        panelIzquierdo = new JPanel();
+        panelIzquierdo.setBackground(Color.WHITE); // Fondo blanco para el logo
         panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.X_AXIS));
         panelIzquierdo.setBorder(new EmptyBorder(10, 20, 10, 10));
-        
+
         if (logoImagen != null) {
             Image logoEscalado = logoImagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
             JLabel lblLogo = new JLabel(new ImageIcon(logoEscalado));
             panelIzquierdo.add(lblLogo);
             panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
-        }
+        }        
         
-        // Panel central - Títulos
         JPanel panelTitulos = new JPanel();
         panelTitulos.setOpaque(false);
         panelTitulos.setLayout(new BoxLayout(panelTitulos, BoxLayout.Y_AXIS));
-        
-        JLabel lblTitulo = new JLabel("LA CASA DEL SABOR");
+
+        lblTitulo = new JLabel("LA CASA DEL SABOR");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTitulo.setForeground(new Color(168, 27, 29));
+        // NO poner color aquí
         lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        JLabel lblSubtitulo = new JLabel("PIZZERÍA");
+
+        lblSubtitulo = new JLabel("PIZZERÍA");
         lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        lblSubtitulo.setForeground(new Color(74, 74, 74));
+        // NO poner color aquí
         lblSubtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         panelTitulos.add(lblTitulo);
         panelTitulos.add(Box.createRigidArea(new Dimension(0, 5)));
         panelTitulos.add(lblSubtitulo);
-        
+
         // Panel derecho - Rol de usuario
         JPanel panelDerecho = new JPanel();
         panelDerecho.setOpaque(false);
         panelDerecho.setLayout(new BoxLayout(panelDerecho, BoxLayout.Y_AXIS));
         panelDerecho.setBorder(new EmptyBorder(10, 10, 10, 20));
         panelDerecho.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JLabel lblRol = new JLabel("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "COCINA"));
+
+        lblRol = new JLabel("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "COCINA"));
         lblRol.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblRol.setForeground(new Color(100, 100, 100));
+        // NO poner color aquí
         lblRol.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JLabel lblNombre = new JLabel(nombreUsuario != null ? nombreUsuario : "Cocina");
+
+        lblNombre = new JLabel(nombreUsuario != null ? nombreUsuario : "Cocina");
         lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblNombre.setForeground(new Color(168, 27, 29));
+        // NO poner color aquí
         lblNombre.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         panelDerecho.add(Box.createVerticalGlue());
         panelDerecho.add(lblRol);
         panelDerecho.add(Box.createRigidArea(new Dimension(0, 5)));
         panelDerecho.add(lblNombre);
         panelDerecho.add(Box.createVerticalGlue());
-        
+
         Encabezado.add(panelIzquierdo, BorderLayout.WEST);
         Encabezado.add(panelTitulos, BorderLayout.CENTER);
         Encabezado.add(panelDerecho, BorderLayout.EAST);
@@ -169,14 +282,13 @@ public class InterfazCocina extends JFrame {
     
     private void crearBarraNav() {
         BarraNav = new JPanel();
-        BarraNav.setBackground(Color.WHITE);
+        // NO poner color aquí
         BarraNav.setPreferredSize(new Dimension(280, 570));
         BarraNav.setLayout(new BoxLayout(BarraNav, BoxLayout.Y_AXIS));
-        
+
         btnPedidosPendientes = new JButton("Pedidos Pendientes");
         btnPedidosPendientes.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnPedidosPendientes.setForeground(new Color(60, 60, 60));
-        btnPedidosPendientes.setBackground(Color.WHITE);
+        // NO poner colores aquí
         btnPedidosPendientes.setHorizontalAlignment(SwingConstants.LEFT);
         btnPedidosPendientes.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnPedidosPendientes.setFocusPainted(false);
@@ -186,11 +298,9 @@ public class InterfazCocina extends JFrame {
         btnPedidosPendientes.setPreferredSize(new Dimension(280, 50));
         btnPedidosPendientes.addActionListener(e -> mostrarPedidosPendientes());
         BarraNav.add(btnPedidosPendientes);
-        
+
         btnTomarPedido = new JButton("Tomar Pedido");
         btnTomarPedido.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnTomarPedido.setForeground(new Color(60, 60, 60));
-        btnTomarPedido.setBackground(Color.WHITE);
         btnTomarPedido.setHorizontalAlignment(SwingConstants.LEFT);
         btnTomarPedido.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnTomarPedido.setFocusPainted(false);
@@ -200,11 +310,9 @@ public class InterfazCocina extends JFrame {
         btnTomarPedido.setPreferredSize(new Dimension(280, 50));
         btnTomarPedido.addActionListener(e -> tomarSiguientePedido());
         BarraNav.add(btnTomarPedido);
-        
+
         btnEnPreparacion = new JButton("En Preparación");
         btnEnPreparacion.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnEnPreparacion.setForeground(new Color(60, 60, 60));
-        btnEnPreparacion.setBackground(Color.WHITE);
         btnEnPreparacion.setHorizontalAlignment(SwingConstants.LEFT);
         btnEnPreparacion.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnEnPreparacion.setFocusPainted(false);
@@ -214,11 +322,9 @@ public class InterfazCocina extends JFrame {
         btnEnPreparacion.setPreferredSize(new Dimension(280, 50));
         btnEnPreparacion.addActionListener(e -> mostrarEnPreparacion());
         BarraNav.add(btnEnPreparacion);
-        
+
         btnMarcarListo = new JButton("Marcar como Listo");
         btnMarcarListo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnMarcarListo.setForeground(new Color(60, 60, 60));
-        btnMarcarListo.setBackground(Color.WHITE);
         btnMarcarListo.setHorizontalAlignment(SwingConstants.LEFT);
         btnMarcarListo.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnMarcarListo.setFocusPainted(false);
@@ -228,11 +334,9 @@ public class InterfazCocina extends JFrame {
         btnMarcarListo.setPreferredSize(new Dimension(280, 50));
         btnMarcarListo.addActionListener(e -> marcarComoListo());
         BarraNav.add(btnMarcarListo);
-        
+
         btnPedidosListos = new JButton("Pedidos Listos");
         btnPedidosListos.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnPedidosListos.setForeground(new Color(60, 60, 60));
-        btnPedidosListos.setBackground(Color.WHITE);
         btnPedidosListos.setHorizontalAlignment(SwingConstants.LEFT);
         btnPedidosListos.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnPedidosListos.setFocusPainted(false);
@@ -242,11 +346,9 @@ public class InterfazCocina extends JFrame {
         btnPedidosListos.setPreferredSize(new Dimension(280, 50));
         btnPedidosListos.addActionListener(e -> mostrarPedidosListos());
         BarraNav.add(btnPedidosListos);
-        
+
         btnMarcarEntregado = new JButton("Marcar como Entregado");
         btnMarcarEntregado.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnMarcarEntregado.setForeground(new Color(60, 60, 60));
-        btnMarcarEntregado.setBackground(Color.WHITE);
         btnMarcarEntregado.setHorizontalAlignment(SwingConstants.LEFT);
         btnMarcarEntregado.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnMarcarEntregado.setFocusPainted(false);
@@ -256,15 +358,13 @@ public class InterfazCocina extends JFrame {
         btnMarcarEntregado.setPreferredSize(new Dimension(280, 50));
         btnMarcarEntregado.addActionListener(e -> marcarComoEntregado());
         BarraNav.add(btnMarcarEntregado);
-        
+
         // Espacio flexible
         BarraNav.add(Box.createVerticalGlue());
-        
+
         // Botón Cerrar Sesión
         btnCerrarSesion = new JButton("Cerrar Sesión");
         btnCerrarSesion.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnCerrarSesion.setForeground(new Color(168, 27, 29));
-        btnCerrarSesion.setBackground(Color.WHITE);
         btnCerrarSesion.setHorizontalAlignment(SwingConstants.LEFT);
         btnCerrarSesion.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnCerrarSesion.setFocusPainted(false);
@@ -321,28 +421,32 @@ public class InterfazCocina extends JFrame {
     private void configurarHover() {
         JButton[] botones = {btnPedidosPendientes, btnTomarPedido, btnEnPreparacion, 
                              btnMarcarListo, btnPedidosListos, btnMarcarEntregado, btnCerrarSesion};
-        
+
         for (JButton b : botones) {
             b.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseEntered(java.awt.event.MouseEvent e) {
-                    if (b != btnActivo && b != btnCerrarSesion) {
-                        b.setBackground(new Color(245, 245, 245));
-                        b.setForeground(new Color(168, 27, 29));
-                    } else if (b == btnCerrarSesion && b != btnActivo) {
-                        b.setBackground(new Color(245, 245, 245));
-                        b.setForeground(new Color(200, 0, 0));
+                    if (b != btnActivo) {
+                        if (b == btnCerrarSesion) {
+                            b.setBackground(new Color(245, 245, 245));
+                            b.setForeground(new Color(200, 0, 0));
+                        } else {
+                            b.setBackground(new Color(200, 200, 200)); // Gris claro al hover
+                            b.setForeground(new Color(168, 27, 29)); // Rojo característico
+                        }
                     }
                 }
-                
+
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent e) {
-                    if (b != btnActivo && b != btnCerrarSesion) {
-                        b.setBackground(Color.WHITE);
-                        b.setForeground(new Color(60, 60, 60));
-                    } else if (b == btnCerrarSesion && b != btnActivo) {
-                        b.setBackground(Color.WHITE);
-                        b.setForeground(new Color(168, 27, 29));
+                    if (b != btnActivo) {
+                        if (b == btnCerrarSesion) {
+                            b.setBackground(Color.WHITE);
+                            b.setForeground(new Color(168, 27, 29));
+                        } else {
+                            b.setBackground(Color.WHITE);
+                            b.setForeground(Color.BLACK);
+                        }
                     }
                 }
             });
@@ -352,15 +456,21 @@ public class InterfazCocina extends JFrame {
     private void activarBoton(JButton boton) {
         if (btnActivo != null) {
             btnActivo.setBackground(Color.WHITE);
-            btnActivo.setForeground(new Color(60, 60, 60));
+            btnActivo.setForeground(Color.BLACK);
             btnActivo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         }
-        
-        boton.setBackground(new Color(168, 27, 29));
-        boton.setForeground(Color.WHITE);
+
+        if (boton == btnCerrarSesion) {
+            boton.setBackground(new Color(168, 27, 29));
+            boton.setForeground(Color.WHITE);
+        } else {
+            boton.setBackground(new Color(168, 27, 29)); // Rojo característico para activo
+            boton.setForeground(Color.WHITE);
+        }
         boton.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnActivo = boton;
     }
+    
     
     private void cargarPanel(JPanel panel) {
         JPanel panelFondo = (JPanel) Interfaz.getComponent(0);
@@ -435,6 +545,8 @@ public class InterfazCocina extends JFrame {
         
         java.awt.EventQueue.invokeLater(() -> new InterfazCocina("COCINA", "Cocinero Demo").setVisible(true));
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -446,7 +558,7 @@ public class InterfazCocina extends JFrame {
     private void initComponents() {
 
         Encabezado = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        panelIzquierdo = new javax.swing.JPanel();
         lblLogo = new javax.swing.JLabel();
         panelTitulos = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
@@ -471,18 +583,18 @@ public class InterfazCocina extends JFrame {
 
         lblLogo.setText("jLabel1");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelIzquierdoLayout = new javax.swing.GroupLayout(panelIzquierdo);
+        panelIzquierdo.setLayout(panelIzquierdoLayout);
+        panelIzquierdoLayout.setHorizontalGroup(
+            panelIzquierdoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelIzquierdoLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(lblLogo)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelIzquierdoLayout.setVerticalGroup(
+            panelIzquierdoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelIzquierdoLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(lblLogo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -547,7 +659,7 @@ public class InterfazCocina extends JFrame {
             EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EncabezadoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTitulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -559,7 +671,7 @@ public class InterfazCocina extends JFrame {
             .addGroup(EncabezadoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelIzquierdo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelTitulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -699,7 +811,6 @@ public class InterfazCocina extends JFrame {
     private javax.swing.JButton btnPedidosListos;
     private javax.swing.JButton btnPedidosPendientes;
     private javax.swing.JButton btnTomarPedido;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEquipo;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblNombre;
@@ -708,6 +819,7 @@ public class InterfazCocina extends JFrame {
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblVersion;
     private javax.swing.JPanel panelDerecho;
+    private javax.swing.JPanel panelIzquierdo;
     private javax.swing.JPanel panelTitulos;
     // End of variables declaration//GEN-END:variables
 }

@@ -42,21 +42,101 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     private Image logoImagen;
     private Image fondoImagen;
 
+    
     /**
-     * Constructor con usuario y rol
-     */
+    * Constructor con usuario y rol
+    */
     public InterfazGerenteP1(String rol, String nombre) {
-        initComponents();
-        setSize(1280, 720);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        this.rolUsuario = rol;
-        this.nombreUsuario = nombre;
-        cargarImagenes();
-        configurarComponentes();
-        configurarHover();
-        activarBoton(btnInicio);
-        verificarDeudasProximas();
+       initComponents();
+       setSize(1280, 720);
+       setLocationRelativeTo(null);
+       setResizable(false);
+       this.rolUsuario = rol;
+       this.nombreUsuario = nombre;
+       cargarImagenes();
+       configurarComponentes();
+       configurarHover();
+       activarBoton(btnInicio);
+       verificarDeudasProximas();
+
+       // APLICAR COLORES PERSONALIZADOS
+       aplicarColoresPersonalizados();
+
+       // Forzar actualización después de que la ventana sea visible
+       addWindowListener(new java.awt.event.WindowAdapter() {
+           @Override
+           public void windowOpened(java.awt.event.WindowEvent e) {
+               aplicarColoresPersonalizados();
+           }
+       });
+
+       // También forzar después de un pequeño delay
+       javax.swing.SwingUtilities.invokeLater(() -> {
+           aplicarColoresPersonalizados();
+           repaint();
+       });
+   }
+
+
+    /**
+     * Aplica los colores personalizados a la interfaz
+     */
+    private void aplicarColoresPersonalizados() {
+        System.out.println("Aplicando colores personalizados a InterfazGerente...");
+
+        // CABECERA - Fondo rojo vino
+        Encabezado.setBackground(new Color(125, 0, 2));
+        Encabezado.setOpaque(true);
+
+        // Panel izquierdo del logo - Fondo blanco
+        // Necesitamos obtener el panel izquierdo que contiene jLabel3
+        Component[] components = Encabezado.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JPanel) {
+                JPanel panel = (JPanel) comp;
+                if (panel.getComponentCount() > 0 && panel.getComponent(0) == jLabel3) {
+                    panel.setBackground(Color.WHITE);
+                    panel.setOpaque(true);
+                    break;
+                }
+            }
+        }
+
+        // Títulos - Texto blanco (USANDO LOS COMPONENTES CORRECTOS)
+        jLabel1.setForeground(Color.WHITE);
+        jLabel4.setForeground(new Color(255, 200, 200));
+
+        // Rol - Texto blanco
+        Rol.setForeground(new Color(255, 200, 200));
+
+        // BARRA DE NAVEGACIÓN - Fondo negro
+        BarraNav.setBackground(Color.BLACK);
+        BarraNav.setOpaque(true);
+
+        // BOTONES - Todos blancos con texto negro
+        JButton[] botones = {btnInicio, btnUsuarios, btnFinanzas, btnMenu, btnInvetario, btnReportes, btnCerrar};
+
+        for (JButton boton : botones) {
+            if (boton != null) {
+                boton.setBackground(Color.WHITE);
+                boton.setForeground(Color.BLACK);
+                boton.setOpaque(true);
+                boton.setContentAreaFilled(true);
+                boton.setBorderPainted(false);
+            }
+        }
+
+        // Forzar actualización visual
+        Encabezado.revalidate();
+        Encabezado.repaint();
+        BarraNav.revalidate();
+        BarraNav.repaint();
+
+        System.out.println("Colores aplicados - Encabezado: " + Encabezado.getBackground());
+        System.out.println("Colores aplicados - BarraNav: " + BarraNav.getBackground());
+        System.out.println("jLabel1 foreground: " + jLabel1.getForeground());
+        System.out.println("jLabel4 foreground: " + jLabel4.getForeground());
+        System.out.println("Rol foreground: " + Rol.getForeground());
     }
     
     /**
@@ -103,29 +183,23 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
             fondoImagen = null;
         }
     }
-    
-    /**
-     * Configura los componentes principales
-     */
+        
     private void configurarComponentes() {
-        // Configurar tamaños de paneles
-        Encabezado.setPreferredSize(new Dimension(1280, 100));
-        BarraNav.setPreferredSize(new Dimension(280, 570));
-        // PiePag.setPreferredSize(new Dimension(1280, 50)); // Ya no es necesario
+       // Configurar tamaños de paneles
+       Encabezado.setPreferredSize(new Dimension(1280, 100));
+       BarraNav.setPreferredSize(new Dimension(280, 570));
 
-        // Configurar el panel de interfaz con fondo
-        Interfaz.setLayout(new BorderLayout());
-        configurarPanelInterfaz();
+       // Configurar el panel de interfaz con fondo
+       Interfaz.setLayout(new BorderLayout());
+       configurarPanelInterfaz();
 
-        // Configurar cabecera con logo y título
-        configurarCabecera();
+       // Configurar cabecera con logo y título
+       configurarCabecera();
 
-        // Comentar o eliminar esta línea
-        // configurarPiePagina();
+       // Configurar botones de navegación (solo tamaños, no colores)
+       configurarBotonesNavegacion();
+   }
 
-        // Configurar botones de navegación
-        configurarBotonesNavegacion();
-    }
     
     /**
      * Configura el panel de interfaz con fondo blanco
@@ -153,79 +227,79 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
         Interfaz.repaint();
     }
     
-    /**
-     * Configura la cabecera con logo, título y rol
-     */
-    private void configurarCabecera() {
-        Encabezado.removeAll();
-        Encabezado.setLayout(new BorderLayout());
-        Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(217, 217, 217)));
-        Encabezado.setBackground(Color.WHITE);
-        
-        // Panel izquierdo - Logo
-        JPanel panelIzquierdo = new JPanel();
-        panelIzquierdo.setOpaque(false);
-        panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.X_AXIS));
-        panelIzquierdo.setBorder(new EmptyBorder(10, 20, 10, 10));
-        
-        if (logoImagen != null) {
-            Image logoEscalado = logoImagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-            JLabel lblLogo = new JLabel(new ImageIcon(logoEscalado));
-            panelIzquierdo.add(lblLogo);
-            panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
-        }
-        
-        // Panel central - Títulos
-        JPanel panelTitulos = new JPanel();
-        panelTitulos.setOpaque(false);
-        panelTitulos.setLayout(new BoxLayout(panelTitulos, BoxLayout.Y_AXIS));
-        
-        JLabel lblTitulo = new JLabel("LA CASA DEL SABOR");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTitulo.setForeground(new Color(168, 27, 29));
-        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        JLabel lblSubtitulo = new JLabel("PIZZERÍA");
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        lblSubtitulo.setForeground(new Color(74, 74, 74));
-        lblSubtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        panelTitulos.add(lblTitulo);
-        panelTitulos.add(Box.createRigidArea(new Dimension(0, 5)));
-        panelTitulos.add(lblSubtitulo);
-        
-        // Panel derecho - Rol de usuario
-        JPanel panelDerecho = new JPanel();
-        panelDerecho.setOpaque(false);
-        panelDerecho.setLayout(new BoxLayout(panelDerecho, BoxLayout.Y_AXIS));
-        panelDerecho.setBorder(new EmptyBorder(10, 10, 10, 20));
-        panelDerecho.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JLabel lblRol = new JLabel("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "GERENTE"));
-        lblRol.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblRol.setForeground(new Color(100, 100, 100));
-        lblRol.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JLabel lblNombre = new JLabel(nombreUsuario != null ? nombreUsuario : "Gerente");
-        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblNombre.setForeground(new Color(168, 27, 29));
-        lblNombre.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        panelDerecho.add(Box.createVerticalGlue());
-        panelDerecho.add(lblRol);
-        panelDerecho.add(Box.createRigidArea(new Dimension(0, 5)));
-        panelDerecho.add(lblNombre);
-        panelDerecho.add(Box.createVerticalGlue());
-        
-        // Agregar paneles a la cabecera
-        Encabezado.add(panelIzquierdo, BorderLayout.WEST);
-        Encabezado.add(panelTitulos, BorderLayout.CENTER);
-        Encabezado.add(panelDerecho, BorderLayout.EAST);
-        
-        Encabezado.revalidate();
-        Encabezado.repaint();
-    }
+
     
+    /**
+    * Configura la cabecera con logo, título y rol
+    */
+   private void configurarCabecera() {
+       Encabezado.removeAll();
+       Encabezado.setLayout(new BorderLayout());
+       Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(100, 0, 0)));
+
+       // Panel izquierdo - Logo (con fondo blanco)
+       JPanel panelIzquierdo = new JPanel();
+       panelIzquierdo.setBackground(Color.WHITE);
+       panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.X_AXIS));
+       panelIzquierdo.setBorder(new EmptyBorder(10, 20, 10, 10));
+
+       if (logoImagen != null) {
+           Image logoEscalado = logoImagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+           jLabel3.setIcon(new ImageIcon(logoEscalado));
+           jLabel3.setText("");
+           panelIzquierdo.add(jLabel3);
+           panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
+       } else {
+           panelIzquierdo.add(jLabel3);
+           panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
+       }
+
+       // Panel central - Títulos (USANDO LOS COMPONENTES EXISTENTES)
+       JPanel panelTitulos = new JPanel();
+       panelTitulos.setOpaque(false);
+       panelTitulos.setLayout(new BoxLayout(panelTitulos, BoxLayout.Y_AXIS));
+
+       // Usar jLabel1 en lugar de crear nuevo
+       jLabel1.setText("LA CASA DEL SABOR");
+       jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 28));
+       jLabel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+       // Usar jLabel4 en lugar de crear nuevo
+       jLabel4.setText("PIZZERÍA");
+       jLabel4.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+       jLabel4.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+       panelTitulos.add(jLabel1);
+       panelTitulos.add(Box.createRigidArea(new Dimension(0, 5)));
+       panelTitulos.add(jLabel4);
+
+       // Panel derecho - Rol de usuario (USANDO EL COMPONENTE EXISTENTE)
+       JPanel panelDerecho = new JPanel();
+       panelDerecho.setOpaque(false);
+       panelDerecho.setLayout(new BoxLayout(panelDerecho, BoxLayout.Y_AXIS));
+       panelDerecho.setBorder(new EmptyBorder(10, 10, 10, 20));
+       panelDerecho.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+       // Usar Rol en lugar de crear nuevo
+       Rol.setText("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "GERENTE") + " - " + 
+                   (nombreUsuario != null ? nombreUsuario : "Gerente"));
+       Rol.setFont(new Font("Segoe UI", Font.BOLD, 13));
+       Rol.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+       panelDerecho.add(Box.createVerticalGlue());
+       panelDerecho.add(Rol);
+       panelDerecho.add(Box.createVerticalGlue());
+
+       // Agregar paneles a la cabecera
+       Encabezado.add(panelIzquierdo, BorderLayout.WEST);
+       Encabezado.add(panelTitulos, BorderLayout.CENTER);
+       Encabezado.add(panelDerecho, BorderLayout.EAST);
+
+       Encabezado.revalidate();
+       Encabezado.repaint();
+   }
+
+
     /**
      * Configura el pie de página
      
@@ -253,68 +327,65 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     }
     
     /**
-     * Configura los botones de navegación
-     */
-    private void configurarBotonesNavegacion() {
-        JButton[] botones = {btnInicio, btnUsuarios, btnFinanzas, btnMenu, btnInvetario, btnReportes, btnCerrar};
-        
-        for (JButton boton : botones) {
-            boton.setBackground(Color.WHITE);
-            boton.setForeground(new Color(60, 60, 60));
-            boton.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-            boton.setHorizontalAlignment(SwingConstants.LEFT);
-            boton.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
-            boton.setFocusPainted(false);
-            boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            boton.setMaximumSize(new Dimension(280, 50));
-            boton.setMinimumSize(new Dimension(280, 50));
-            boton.setPreferredSize(new Dimension(280, 50));
-        }
-    }
+    * Configura los botones de navegación
+    */    
+   private void configurarBotonesNavegacion() {
+       JButton[] botones = {btnInicio, btnUsuarios, btnFinanzas, btnMenu, btnInvetario, btnReportes, btnCerrar};
+
+       for (JButton boton : botones) {
+           // Solo configurar tamaños y comportamiento, no colores
+           boton.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+           boton.setHorizontalAlignment(SwingConstants.LEFT);
+           boton.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
+           boton.setFocusPainted(false);
+           boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+           boton.setMaximumSize(new Dimension(280, 50));
+           boton.setMinimumSize(new Dimension(280, 50));
+           boton.setPreferredSize(new Dimension(280, 50));
+       }
+   }
     
-    /**
-     * Configura el efecto hover para los botones
-     */
     private void configurarHover() {
         JButton[] botones = {btnInicio, btnUsuarios, btnFinanzas,
                             btnMenu, btnInvetario, btnReportes, btnCerrar};
-        
+
         for (JButton b : botones) {
             b.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseEntered(java.awt.event.MouseEvent e) {
                     if (b != btnActivo) {
-                        b.setBackground(new Color(245, 245, 245));
-                        b.setForeground(new Color(168, 27, 29));
+                        b.setBackground(new Color(200, 200, 200)); // Gris claro al hover
+                        b.setForeground(new Color(168, 27, 29)); // Rojo característico
                     }
                 }
-                
+
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent e) {
                     if (b != btnActivo) {
                         b.setBackground(Color.WHITE);
-                        b.setForeground(new Color(60, 60, 60));
+                        b.setForeground(Color.BLACK);
                     }
                 }
             });
         }
     }
     
-    /**
-     * Activa visualmente un botón
-     */
-    private void activarBoton(JButton boton) {
-        if (btnActivo != null) {
-            btnActivo.setBackground(Color.WHITE);
-            btnActivo.setForeground(new Color(60, 60, 60));
-            btnActivo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        }
         
-        boton.setBackground(new Color(168, 27, 29));
-        boton.setForeground(Color.WHITE);
-        boton.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        btnActivo = boton;
-    }
+    /**
+    * Activa visualmente un botón
+    */
+   private void activarBoton(JButton boton) {
+       if (btnActivo != null) {
+           btnActivo.setBackground(Color.WHITE);
+           btnActivo.setForeground(Color.BLACK);
+           btnActivo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+       }
+
+       boton.setBackground(new Color(168, 27, 29)); // Rojo característico para activo
+       boton.setForeground(Color.WHITE);
+       boton.setFont(new Font("Segoe UI", Font.BOLD, 15));
+       btnActivo = boton;
+   }    
     
     /**
      * Carga un panel en el área de interfaz
@@ -417,9 +488,10 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
         btnCerrar = new javax.swing.JButton();
         Encabezado = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         Rol = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1280, 720));
@@ -440,7 +512,7 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
         jLabel2.setText("Powered by StarTech");
         PiePag.add(jLabel2, java.awt.BorderLayout.CENTER);
 
-        BarraNav.setBackground(new java.awt.Color(255, 255, 255));
+        BarraNav.setBackground(new java.awt.Color(0, 0, 0));
 
         btnInicio.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnInicio.setText("Inicio");
@@ -510,23 +582,42 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
                 .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(225, Short.MAX_VALUE))
         );
 
-        Encabezado.setBackground(new java.awt.Color(255, 255, 255));
+        Encabezado.setBackground(new java.awt.Color(125, 0, 2));
 
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 35)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(168, 27, 29));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("LA CASA DEL SABOR");
 
-        jLabel3.setText("LOGO");
-
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(74, 74, 74));
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("PIZZERIA");
 
         Rol.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        Rol.setForeground(new java.awt.Color(255, 255, 255));
         Rol.setText("Rol: Usuario");
+
+        jLabel3.setText("LOGO");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(27, 27, 27))
+        );
 
         javax.swing.GroupLayout EncabezadoLayout = new javax.swing.GroupLayout(Encabezado);
         Encabezado.setLayout(EncabezadoLayout);
@@ -534,27 +625,28 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
             EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EncabezadoLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
                 .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 798, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 682, Short.MAX_VALUE)
                 .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         EncabezadoLayout.setVerticalGroup(
             EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EncabezadoLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EncabezadoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(EncabezadoLayout.createSequentialGroup()
                         .addGroup(EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Rol, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3)))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -574,11 +666,11 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Encabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BarraNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE))
+                    .addComponent(Interfaz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PiePag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -624,8 +716,8 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnInvetarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvetarioActionPerformed
-        new InventarioPantallaInicial(rolUsuario, nombreUsuario).setVisible(true);
-        this.dispose();
+//        new InventarioPantallaInicial(rolUsuario, nombreUsuario).setVisible(true);
+//        this.dispose();
     }//GEN-LAST:event_btnInvetarioActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
@@ -681,5 +773,6 @@ public class InterfazGerenteP1 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
