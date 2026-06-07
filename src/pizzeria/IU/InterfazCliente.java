@@ -36,7 +36,13 @@ public class InterfazCliente extends JFrame {
     private JPanel PiePag;
     private JButton btnVerMenu;
     private JButton btnVerCombos;
-    private JButton btnCerrarSesion;  // Nuevo botón
+    private JButton btnCerrarSesion;
+    
+    // Componentes de la cabecera (los del diseñador)
+    private JLabel jLabel1;  // "LA CASA DEL SABOR"
+    private JLabel jLabel3;  // Logo
+    private JLabel jLabel4;  // "PIZZERIA"
+    private JLabel Rol;      // Rol
     
     public InterfazCliente(String rol, String nombre) {
         this.rolUsuario = rol;
@@ -50,6 +56,22 @@ public class InterfazCliente extends JFrame {
         
         cargarImagenes();
         initUI();
+        
+        // Aplicar colores personalizados
+        aplicarColoresPersonalizados();
+        
+        // Forzar actualización después de que la ventana sea visible
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                aplicarColoresPersonalizados();
+            }
+        });
+        
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            aplicarColoresPersonalizados();
+            repaint();
+        });
     }
     
     private void cargarImagenes() {
@@ -110,41 +132,40 @@ public class InterfazCliente extends JFrame {
     
     private void crearEncabezado() {
         Encabezado = new JPanel(new BorderLayout());
-        Encabezado.setBackground(Color.WHITE);
-        Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(217, 217, 217)));
+        Encabezado.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(100, 0, 0)));
         Encabezado.setPreferredSize(new Dimension(1280, 100));
         
-        // Panel izquierdo - Logo
+        // Panel izquierdo - Logo (con fondo blanco)
         JPanel panelIzquierdo = new JPanel();
-        panelIzquierdo.setOpaque(false);
+        panelIzquierdo.setBackground(Color.WHITE);
         panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.X_AXIS));
         panelIzquierdo.setBorder(new EmptyBorder(10, 20, 10, 10));
         
+        jLabel3 = new JLabel();
         if (logoImagen != null) {
             Image logoEscalado = logoImagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-            JLabel lblLogo = new JLabel(new ImageIcon(logoEscalado));
-            panelIzquierdo.add(lblLogo);
-            panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
+            jLabel3.setIcon(new ImageIcon(logoEscalado));
         }
+        jLabel3.setText("");
+        panelIzquierdo.add(jLabel3);
+        panelIzquierdo.add(Box.createRigidArea(new Dimension(15, 0)));
         
         // Panel central - Títulos
         JPanel panelTitulos = new JPanel();
         panelTitulos.setOpaque(false);
         panelTitulos.setLayout(new BoxLayout(panelTitulos, BoxLayout.Y_AXIS));
         
-        JLabel lblTitulo = new JLabel("LA CASA DEL SABOR");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTitulo.setForeground(new Color(168, 27, 29));
-        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jLabel1 = new JLabel("LA CASA DEL SABOR");
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        jLabel1.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JLabel lblSubtitulo = new JLabel("PIZZERÍA");
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        lblSubtitulo.setForeground(new Color(74, 74, 74));
-        lblSubtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jLabel4 = new JLabel("PIZZERÍA");
+        jLabel4.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        jLabel4.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        panelTitulos.add(lblTitulo);
+        panelTitulos.add(jLabel1);
         panelTitulos.add(Box.createRigidArea(new Dimension(0, 5)));
-        panelTitulos.add(lblSubtitulo);
+        panelTitulos.add(jLabel4);
         
         // Panel derecho - Rol de usuario
         JPanel panelDerecho = new JPanel();
@@ -153,20 +174,13 @@ public class InterfazCliente extends JFrame {
         panelDerecho.setBorder(new EmptyBorder(10, 10, 10, 20));
         panelDerecho.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
-        JLabel lblRol = new JLabel("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "CLIENTE"));
-        lblRol.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblRol.setForeground(new Color(100, 100, 100));
-        lblRol.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JLabel lblNombre = new JLabel(nombreUsuario != null ? nombreUsuario : "Cliente");
-        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblNombre.setForeground(new Color(168, 27, 29));
-        lblNombre.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        Rol = new JLabel("ROL: " + (rolUsuario != null ? rolUsuario.toUpperCase() : "CLIENTE") + " - " + 
+                         (nombreUsuario != null ? nombreUsuario : "Cliente"));
+        Rol.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        Rol.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
         panelDerecho.add(Box.createVerticalGlue());
-        panelDerecho.add(lblRol);
-        panelDerecho.add(Box.createRigidArea(new Dimension(0, 5)));
-        panelDerecho.add(lblNombre);
+        panelDerecho.add(Rol);
         panelDerecho.add(Box.createVerticalGlue());
         
         Encabezado.add(panelIzquierdo, BorderLayout.WEST);
@@ -176,15 +190,11 @@ public class InterfazCliente extends JFrame {
     
     private void crearBarraNav() {
         BarraNav = new JPanel();
-        BarraNav.setBackground(Color.WHITE);
         BarraNav.setPreferredSize(new Dimension(280, 570));
         BarraNav.setLayout(new BoxLayout(BarraNav, BoxLayout.Y_AXIS));
 
-        // Botón Ver Menú
         btnVerMenu = new JButton("Ver Menú");
         btnVerMenu.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnVerMenu.setForeground(new Color(60, 60, 60));
-        btnVerMenu.setBackground(Color.WHITE);
         btnVerMenu.setHorizontalAlignment(SwingConstants.LEFT);
         btnVerMenu.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnVerMenu.setFocusPainted(false);
@@ -195,11 +205,8 @@ public class InterfazCliente extends JFrame {
         btnVerMenu.addActionListener(e -> mostrarMenuCompleto());
         BarraNav.add(btnVerMenu);
 
-        // Botón Ver Combos
         btnVerCombos = new JButton("Ver Combos");
         btnVerCombos.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnVerCombos.setForeground(new Color(60, 60, 60));
-        btnVerCombos.setBackground(Color.WHITE);
         btnVerCombos.setHorizontalAlignment(SwingConstants.LEFT);
         btnVerCombos.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnVerCombos.setFocusPainted(false);
@@ -210,14 +217,10 @@ public class InterfazCliente extends JFrame {
         btnVerCombos.addActionListener(e -> mostrarCombos());
         BarraNav.add(btnVerCombos);
 
-        // Espacio flexible (empuja los botones hacia arriba)
         BarraNav.add(Box.createVerticalGlue());
 
-        // Botón Cerrar Sesión (se mantiene abajo)
         btnCerrarSesion = new JButton("Cerrar Sesión");
         btnCerrarSesion.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        btnCerrarSesion.setForeground(new Color(168, 27, 29));
-        btnCerrarSesion.setBackground(Color.WHITE);
         btnCerrarSesion.setHorizontalAlignment(SwingConstants.LEFT);
         btnCerrarSesion.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 15));
         btnCerrarSesion.setFocusPainted(false);
@@ -271,6 +274,66 @@ public class InterfazCliente extends JFrame {
         PiePag.add(lblVersion, BorderLayout.EAST);
     }
     
+    private void aplicarColoresPersonalizados() {
+        System.out.println("Aplicando colores personalizados a InterfazCliente...");
+        
+        // CABECERA - Fondo rojo vino
+        Encabezado.setBackground(new Color(125, 0, 2));
+        Encabezado.setOpaque(true);
+        
+        // Panel izquierdo del logo - Fondo blanco
+        Component[] components = Encabezado.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JPanel) {
+                JPanel panel = (JPanel) comp;
+                if (panel.getComponentCount() > 0 && panel.getComponent(0) == jLabel3) {
+                    panel.setBackground(Color.WHITE);
+                    panel.setOpaque(true);
+                    break;
+                }
+            }
+        }
+        
+        // Títulos - Texto blanco
+        if (jLabel1 != null) {
+            jLabel1.setForeground(Color.WHITE);
+        }
+        if (jLabel4 != null) {
+            jLabel4.setForeground(new Color(255, 200, 200));
+        }
+        
+        // Rol - Texto blanco
+        if (Rol != null) {
+            Rol.setForeground(new Color(255, 200, 200));
+        }
+        
+        // BARRA DE NAVEGACIÓN - Fondo negro
+        BarraNav.setBackground(Color.BLACK);
+        BarraNav.setOpaque(true);
+        
+        // BOTONES - Todos blancos con texto negro
+        JButton[] botones = {btnVerMenu, btnVerCombos, btnCerrarSesion};
+        
+        for (JButton boton : botones) {
+            if (boton != null) {
+                boton.setBackground(Color.WHITE);
+                boton.setForeground(boton == btnCerrarSesion ? new Color(168, 27, 29) : Color.BLACK);
+                boton.setOpaque(true);
+                boton.setContentAreaFilled(true);
+                boton.setBorderPainted(false);
+            }
+        }
+        
+        // Forzar actualización visual
+        Encabezado.revalidate();
+        Encabezado.repaint();
+        BarraNav.revalidate();
+        BarraNav.repaint();
+        
+        System.out.println("Colores aplicados - Encabezado: " + Encabezado.getBackground());
+        System.out.println("Colores aplicados - BarraNav: " + BarraNav.getBackground());
+    }
+    
     private void configurarHover() {
         JButton[] botones = {btnVerMenu, btnVerCombos, btnCerrarSesion};
         
@@ -278,23 +341,27 @@ public class InterfazCliente extends JFrame {
             b.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseEntered(java.awt.event.MouseEvent e) {
-                    if (b != btnActivo && b != btnCerrarSesion) {
-                        b.setBackground(new Color(245, 245, 245));
-                        b.setForeground(new Color(168, 27, 29));
-                    } else if (b == btnCerrarSesion) {
-                        b.setBackground(new Color(245, 245, 245));
-                        b.setForeground(new Color(200, 0, 0));
+                    if (b != btnActivo) {
+                        if (b == btnCerrarSesion) {
+                            b.setBackground(new Color(245, 245, 245));
+                            b.setForeground(new Color(200, 0, 0));
+                        } else {
+                            b.setBackground(new Color(200, 200, 200));
+                            b.setForeground(new Color(168, 27, 29));
+                        }
                     }
                 }
                 
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent e) {
-                    if (b != btnActivo && b != btnCerrarSesion) {
-                        b.setBackground(Color.WHITE);
-                        b.setForeground(new Color(60, 60, 60));
-                    } else if (b == btnCerrarSesion) {
-                        b.setBackground(Color.WHITE);
-                        b.setForeground(new Color(168, 27, 29));
+                    if (b != btnActivo) {
+                        if (b == btnCerrarSesion) {
+                            b.setBackground(Color.WHITE);
+                            b.setForeground(new Color(168, 27, 29));
+                        } else {
+                            b.setBackground(Color.WHITE);
+                            b.setForeground(Color.BLACK);
+                        }
                     }
                 }
             });
@@ -304,12 +371,17 @@ public class InterfazCliente extends JFrame {
     private void activarBoton(JButton boton) {
         if (btnActivo != null) {
             btnActivo.setBackground(Color.WHITE);
-            btnActivo.setForeground(new Color(60, 60, 60));
+            btnActivo.setForeground(Color.BLACK);
             btnActivo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         }
         
-        boton.setBackground(new Color(168, 27, 29));
-        boton.setForeground(Color.WHITE);
+        if (boton == btnCerrarSesion) {
+            boton.setBackground(new Color(168, 27, 29));
+            boton.setForeground(Color.WHITE);
+        } else {
+            boton.setBackground(new Color(168, 27, 29));
+            boton.setForeground(Color.WHITE);
+        }
         boton.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnActivo = boton;
     }
@@ -325,6 +397,7 @@ public class InterfazCliente extends JFrame {
     }
     
     private void mostrarMenuCompleto() {
+        activarBoton(btnVerMenu);
         FrameVerMenu ventana = new FrameVerMenu(rolUsuario, nombreUsuario);
         ventana.setVisible(true);
         this.dispose();
@@ -349,8 +422,8 @@ public class InterfazCliente extends JFrame {
             JOptionPane.QUESTION_MESSAGE);
         
         if (confirm == JOptionPane.YES_OPTION) {
-            this.dispose(); // Cierra la ventana actual
-            new PantallaInicial().setVisible(true); // Abre la pantalla inicial
+            this.dispose();
+            new PantallaInicial().setVisible(true);
         }
     }
     
