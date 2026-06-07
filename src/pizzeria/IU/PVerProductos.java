@@ -172,8 +172,8 @@ public class PVerProductos extends javax.swing.JPanel {
                         .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(41, 41, 41)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(4, 4, 4)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -324,10 +324,10 @@ public class PVerProductos extends javax.swing.JPanel {
         }
         jTable1.setModel(modelo);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(130);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(280);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(250);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(280);
     }   
     
     private void configurarPlaceholder() {
