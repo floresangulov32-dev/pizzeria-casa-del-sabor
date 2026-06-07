@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import pizzeria.model.Menu;
 import pizzeria.model.Inventario;
+import pizzeria.model.Insumo;
 import pizzeria.util.ArchivoMenu;
 import pizzeria.model.Producto;
 import javax.swing.table.DefaultTableModel;
@@ -171,8 +172,8 @@ public class PVerProductos extends javax.swing.JPanel {
                         .addComponent(btnEliminarP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnAgregarI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(41, 41, 41)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(4, 4, 4)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -296,19 +297,37 @@ public class PVerProductos extends javax.swing.JPanel {
     modelo.setRowCount(0); // Limpia las filas
 
         for(Producto p : menu.getProductos()){
-        modelo.addRow(new Object[]{
+            String ingredientes;
+        if (p.getIngredientes() == null || p.getIngredientes().isEmpty()) {
+            ingredientes = "(ninguno)";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < p.getIngredientes().size(); i++) {
+                int idIng = p.getIngredientes().get(i);
+                if (inventario != null) {
+                    Insumo ins = inventario.buscarId(idIng);
+                    sb.append(ins != null ? ins.getNombre() : "ID " + idIng);
+                } else {
+                    sb.append("ID " + idIng);
+                }
+                if (i < p.getIngredientes().size() - 1) sb.append(", ");
+            }
+            ingredientes = sb.toString();
+        }
+            
+            modelo.addRow(new Object[]{
             p.getID(),
             p.getNombre(),
             String.format("%.2f", p.getPrecio()),
-            p.getDescripcion(), "xd"
+            p.getDescripcion(), ingredientes 
             });
         }
         jTable1.setModel(modelo);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(300);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(200);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(280);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(280);
     }   
     
     private void configurarPlaceholder() {
